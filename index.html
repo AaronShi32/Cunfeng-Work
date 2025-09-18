@@ -1,12 +1,20 @@
 <!DOCTYPE html>
-<html lang="zh-CN">
+<html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Azure Static Web Apps Demo</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>React Flow Demo (Static)</title>
+  <link rel="stylesheet" href="https://unpkg.com/react-flow-renderer@11.7.4/dist/style.css" />
+  <style>
+    html, body, #root { height: 100%; margin: 0; padding: 0; }
+    #root { width: 100vw; height: 100vh; }
+  </style>
 </head>
 <body>
-    <h1>欢迎来到 Azure Static Web Apps 静态站点演示</h1>
-    <p>本页面已成功部署到 Azure Static Web Apps。</p>
+  <div id="root"></div>
+  <script src="https://unpkg.com/react@17/umd/react.production.min.js"></script>
+  <script src="https://unpkg.com/react-dom@17/umd/react-dom.production.min.js"></script>
+  <script src="https://unpkg.com/react-flow-renderer@11.7.4/dist/react-flow-renderer.min.js"></script>
+  <script src="./react-flow-demo/main.js"></script>
 </body>
 </html>
