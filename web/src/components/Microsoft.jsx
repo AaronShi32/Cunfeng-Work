@@ -1,4 +1,4 @@
-import ReactFlow from '@xyflow/react';
+import { ReactFlow } from '@xyflow/react';
 
 const nodes = [
   { id: '1', type: 'input', data: { label: 'Start Node' }, position: { x: 250, y: 5 } },
