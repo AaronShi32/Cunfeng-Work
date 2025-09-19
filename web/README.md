@@ -1,11 +1,11 @@
-# flow-visualization
+# web
 
 本项目为基于 React + Vite 的可视化流程编辑器开发模板，适合集成 react-flow 及相关自定义组件。
 
 ## 目录结构
 
 ```
-flow-visualization/
+web/
 ├── public/                # 静态资源与 HTML 模板
 │   └── index.html
 ├── src/                   # 源码目录
@@ -39,7 +39,7 @@ npm run dev
 安装 react-flow：
 
 ```sh
-npm install reactflow
+npm install @xyflow/react
 ```
 
 在 `src/components/FlowEditor.jsx` 中编写你的流程编辑器组件。
