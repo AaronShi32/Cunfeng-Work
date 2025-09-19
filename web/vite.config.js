@@ -8,7 +8,7 @@ export default defineConfig({
   build: {
     rollupOptions: {
       input: {
-        home: resolve(__dirname, 'public/home.html'),
+        main: resolve(__dirname, 'index.html'),
         microsoft: resolve(__dirname, 'public/microsoft.html'),
       },
     },
