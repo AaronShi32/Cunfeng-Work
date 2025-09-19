@@ -1,3 +1,5 @@
+
+import React from 'react';
 import { ReactFlow } from '@xyflow/react';
 
 const nodes = [
