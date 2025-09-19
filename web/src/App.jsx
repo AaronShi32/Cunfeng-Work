@@ -9,6 +9,9 @@ import {
 } from '@xyflow/react';
 import '@xyflow/react/dist/style.css';
 import { useCallback, useState } from 'react';
+import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import Home from './components/Home';
+import Microsoft from './components/Microsoft';
  
 const initialNodes = [
   { id: 'n1', position: { x: 0, y: 0 }, data: { label: 'Node 1' } },
@@ -34,19 +37,25 @@ export default function App() {
   );
  
   return (
-    <div style={{ width: '100vw', height: '100vh' }}>
-      <ReactFlow
-        nodes={nodes}
-        edges={edges}
-        onNodesChange={onNodesChange}
-        onEdgesChange={onEdgesChange}
-        onConnect={onConnect}
-        fitView
-      >
-        <Controls />
-        <MiniMap />
-        <Background variant="dots" gap={12} size={1} />
-      </ReactFlow>
-    </div>
+    <BrowserRouter>
+      <Routes>
+        <Route path="/" element={<Home />} />
+        <Route path="/microsoft" element={<Microsoft />} />
+      </Routes>
+      <div style={{ width: '100vw', height: '100vh' }}>
+        <ReactFlow
+          nodes={nodes}
+          edges={edges}
+          onNodesChange={onNodesChange}
+          onEdgesChange={onEdgesChange}
+          onConnect={onConnect}
+          fitView
+        >
+          <Controls />
+          <MiniMap />
+          <Background variant="dots" gap={12} size={1} />
+        </ReactFlow>
+      </div>
+    </BrowserRouter>
   );
 }
