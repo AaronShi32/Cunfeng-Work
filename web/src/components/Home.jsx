@@ -1,13 +1,67 @@
 
-import React from 'react';
+import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
+import ASI from './ASI';
 
 export default function Home() {
+  const [showMicrosoftSubCards, setShowMicrosoftSubCards] = useState(false);
+  const [showASI, setShowASI] = useState(false);
+
+  const handleMicrosoftClick = () => {
+    setShowMicrosoftSubCards(true);
+  };
+
+  const handleASIClick = () => {
+    setShowASI(true);
+  };
+
+  const handleBackToMain = () => {
+    setShowMicrosoftSubCards(false);
+    setShowASI(false);
+  };
+
+  // 如果显示ASI页面
+  if (showASI) {
+    return (
+      <div>
+        <div style={{
+          position: 'absolute',
+          top: '20px',
+          left: '20px',
+          zIndex: 1000
+        }}>
+          <button
+            onClick={handleBackToMain}
+            style={{
+              background: 'rgba(255,255,255,0.2)',
+              color: '#ffffff',
+              border: '1px solid rgba(255,255,255,0.3)',
+              padding: '12px 32px',
+              borderRadius: '8px',
+              fontSize: '14px',
+              fontWeight: '500',
+              cursor: 'pointer',
+              transition: 'all 0.3s ease'
+            }}
+            onMouseEnter={(e) => {
+              e.currentTarget.style.background = 'rgba(255,255,255,0.3)';
+            }}
+            onMouseLeave={(e) => {
+              e.currentTarget.style.background = 'rgba(255,255,255,0.2)';
+            }}
+          >
+            ← 返回主页
+          </button>
+        </div>
+        <ASI />
+      </div>
+    );
+  }
   return (
     <div style={{ 
       fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif',
       minHeight: '100vh',
-      background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+      background: 'linear-gradient(135deg, #e7e9f2ff 0%, #d3c4e2ff 100%)',
       padding: '60px 40px'
     }}>
       <div style={{
@@ -32,7 +86,7 @@ export default function Home() {
           margin: '0 0 60px 0',
           lineHeight: '1.6'
         }}>
-          基于 React + Vite 的现代化前端工作空间
+          简历
         </p>
 
         <div style={{
@@ -41,176 +95,211 @@ export default function Home() {
           gap: '24px',
           marginBottom: '40px'
         }}>
-          {/* Samples 卡片 */}
-          <Link 
-            to="/samples"
-            style={{
-              textDecoration: 'none',
-              display: 'block'
-            }}
-          >
-            <div style={{
-              background: '#ffffff',
-              borderRadius: '16px',
-              padding: '32px',
-              boxShadow: '0 10px 25px rgba(0,0,0,0.1)',
-              transition: 'all 0.3s ease',
-              cursor: 'pointer',
-              height: '200px',
-              display: 'flex',
-              flexDirection: 'column',
-              justifyContent: 'center',
-              alignItems: 'center'
-            }}
-            onMouseEnter={(e) => {
-              e.currentTarget.style.transform = 'translateY(-8px)';
-              e.currentTarget.style.boxShadow = '0 20px 40px rgba(0,0,0,0.15)';
-            }}
-            onMouseLeave={(e) => {
-              e.currentTarget.style.transform = 'translateY(0)';
-              e.currentTarget.style.boxShadow = '0 10px 25px rgba(0,0,0,0.1)';
-            }}
-          >
-            <div style={{
-              fontSize: '48px',
-              marginBottom: '16px'
-            }}>
-              🎨
-            </div>
-            <h3 style={{
-              fontSize: '24px',
-              fontWeight: '600',
-              color: '#1f2937',
-              margin: '0 0 8px 0'
-            }}>
-              样本库
-            </h3>
-            <p style={{
-              fontSize: '14px',
-              color: '#6b7280',
-              textAlign: 'center',
-              margin: 0,
-              lineHeight: '1.5'
-            }}>
-              React Flow 模板 | 组件样本<br/>
-              开箱即用的精美设计
-            </p>
-          </div>
-          </Link>
+          {!showMicrosoftSubCards ? (
+            // 主要卡片
+            <>
+              {/* Alibaba 卡片 */}
+              <Link 
+                to="/samples"
+                style={{
+                  textDecoration: 'none',
+                  display: 'block'
+                }}
+              >
+                <div style={{
+                  background: '#ffffff',
+                  borderRadius: '16px',
+                  padding: '32px',
+                  boxShadow: '0 10px 25px rgba(0,0,0,0.1)',
+                  transition: 'all 0.3s ease',
+                  cursor: 'pointer',
+                  height: '200px',
+                  display: 'flex',
+                  flexDirection: 'column',
+                  justifyContent: 'center',
+                  alignItems: 'center'
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.transform = 'translateY(-8px)';
+                  e.currentTarget.style.boxShadow = '0 20px 40px rgba(0,0,0,0.15)';
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.transform = 'translateY(0)';
+                  e.currentTarget.style.boxShadow = '0 10px 25px rgba(0,0,0,0.1)';
+                }}
+              >
+                <div style={{
+                  fontSize: '48px',
+                  marginBottom: '16px'
+                }}>
+                  🎨
+                </div>
+                <h3 style={{
+                  fontSize: '24px',
+                  fontWeight: '600',
+                  color: '#1f2937',
+                  margin: '0 0 8px 0'
+                }}>
+                  Alibaba
+                </h3>
+                <p style={{
+                  fontSize: '14px',
+                  color: '#6b7280',
+                  textAlign: 'center',
+                  margin: 0,
+                  lineHeight: '1.5'
+                }}>
+                  阿里云 相关项目经历<br/>
+                </p>
+              </div>
+              </Link>
 
-          {/* Microsoft 卡片 */}
-          <Link 
-            to="/microsoft"
-            style={{
-              textDecoration: 'none',
-              display: 'block'
-            }}
-          >
-            <div style={{
-              background: '#ffffff',
-              borderRadius: '16px',
-              padding: '32px',
-              boxShadow: '0 10px 25px rgba(0,0,0,0.1)',
-              transition: 'all 0.3s ease',
-              cursor: 'pointer',
-              height: '200px',
-              display: 'flex',
-              flexDirection: 'column',
-              justifyContent: 'center',
-              alignItems: 'center'
-            }}
-            onMouseEnter={(e) => {
-              e.currentTarget.style.transform = 'translateY(-8px)';
-              e.currentTarget.style.boxShadow = '0 20px 40px rgba(0,0,0,0.15)';
-            }}
-            onMouseLeave={(e) => {
-              e.currentTarget.style.transform = 'translateY(0)';
-              e.currentTarget.style.boxShadow = '0 10px 25px rgba(0,0,0,0.1)';
-            }}
-          >
-            <div style={{
-              fontSize: '48px',
-              marginBottom: '16px'
-            }}>
-              🏢
-            </div>
-            <h3 style={{
-              fontSize: '24px',
-              fontWeight: '600',
-              color: '#1f2937',
-              margin: '0 0 8px 0'
-            }}>
-              Microsoft
-            </h3>
-            <p style={{
-              fontSize: '14px',
-              color: '#6b7280',
-              textAlign: 'center',
-              margin: 0,
-              lineHeight: '1.5'
-            }}>
-              Microsoft 相关功能和集成<br/>
-              企业级应用和服务
-            </p>
-          </div>
-          </Link>
+              {/* Microsoft 卡片 - 修改为点击事件 */}
+              <div 
+                onClick={handleMicrosoftClick}
+                style={{
+                  textDecoration: 'none',
+                  display: 'block'
+                }}
+              >
+                <div style={{
+                  background: '#ffffff',
+                  borderRadius: '16px',
+                  padding: '32px',
+                  boxShadow: '0 10px 25px rgba(0,0,0,0.1)',
+                  transition: 'all 0.3s ease',
+                  cursor: 'pointer',
+                  height: '200px',
+                  display: 'flex',
+                  flexDirection: 'column',
+                  justifyContent: 'center',
+                  alignItems: 'center'
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.transform = 'translateY(-8px)';
+                  e.currentTarget.style.boxShadow = '0 20px 40px rgba(0,0,0,0.15)';
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.transform = 'translateY(0)';
+                  e.currentTarget.style.boxShadow = '0 10px 25px rgba(0,0,0,0.1)';
+                }}
+              >
+                <div style={{
+                  fontSize: '48px',
+                  marginBottom: '16px'
+                }}>
+                  🏢
+                </div>
+                <h3 style={{
+                  fontSize: '24px',
+                  fontWeight: '600',
+                  color: '#1f2937',
+                  margin: '0 0 8px 0'
+                }}>
+                  Microsoft
+                </h3>
+                <p style={{
+                  fontSize: '14px',
+                  color: '#6b7280',
+                  textAlign: 'center',
+                  margin: 0,
+                  lineHeight: '1.5'
+                }}>
+                  微软云 相关项目经历
+                </p>
+              </div>
+              </div>
+            </>
+          ) : (
+            // Microsoft 二级卡片
+            <>
+              <div style={{
+                gridColumn: '1 / -1',
+                textAlign: 'center',
+                marginBottom: '20px'
+              }}>
+                <button
+                  onClick={handleBackToMain}
+                  style={{
+                    background: 'rgba(255,255,255,0.2)',
+                    color: '#ffffff',
+                    border: '1px solid rgba(255,255,255,0.3)',
+                    padding: '12px 32px',
+                    borderRadius: '8px',
+                    fontSize: '14px',
+                    fontWeight: '500',
+                    cursor: 'pointer',
+                    transition: 'all 0.3s ease'
+                  }}
+                  onMouseEnter={(e) => {
+                    e.currentTarget.style.background = 'rgba(255,255,255,0.3)';
+                  }}
+                  onMouseLeave={(e) => {
+                    e.currentTarget.style.background = 'rgba(255,255,255,0.2)';
+                  }}
+                >
+                  ← 返回主页
+                </button>
+              </div>
 
-          {/* ASI 卡片 */}
-          <Link 
-            to="/asi"
-            style={{
-              textDecoration: 'none',
-              display: 'block'
-            }}
-          >
-            <div style={{
-              background: '#ffffff',
-              borderRadius: '16px',
-              padding: '32px',
-              boxShadow: '0 10px 25px rgba(0,0,0,0.1)',
-              transition: 'all 0.3s ease',
-              cursor: 'pointer',
-              height: '200px',
-              display: 'flex',
-              flexDirection: 'column',
-              justifyContent: 'center',
-              alignItems: 'center'
-            }}
-            onMouseEnter={(e) => {
-              e.currentTarget.style.transform = 'translateY(-8px)';
-              e.currentTarget.style.boxShadow = '0 20px 40px rgba(0,0,0,0.15)';
-            }}
-            onMouseLeave={(e) => {
-              e.currentTarget.style.transform = 'translateY(0)';
-              e.currentTarget.style.boxShadow = '0 10px 25px rgba(0,0,0,0.1)';
-            }}
-          >
-            <div style={{
-              fontSize: '48px',
-              marginBottom: '16px'
-            }}>
-              📊
-            </div>
-            <h3 style={{
-              fontSize: '24px',
-              fontWeight: '600',
-              color: '#1f2937',
-              margin: '0 0 8px 0'
-            }}>
-              ASI 监控
-            </h3>
-            <p style={{
-              fontSize: '14px',
-              color: '#6b7280',
-              textAlign: 'center',
-              margin: 0,
-              lineHeight: '1.5'
-            }}>
-              Azure Service Infrastructure<br/>
-              服务监控与分析报告
-            </p>
-          </div>
-          </Link>
+              {/* ASI 卡片 */}
+              <div 
+                onClick={handleASIClick}
+                style={{
+                  textDecoration: 'none',
+                  display: 'block'
+                }}
+              >
+                <div style={{
+                  background: '#ffffff',
+                  borderRadius: '16px',
+                  padding: '32px',
+                  boxShadow: '0 10px 25px rgba(0,0,0,0.1)',
+                  transition: 'all 0.3s ease',
+                  cursor: 'pointer',
+                  height: '200px',
+                  display: 'flex',
+                  flexDirection: 'column',
+                  justifyContent: 'center',
+                  alignItems: 'center'
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.transform = 'translateY(-8px)';
+                  e.currentTarget.style.boxShadow = '0 20px 40px rgba(0,0,0,0.15)';
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.transform = 'translateY(0)';
+                  e.currentTarget.style.boxShadow = '0 10px 25px rgba(0,0,0,0.1)';
+                }}
+              >
+                <div style={{
+                  fontSize: '48px',
+                  marginBottom: '16px'
+                }}>
+                  📊
+                </div>
+                <h3 style={{
+                  fontSize: '24px',
+                  fontWeight: '600',
+                  color: '#1f2937',
+                  margin: '0 0 8px 0'
+                }}>
+                  ASI 监控
+                </h3>
+                <p style={{
+                  fontSize: '14px',
+                  color: '#6b7280',
+                  textAlign: 'center',
+                  margin: 0,
+                  lineHeight: '1.5'
+                }}>
+                  Azure Service Insights<br/>
+                  服务监控与分析报告
+                </p>
+              </div>
+              </div>
+            </>
+          )}
         </div>
 
         {/* 技术栈展示 */}
@@ -236,11 +325,9 @@ export default function Home() {
             flexWrap: 'wrap'
           }}>
             {[
-              { name: 'React 19.1.1', icon: '⚛️' },
-              { name: 'Vite 6.3.6', icon: '⚡' },
-              { name: 'React Router', icon: '🗺️' },
-              { name: '@xyflow/react', icon: '🔄' },
-              { name: 'ESLint', icon: '✅' }
+              { name: 'Java/C#/Python', icon: '⚛️' },
+              { name: '分布式后端服务', icon: '⚡' },
+              { name: 'AI Agent/MCP', icon: '🗺️' },
             ].map(tech => (
               <div 
                 key={tech.name}

@@ -4,7 +4,7 @@ export default function ASI() {
   return (
     <div style={{
       minHeight: '100vh',
-      background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+      background: 'linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%)',
       padding: '40px 20px'
     }}>
       <div style={{
@@ -19,16 +19,16 @@ export default function ASI() {
           <h1 style={{
             fontSize: '36px',
             fontWeight: '700',
-            color: '#ffffff',
+            color: '#1e293b',
             margin: '0 0 16px 0',
-            textShadow: '0 2px 4px rgba(0,0,0,0.1)'
+            textShadow: '0 1px 2px rgba(0,0,0,0.05)'
           }}>
             ASI (Azure Service Infrastructure)
           </h1>
           <p style={{
             fontSize: '18px',
-            color: '#ffffff',
-            opacity: 0.9,
+            color: '#64748b',
+            opacity: 1,
             margin: 0
           }}>
             Azure 服务基础架构监控与分析
@@ -41,13 +41,14 @@ export default function ASI() {
           borderRadius: '16px',
           padding: '32px',
           marginBottom: '32px',
-          boxShadow: '0 10px 25px rgba(0,0,0,0.1)',
+          boxShadow: '0 4px 20px rgba(0,0,0,0.06)',
+          border: '1px solid #e2e8f0',
           textAlign: 'center'
         }}>
           <h2 style={{
             fontSize: '24px',
             fontWeight: '600',
-            color: '#1f2937',
+            color: '#334155',
             margin: '0 0 24px 0'
           }}>
             ASI 架构结构图
@@ -59,9 +60,9 @@ export default function ASI() {
             justifyContent: 'center',
             alignItems: 'center',
             minHeight: '400px',
-            background: '#f8fafc',
+            background: '#f1f5f9',
             borderRadius: '8px',
-            border: '2px dashed #d1d5db'
+            border: '2px dashed #cbd5e1'
           }}>
             {/* 这里应该嵌入 ASI-Structure.svg */}
             <img 
@@ -79,7 +80,7 @@ export default function ASI() {
             />
             <div style={{
               display: 'none',
-              color: '#6b7280',
+              color: '#64748b',
               fontSize: '16px',
               padding: '40px'
             }}>
@@ -97,12 +98,13 @@ export default function ASI() {
           background: '#ffffff',
           borderRadius: '16px',
           padding: '32px',
-          boxShadow: '0 10px 25px rgba(0,0,0,0.1)'
+          boxShadow: '0 4px 20px rgba(0,0,0,0.06)',
+          border: '1px solid #e2e8f0'
         }}>
           <h2 style={{
             fontSize: '24px',
             fontWeight: '600',
-            color: '#1f2937',
+            color: '#334155',
             margin: '0 0 24px 0',
             textAlign: 'center'
           }}>
@@ -125,7 +127,8 @@ export default function ASI() {
               allowFullScreen={true}
               style={{
                 borderRadius: '8px',
-                boxShadow: '0 4px 15px rgba(0,0,0,0.1)',
+                boxShadow: '0 2px 10px rgba(0,0,0,0.08)',
+                border: '1px solid #e2e8f0',
                 maxWidth: '100%'
               }}
             />
@@ -135,13 +138,13 @@ export default function ASI() {
           <div style={{
             marginTop: '24px',
             padding: '16px',
-            background: '#f8fafc',
+            background: '#f1f5f9',
             borderRadius: '8px',
             textAlign: 'center'
           }}>
             <p style={{
               fontSize: '14px',
-              color: '#6b7280',
+              color: '#64748b',
               margin: 0,
               lineHeight: '1.5'
             }}>
@@ -160,21 +163,24 @@ export default function ASI() {
           <button
             onClick={() => window.history.back()}
             style={{
-              background: 'rgba(255,255,255,0.2)',
+              background: '#3b82f6',
               color: '#ffffff',
-              border: '1px solid rgba(255,255,255,0.3)',
+              border: 'none',
               padding: '12px 32px',
               borderRadius: '8px',
               fontSize: '14px',
               fontWeight: '500',
               cursor: 'pointer',
-              transition: 'all 0.3s ease'
+              transition: 'all 0.3s ease',
+              boxShadow: '0 2px 8px rgba(59, 130, 246, 0.3)'
             }}
             onMouseEnter={(e) => {
-              e.currentTarget.style.background = 'rgba(255,255,255,0.3)';
+              e.currentTarget.style.background = '#2563eb';
+              e.currentTarget.style.boxShadow = '0 4px 12px rgba(59, 130, 246, 0.4)';
             }}
             onMouseLeave={(e) => {
-              e.currentTarget.style.background = 'rgba(255,255,255,0.2)';
+              e.currentTarget.style.background = '#3b82f6';
+              e.currentTarget.style.boxShadow = '0 2px 8px rgba(59, 130, 246, 0.3)';
             }}
           >
             ← 返回上一页

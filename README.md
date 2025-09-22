@@ -1,166 +1,190 @@
-# Cunfeng-Work
+# 🚀 Cunfeng-Work
 
-🚀 基于 React + Vite 的现代化前端工作空间，专注于企业级应用和数据可视化解决方案。
+> 个人简历展示平台 
 
-## 📋 项目概述
+## 📝 项目简介
 
-这是一个现代化的前端开发项目，集成了多种企业级功能模块，包括：
+这是一个个人简历展示平台，采用现代化的前端技术栈构建，用于展示个人的工作经历和项目成果。项目采用模块化设计，支持多级导航和动态内容展示。
 
-- 🏠 **主页导航**：优雅的卡片式导航界面
-- 🏢 **Microsoft 集成**：企业级功能和服务集成
-- 📊 **ASI 监控**：Azure Service Infrastructure 监控与分析
-- 🎨 **可扩展架构**：模块化设计，便于添加新功能
+### ✨ 核心特性
+
+- 🎨 **现代化UI设计** - 渐变背景、卡片式布局、流畅动画
+- 📱 **响应式设计** - 完美适配桌面和移动设备
+- 🔄 **动态导航** - 支持二级卡片展示，无需页面跳转
+- 📊 **数据可视化** - 集成PowerBI报告和SVG图表
+- 🏗️ **模块化架构** - 易于扩展和维护
 
 ## 🛠️ 技术栈
 
-### 核心技术
-- **React 19.1.1** - 现代化 React 框架
+### 核心框架
+- **React 19.1.1** - 最新的React框架
 - **Vite 6.3.6** - 快速构建工具
 - **React Router DOM 6.23.0** - 客户端路由
+
+### 可视化组件
 - **@xyflow/react 12.8.5** - 流程图和数据可视化
 
 ### 开发工具
 - **ESLint 9.35.0** - 代码质量检查
-- **TypeScript 支持** - 类型安全开发体验
-- **模块化 CSS** - 组件级样式管理
+- **TypeScript 支持** - 类型安全开发
+- **热重载** - 开发时实时更新
 
 ## 📂 项目结构
 
 ```
 Cunfeng-Work/
-├── .github/                    # GitHub 配置文件
-│   └── copilot-instructions.md # Copilot 指令文档
-├── web/                        # Web 应用主目录
-│   ├── public/                 # 静态资源
-│   │   └── ASI-Structure.svg   # ASI 结构图
-│   ├── img/                    # 图片资源
-│   │   └── ASI/                # ASI 相关图片
-│   ├── src/                    # 源码目录
-│   │   ├── components/         # React 组件
-│   │   │   ├── Home.jsx        # 主页组件
-│   │   │   ├── Microsoft.jsx   # Microsoft 功能组件
-│   │   │   └── ASI.jsx         # ASI 监控组件
-│   │   ├── assets/             # 项目资源
-│   │   ├── App.jsx             # 应用根组件
-│   │   └── main.jsx            # 应用入口
-│   ├── package.json            # 项目依赖配置
-│   ├── vite.config.js          # Vite 配置
-│   ├── eslint.config.js        # ESLint 配置
-│   └── staticwebapp.config.json # Azure Static Web App 配置
-└── README.md                   # 项目文档
+├── 📁 .github/                    # GitHub 配置
+│   └── copilot-instructions.md    # AI 助手配置
+├── 📁 web/                        # 主应用目录
+│   ├── 📁 public/                 # 静态资源
+│   │   └── ASI-Structure.svg      # ASI架构图
+│   ├── 📁 img/ASI/               # 图片资源
+│   ├── 📁 src/                   # 源代码
+│   │   ├── 📁 components/        # React组件
+│   │   │   ├── Home.jsx          # 主页组件（支持二级导航）
+│   │   │   ├── Microsoft.jsx     # Microsoft经历组件
+│   │   │   └── ASI.jsx           # ASI监控组件
+│   │   ├── 📁 assets/            # 项目资源
+│   │   ├── App.jsx               # 应用根组件
+│   │   ├── main.jsx              # 应用入口
+│   │   └── index.css             # 全局样式
+│   ├── package.json              # 依赖配置
+│   ├── vite.config.js            # Vite配置
+│   ├── eslint.config.js          # 代码规范配置
+│   └── staticwebapp.config.json  # Azure部署配置
+└── README.md                     # 项目文档
 ```
+
+## 🎯 功能模块
+
+### 🏠 主页 (Home)
+- **双级导航系统**：
+  - 第一级：Alibaba、Microsoft 主要经历卡片
+  - 第二级：点击Microsoft后显示ASI等子模块
+- **无刷新切换**：所有导航都在同一页面完成
+- **优雅交互**：悬停效果、平滑过渡动画
+
+### 🏢 Microsoft 模块
+- **项目展示**：微软云相关项目经历
+- **二级导航**：点击后展开ASI监控等子功能
+- **返回功能**：便捷的返回主页按钮
+
+### 📊 ASI 监控模块
+- **架构图展示**：SVG格式的系统架构图
+- **PowerBI集成**：嵌入式报告展示
+- **数据可视化**：Fabric Container Service相关指标
 
 ## 🚀 快速开始
 
 ### 环境要求
-- Node.js 18+ (推荐 18.18.0 或更高版本)
-- npm 或 yarn 包管理器
-
-### 安装依赖
 ```bash
+Node.js >= 18.0.0
+npm >= 8.0.0
+```
+
+### 安装与运行
+```bash
+# 克隆项目
+git clone https://github.com/Cunfeng/Cunfeng-Work.git
+cd Cunfeng-Work
+
+# 进入应用目录
 cd web
+
+# 安装依赖
 npm install
-```
 
-### 启动开发服务器
-```bash
+# 启动开发服务器
 npm run dev
-```
 
-### 构建项目
-```bash
+# 构建生产版本
 npm run build
-```
 
-### 预览构建结果
-```bash
+# 预览构建结果
 npm run preview
 ```
 
-## 🏗️ 功能模块
+## 🎨 设计亮点
 
-### 🏠 主页 (Home)
-- 现代化的渐变背景设计
-- 卡片式导航布局
-- 响应式设计适配
-- 技术栈展示
+### 视觉设计
+- **渐变背景**：`linear-gradient(135deg, #e7e9f2ff 0%, #d3c4e2ff 100%)`
+- **卡片设计**：圆角、阴影、悬停效果
+- **图标系统**：表意清晰的emoji图标
 
-### 🏢 Microsoft 集成
-- 企业级功能模块
-- Microsoft 服务集成
-- 身份验证支持
+### 交互设计
+- **状态管理**：React Hooks管理组件状态
+- **动画效果**：CSS过渡和变换
+- **响应式布局**：Grid布局自适应
 
-### 📊 ASI 监控页面
-- **结构图展示**：居中显示 ASI-Structure.svg 架构图
-- **PowerBI 报告**：内嵌 Fabric Container Service ASI 报告
-- **响应式设计**：适配不同屏幕尺寸
-- **友好的错误处理**：文件不存在或权限不足时的提示
+### 代码架构
+- **组件化开发**：功能模块独立组件
+- **状态提升**：合理的状态管理策略
+- **事件处理**：优雅的用户交互处理
 
-### 🎨 设计特点
-- 现代化 UI/UX 设计
-- 一致的视觉风格
-- 流畅的交互动画
-- 移动端友好
+## 💡 核心实现
 
-## 📦 部署说明
+### 二级导航系统
+```jsx
+const [showMicrosoftSubCards, setShowMicrosoftSubCards] = useState(false);
+const [showASI, setShowASI] = useState(false);
 
-### Azure Static Web Apps
-项目已配置 Azure Static Web Apps 支持：
-- `staticwebapp.config.json` 配置文件
-- 自动化部署流水线
-- 客户端路由支持
+// Microsoft卡片点击 -> 显示子卡片
+const handleMicrosoftClick = () => {
+  setShowMicrosoftSubCards(true);
+};
 
-### 本地静态部署
-```bash
-npm run build
-# 构建文件位于 dist/ 目录
+// ASI卡片点击 -> 显示ASI页面
+const handleASIClick = () => {
+  setShowASI(true);
+};
 ```
+
+### 动态内容渲染
+- 条件渲染不同的卡片组合
+- 平滑的状态切换
+- 统一的返回机制
+
+## 🌟 项目特色
+
+- ✅ **用户体验优先**：无页面跳转的流畅导航
+- ✅ **现代化技术**：最新React 19和Vite 6
+- ✅ **企业级功能**：PowerBI集成和数据可视化
+- ✅ **响应式设计**：完美的移动端适配
+- ✅ **代码质量**：ESLint规范和模块化架构
+- ✅ **易于部署**：支持Azure Static Web Apps
 
 ## 🔧 开发指南
 
-### 添加新页面
-1. 在 `src/components/` 中创建新组件
-2. 在 `App.jsx` 中添加路由配置
-3. 在 `Home.jsx` 中添加导航卡片
+### 添加新模块
+1. 在 `src/components/` 创建新组件
+2. 在 `Home.jsx` 中添加对应的卡片
+3. 实现状态管理和切换逻辑
 
 ### 样式规范
-- 使用内联样式进行组件级样式管理
-- 保持一致的颜色主题
+- 使用内联样式保持组件独立性
+- 保持设计系统的一致性
 - 响应式设计优先
 
-### 代码质量
-- 运行 `npm run lint` 检查代码质量
-- 遵循 React Hooks 最佳实践
-- 保持组件的单一职责原则
+### 构建部署
+```bash
+# 构建
+npm run build
 
-## 🌟 主要特性
+# 预览
+npm run preview
 
-- ✅ **现代化技术栈**：使用最新的 React 19 和 Vite 6
-- ✅ **企业级集成**：支持 Microsoft 服务和 PowerBI 报告
-- ✅ **数据可视化**：集成 React Flow 用于图表展示
-- ✅ **响应式设计**：完美适配桌面和移动设备
-- ✅ **模块化架构**：易于扩展和维护
-- ✅ **代码质量保障**：ESLint 和 TypeScript 支持
-
-## 🤝 贡献指南
-
-1. Fork 项目仓库
-2. 创建功能分支 (`git checkout -b feature/AmazingFeature`)
-3. 提交更改 (`git commit -m 'Add some AmazingFeature'`)
-4. 推送到分支 (`git push origin feature/AmazingFeature`)
-5. 开启 Pull Request
-
-## 📄 许可证
-
-本项目采用 MIT 许可证 - 查看 [LICENSE](LICENSE) 文件了解详情。
+# 部署到Azure Static Web Apps
+# 使用 staticwebapp.config.json 配置
+```
 
 ## 📞 联系方式
 
-如有问题或建议，请通过以下方式联系：
-
-- 📧 Email: [你的邮箱]
-- 🐙 GitHub Issues: [项目 Issues 页面]
+- 📧 **邮箱**：[你的邮箱]
+- 🌐 **GitHub**：[GitHub 链接]
+- 💼 **LinkedIn**：[LinkedIn 链接]
 
 ---
 
-⭐ 如果这个项目对您有帮助，请给它一个星标！
+*该项目展示了从阿里云到微软云的职业发展历程，以及在Azure Service Infrastructure方面的专业技能。*
+
+⭐ **如果这个项目对你有帮助，请给它一个星标！**
