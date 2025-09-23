@@ -23,7 +23,7 @@ export default function ASI() {
             margin: '0 0 16px 0',
             textShadow: '0 1px 2px rgba(0,0,0,0.05)'
           }}>
-            ASI (Azure Service Infrastructure)
+            ASI (Azure Service Insights)
           </h1>
           <p style={{
             fontSize: '18px',
@@ -31,7 +31,7 @@ export default function ASI() {
             opacity: 1,
             margin: 0
           }}>
-            Azure 服务基础架构监控与分析
+            Azure 服务洞察看板
           </p>
         </div>
 
@@ -51,7 +51,7 @@ export default function ASI() {
             color: '#334155',
             margin: '0 0 24px 0'
           }}>
-            ASI 架构结构图
+            ASI 业务架构图
           </h2>
           
           {/* SVG 图片容器 */}
