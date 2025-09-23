@@ -108,7 +108,7 @@ export default function ASI() {
             margin: '0 0 24px 0',
             textAlign: 'center'
           }}>
-            Fabric Container Service ASI Report
+            ASI 使用报告
           </h2>
           
           {/* PowerBI iframe 容器 */}

@@ -128,12 +128,11 @@ export default function Home() {
                   e.currentTarget.style.boxShadow = '0 10px 25px rgba(0,0,0,0.1)';
                 }}
               >
-                <div style={{
-                  fontSize: '48px',
-                  marginBottom: '16px'
-                }}>
-                  🎨
-                </div>
+                <img
+                  src={require('../../img/Others/Alibaba.png')}
+                  alt="Alibaba"
+                  style={{ width: 48, height: 48, marginBottom: 16, objectFit: 'contain' }}
+                />
                 <h3 style={{
                   fontSize: '24px',
                   fontWeight: '600',
@@ -184,12 +183,11 @@ export default function Home() {
                   e.currentTarget.style.boxShadow = '0 10px 25px rgba(0,0,0,0.1)';
                 }}
               >
-                <div style={{
-                  fontSize: '48px',
-                  marginBottom: '16px'
-                }}>
-                  🏢
-                </div>
+                <img
+                  src={require('../../img/Others/Microsoft.svg')}
+                  alt="Microsoft"
+                  style={{ width: 48, height: 48, marginBottom: 16, objectFit: 'contain' }}
+                />
                 <h3 style={{
                   fontSize: '24px',
                   fontWeight: '600',
