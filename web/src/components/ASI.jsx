@@ -93,6 +93,64 @@ export default function ASI() {
           </div>
         </div>
 
+        {/* ASI 数据源 */}
+        <div style={{
+          background: '#ffffff',
+          borderRadius: '16px',
+          padding: '32px',
+          marginBottom: '32px',
+          boxShadow: '0 4px 20px rgba(0,0,0,0.06)',
+          border: '1px solid #e2e8f0',
+          textAlign: 'center'
+        }}>
+          <h2 style={{
+            fontSize: '24px',
+            fontWeight: '600',
+            color: '#334155',
+            margin: '0 0 24px 0'
+          }}>
+            ASI 数据源
+          </h2>
+          
+          {/* ASI-Telemetry 图片容器 */}
+          <div style={{
+            display: 'flex',
+            justifyContent: 'center',
+            alignItems: 'center',
+            minHeight: '400px',
+            background: '#f1f5f9',
+            borderRadius: '8px',
+            border: '2px dashed #cbd5e1'
+          }}>
+            {/* 这里嵌入 ASI-Telemetry.png */}
+            <img 
+              src="/ASI-Telemetry.png" 
+              alt="ASI Telemetry Data Sources"
+              style={{
+                maxWidth: '100%',
+                maxHeight: '500px',
+                objectFit: 'contain'
+              }}
+              onError={(e) => {
+                e.target.style.display = 'none';
+                e.target.nextSibling.style.display = 'block';
+              }}
+            />
+            <div style={{
+              display: 'none',
+              color: '#64748b',
+              fontSize: '16px',
+              padding: '40px'
+            }}>
+              <div style={{ fontSize: '48px', marginBottom: '16px' }}>📈</div>
+              <p>ASI-Telemetry.png</p>
+              <p style={{ fontSize: '14px', marginTop: '8px' }}>
+                请将 ASI-Telemetry.png 文件放置在 public 目录中
+              </p>
+            </div>
+          </div>
+        </div>
+
         {/* PowerBI 报告 */}
         <div style={{
           background: '#ffffff',
