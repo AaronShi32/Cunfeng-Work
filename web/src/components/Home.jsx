@@ -1,5 +1,7 @@
 
 import React, { useState } from 'react';
+import alibabaLogo from '../../img/Others/Alibaba.png';
+import microsoftLogo from '../../img/Others/Microsoft.svg';
 import { Link } from 'react-router-dom';
 import ASI from './ASI';
 
@@ -129,7 +131,7 @@ export default function Home() {
                 }}
               >
                 <img
-                  src={require('../../img/Others/Alibaba.png')}
+                  src={alibabaLogo}
                   alt="Alibaba"
                   style={{ width: 48, height: 48, marginBottom: 16, objectFit: 'contain' }}
                 />
@@ -184,7 +186,7 @@ export default function Home() {
                 }}
               >
                 <img
-                  src={require('../../img/Others/Microsoft.svg')}
+                  src={microsoftLogo}
                   alt="Microsoft"
                   style={{ width: 48, height: 48, marginBottom: 16, objectFit: 'contain' }}
                 />
