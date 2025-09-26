@@ -2,7 +2,7 @@
 export const scoutConfig = {
   title: {
     main: "Scout (Service Monitoring & Analytics)",
-    subtitle: "服务监控与分析平台"
+    subtitle: "AI 工具"
   },
   
   sections: [
