@@ -535,8 +535,9 @@ export default function Home() {
           }}>
             {[
               { name: 'Java/C#/Python', icon: '⚛️' },
-              { name: '分布式后端服务', icon: '⚡' },
+              { name: 'Distributed Service', icon: '⚡' },
               { name: 'AI Agent/MCP', icon: '🗺️' },
+              { name: 'Azure/Alibaba Cloud', icon: '☁️' },
             ].map(tech => (
               <div 
                 key={tech.name}
