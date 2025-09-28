@@ -513,7 +513,7 @@ export default function Home() {
 
         {/* 技术栈展示 */}
         <div style={{
-          background: 'rgba(255,255,255,0.1)',
+          background: 'rgba(0,0,0,0.3)',
           backdropFilter: 'blur(20px)',
           borderRadius: '16px',
           padding: '32px',
@@ -531,7 +531,8 @@ export default function Home() {
             display: 'flex',
             justifyContent: 'center',
             gap: '24px',
-            flexWrap: 'wrap'
+            flexWrap: 'nowrap',
+            overflowX: 'auto'
           }}>
             {[
               { name: 'Java/C#/Python', icon: '⚛️' },
