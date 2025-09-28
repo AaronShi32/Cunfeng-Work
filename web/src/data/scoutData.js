@@ -1,7 +1,7 @@
 // Scout 页面的所有数据和配置
 export const scoutConfig = {
   title: {
-    main: "Scout (Service Monitoring & Analytics)",
+    main: "Scout (AzureData-AITools)",
     subtitle: "AI 工具"
   },
   
@@ -11,26 +11,26 @@ export const scoutConfig = {
       title: "Scout 架构图",
       type: "image",
       content: {
-        src: "/Scout-Architecture.svg",
+        src: "/Scout-Arch.png",
         alt: "Scout Architecture Diagram",
         fallback: {
           icon: "🏗️",
-          text: "Scout-Architecture.svg",
-          description: "请将 Scout-Architecture.svg 文件放置在 public 目录中"
+          text: "Scout-Arch.png",
+          description: "请将 Scout-Arch.png 文件放置在 public 目录中"
         }
       }
     },
     {
-      id: "monitoring",
-      title: "监控数据流",
+      id: "persona",
+      title: "Scout Persona",
       type: "image",
       content: {
-        src: "/Scout-Monitoring.png",
-        alt: "Scout Monitoring Data Flow",
+        src: "/Scout-Persona.png",
+        alt: "Scout Persona Diagram",
         fallback: {
-          icon: "📊",
-          text: "Scout-Monitoring.png",
-          description: "请将 Scout-Monitoring.png 文件放置在 public 目录中"
+          icon: "�",
+          text: "Scout-Persona.png",
+          description: "请将 Scout-Persona.png 文件放置在 public 目录中"
         }
       }
     }

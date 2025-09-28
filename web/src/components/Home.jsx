@@ -154,7 +154,7 @@ export default function Home() {
     <div style={{ 
       fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif',
       minHeight: '100vh',
-      background: 'linear-gradient(135deg, #e7e9f2ff 0%, #d3c4e2ff 100%)',
+      background: 'linear-gradient(135deg, #e7e9f2ff 0%, #353435ff 100%)',
       padding: '60px 40px'
     }}>
       <div style={{
@@ -436,7 +436,7 @@ export default function Home() {
                   color: '#1f2937',
                   margin: '0 0 8px 0'
                 }}>
-                  Scout 监控
+                  Scout
                 </h3>
                 <p style={{
                   fontSize: '14px',
@@ -445,8 +445,8 @@ export default function Home() {
                   margin: 0,
                   lineHeight: '1.5'
                 }}>
-                  Service Monitoring & Analytics<br/>
-                  服务监控与分析平台
+                  AzureData-AI Tools<br/>
+                  智能分析引擎
                 </p>
               </div>
               </div>
@@ -493,7 +493,7 @@ export default function Home() {
                   color: '#1f2937',
                   margin: '0 0 8px 0'
                 }}>
-                  FCS 监控
+                  FCS 服务
                 </h3>
                 <p style={{
                   fontSize: '14px',
@@ -503,7 +503,7 @@ export default function Home() {
                   lineHeight: '1.5'
                 }}>
                   Fabric Container Service<br/>
-                  容器服务监控与管理
+                  容器资源管理
                 </p>
               </div>
               </div>
@@ -530,9 +530,9 @@ export default function Home() {
           <div style={{
             display: 'flex',
             justifyContent: 'center',
-            gap: '24px',
-            flexWrap: 'nowrap',
-            overflowX: 'auto'
+            gap: '16px',
+            flexWrap: 'wrap',
+            alignItems: 'center'
           }}>
             {[
               { name: 'Java/C#/Python', icon: '⚛️' },
@@ -548,7 +548,8 @@ export default function Home() {
                   borderRadius: '20px',
                   color: '#ffffff',
                   fontSize: '14px',
-                  fontWeight: '500'
+                  fontWeight: '500',
+                  whiteSpace: 'nowrap'
                 }}
               >
                 <span style={{ marginRight: '8px' }}>{tech.icon}</span>
