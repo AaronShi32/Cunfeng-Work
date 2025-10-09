@@ -122,7 +122,7 @@ export default function Microsoft() {
               color: '#1f2937',
               margin: '0 0 8px 0'
             }}>
-              ASI 监控
+              ASI
             </h3>
             <p style={{
               fontSize: '14px',

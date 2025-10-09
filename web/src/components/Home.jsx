@@ -169,7 +169,7 @@ export default function Home() {
           margin: '0 0 20px 0',
           textShadow: '0 2px 4px rgba(0,0,0,0.1)'
         }}>
-          Cunfeng-Work
+          Cunfeng Shi
         </h1>
         
         <p style={{
@@ -179,7 +179,7 @@ export default function Home() {
           margin: '0 0 60px 0',
           lineHeight: '1.6'
         }}>
-          简历
+          工作项目经历
         </p>
 
         <div style={{
@@ -197,7 +197,7 @@ export default function Home() {
             <>
               {/* Alibaba 卡片 */}
               <Link 
-                to="/samples"
+                to="/alibaba"
                 style={{
                   textDecoration: 'none',
                   display: 'block'
@@ -245,7 +245,7 @@ export default function Home() {
                   margin: 0,
                   lineHeight: '1.5'
                 }}>
-                  阿里云 相关项目经历<br/>
+                  阿里云<br/>
                 </p>
               </div>
               </Link>
@@ -300,7 +300,7 @@ export default function Home() {
                   margin: 0,
                   lineHeight: '1.5'
                 }}>
-                  微软云 相关项目经历
+                  微软云
                 </p>
               </div>
               </div>
@@ -379,7 +379,7 @@ export default function Home() {
                   color: '#1f2937',
                   margin: '0 0 8px 0'
                 }}>
-                  ASI 监控
+                  ASI
                 </h3>
                 <p style={{
                   fontSize: '14px',
@@ -493,7 +493,7 @@ export default function Home() {
                   color: '#1f2937',
                   margin: '0 0 8px 0'
                 }}>
-                  FCS 服务
+                  FCS
                 </h3>
                 <p style={{
                   fontSize: '14px',
@@ -503,7 +503,7 @@ export default function Home() {
                   lineHeight: '1.5'
                 }}>
                   Fabric Container Service<br/>
-                  容器资源管理
+                  容器资源管理服务
                 </p>
               </div>
               </div>
@@ -536,7 +536,7 @@ export default function Home() {
           }}>
             {[
               { name: 'Java/C#/Python', icon: '⚛️' },
-              { name: 'Distributed Service', icon: '⚡' },
+              { name: '分布式服务', icon: '⚡' },
               { name: 'AI Agent/MCP', icon: '🗺️' },
               { name: 'Azure/Alibaba Cloud', icon: '☁️' },
             ].map(tech => (
