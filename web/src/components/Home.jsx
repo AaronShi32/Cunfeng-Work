@@ -228,7 +228,7 @@ export default function Home() {
                 <img
                   src={alibabaLogo}
                   alt="Alibaba"
-                  style={{ width: 48, height: 48, marginBottom: 16, objectFit: 'contain' }}
+                  style={{ width: 64, height: 64, marginBottom: 16, objectFit: 'contain' }}
                 />
                 <h3 style={{
                   fontSize: '24px',

@@ -26,7 +26,7 @@ export default function ENI({ onBack }) {
             color: '#1e293b',
             margin: '0 0 16px 0'
           }}>
-            ENI (弹性网络接口)
+            ENI (弹性网卡)
           </h1>
           <p style={{
             fontSize: '18px',
@@ -34,7 +34,7 @@ export default function ENI({ onBack }) {
             margin: 0,
             lineHeight: '1.6'
           }}>
-            阿里云弹性网络接口项目经历与技术实现
+            阿里云弹性网卡项目经历与技术实现
           </p>
         </div>
 
@@ -84,7 +84,7 @@ export default function ENI({ onBack }) {
                 lineHeight: '1.6',
                 margin: '0 0 16px 0'
               }}>
-                弹性网络接口（ENI）是阿里云提供的一种虚拟网络接口，可以在专有网络VPC中自由移动，提供高可用性和灵活性。
+                弹性网卡（ENI）是阿里云提供的一种虚拟网络接口，可以在专有网络VPC中自由移动，提供高可用性和灵活性。
               </p>
               <p style={{
                 fontSize: '16px',
@@ -92,7 +92,7 @@ export default function ENI({ onBack }) {
                 lineHeight: '1.6',
                 margin: '0 0 24px 0'
               }}>
-                在项目中负责 ENI 的核心功能开发，包括网络接口的创建、绑定、解绑、以及跨可用区迁移等关键特性。
+                在项目中负责 ENI 的核心功能开发，包括网络接口的创建、绑定、解绑、RDMA 等关键特性。
               </p>
             </div>
 

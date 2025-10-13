@@ -104,7 +104,12 @@ export default function Alibaba({ onBack }) {
             >
               <div style={{
                 fontSize: '48px',
-                marginBottom: '16px'
+                marginBottom: '16px',
+                lineHeight: '1',
+                display: 'flex',
+                justifyContent: 'center',
+                alignItems: 'center',
+                height: '48px'
               }}>
                 🌐
               </div>
@@ -161,7 +166,12 @@ export default function Alibaba({ onBack }) {
             >
               <div style={{
                 fontSize: '48px',
-                marginBottom: '16px'
+                marginBottom: '16px',
+                lineHeight: '1',
+                display: 'flex',
+                justifyContent: 'center',
+                alignItems: 'center',
+                height: '48px'
               }}>
                 🏗️
               </div>

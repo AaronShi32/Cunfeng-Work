@@ -115,7 +115,15 @@ export default function Microsoft() {
               e.currentTarget.style.boxShadow = '0 10px 25px rgba(0,0,0,0.1)';
             }}
           >
-            <div style={{ fontSize: '48px', marginBottom: '16px' }}>📊</div>
+            <div style={{ 
+              fontSize: '48px', 
+              marginBottom: '16px',
+              lineHeight: '1',
+              display: 'flex',
+              justifyContent: 'center',
+              alignItems: 'center',
+              height: '48px'
+            }}>📊</div>
             <h3 style={{
               fontSize: '24px',
               fontWeight: '600',
@@ -156,7 +164,15 @@ export default function Microsoft() {
               e.currentTarget.style.boxShadow = '0 10px 25px rgba(0,0,0,0.1)';
             }}
           >
-            <div style={{ fontSize: '48px', marginBottom: '16px' }}>🔍</div>
+            <div style={{ 
+              fontSize: '48px', 
+              marginBottom: '16px',
+              lineHeight: '1',
+              display: 'flex',
+              justifyContent: 'center',
+              alignItems: 'center',
+              height: '48px'
+            }}>🔍</div>
             <h3 style={{
               fontSize: '24px',
               fontWeight: '600',
@@ -197,7 +213,15 @@ export default function Microsoft() {
               e.currentTarget.style.boxShadow = '0 10px 25px rgba(0,0,0,0.1)';
             }}
           >
-            <div style={{ fontSize: '48px', marginBottom: '16px' }}>🐳</div>
+            <div style={{ 
+              fontSize: '48px', 
+              marginBottom: '16px',
+              lineHeight: '1',
+              display: 'flex',
+              justifyContent: 'center',
+              alignItems: 'center',
+              height: '48px'
+            }}>🐳</div>
             <h3 style={{
               fontSize: '24px',
               fontWeight: '600',

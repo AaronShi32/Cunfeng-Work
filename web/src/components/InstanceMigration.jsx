@@ -92,7 +92,7 @@ export default function InstanceMigration({ onBack }) {
                 lineHeight: '1.6',
                 margin: '0 0 16px 0'
               }}>
-                在项目中主要负责迁移策略设计、数据一致性保障、以及迁移过程中的状态管理和异常处理机制。
+                在项目中主要负责迁移策略设计、数据一致性保障、网络类型转换、以及迁移过程中的状态管理和异常处理机制。
               </p>
               <p style={{
                 fontSize: '16px',
@@ -100,7 +100,7 @@ export default function InstanceMigration({ onBack }) {
                 lineHeight: '1.6',
                 margin: '0 0 24px 0'
               }}>
-                实现了零停机迁移、增量数据同步、以及迁移过程的实时监控等核心功能。
+                实现了批量整体、迁移网络互通、增量数据同步、以及迁移过程的实时监控等核心功能。
               </p>
             </div>
 
