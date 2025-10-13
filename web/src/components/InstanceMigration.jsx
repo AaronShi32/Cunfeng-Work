@@ -179,7 +179,7 @@ export default function InstanceMigration({ onBack }) {
               </a>
 
               <a
-                href="https://help.aliyun.com/zh/ecs/user-guide/disaster-recovery-solutions"
+                href="https://help.aliyun.com/zh/ecs/user-guide/migrate-ecs-instances-from-the-classic-network-to-a-vpc"
                 target="_blank"
                 rel="noopener noreferrer"
                 style={{
@@ -205,7 +205,7 @@ export default function InstanceMigration({ onBack }) {
                 }}
               >
                 <span style={{ marginRight: '8px' }}>🛡️</span>
-                灾难恢复解决方案
+                ECS 实例从经典网络迁移到专有网络
               </a>
             </div>
           </div>
