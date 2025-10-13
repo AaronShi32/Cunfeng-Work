@@ -34,44 +34,43 @@ export default function Alibaba({ onBack }) {
           在阿里云平台参与的核心项目与技术实现
         </p>
 
+        {/* 返回按钮 */}
         <div style={{
-          display: 'grid',
-          gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))',
-          gap: '24px',
-          marginBottom: '40px',
-          maxWidth: '1000px',
-          margin: '0 auto 40px auto'
+          textAlign: 'center',
+          marginBottom: '20px'
         }}>
-          {/* 返回按钮 */}
-          <div style={{
-            gridColumn: '1 / -1',
-            textAlign: 'center',
-            marginBottom: '20px'
-          }}>
-            <button
-              onClick={onBack || (() => window.history.back())}
-              style={{
-                background: 'rgba(255,255,255,0.2)',
-                color: '#ffffff',
-                border: '1px solid rgba(255,255,255,0.3)',
-                padding: '12px 32px',
-                borderRadius: '8px',
-                fontSize: '14px',
-                fontWeight: '500',
-                cursor: 'pointer',
-                transition: 'all 0.3s ease'
-              }}
-              onMouseEnter={(e) => {
-                e.currentTarget.style.background = 'rgba(255,255,255,0.3)';
-              }}
-              onMouseLeave={(e) => {
-                e.currentTarget.style.background = 'rgba(255,255,255,0.2)';
-              }}
-            >
-              ← 返回主页
-            </button>
-          </div>
+          <button
+            onClick={onBack || (() => window.history.back())}
+            style={{
+              background: 'rgba(255,255,255,0.2)',
+              color: '#ffffff',
+              border: '1px solid rgba(255,255,255,0.3)',
+              padding: '12px 32px',
+              borderRadius: '8px',
+              fontSize: '14px',
+              fontWeight: '500',
+              cursor: 'pointer',
+              transition: 'all 0.3s ease'
+            }}
+            onMouseEnter={(e) => {
+              e.currentTarget.style.background = 'rgba(255,255,255,0.3)';
+            }}
+            onMouseLeave={(e) => {
+              e.currentTarget.style.background = 'rgba(255,255,255,0.2)';
+            }}
+          >
+            ← 返回主页
+          </button>
+        </div>
 
+        {/* 卡片区块居中 */}
+        <div style={{
+          display: 'flex',
+          justifyContent: 'center',
+          alignItems: 'center',
+          gap: '32px',
+          marginBottom: '40px',
+        }}>
           {/* ENI 项目卡片 */}
           <Link 
             to="/samples"
@@ -88,6 +87,7 @@ export default function Alibaba({ onBack }) {
               transition: 'all 0.3s ease',
               cursor: 'pointer',
               height: '200px',
+              width: '320px',
               display: 'flex',
               flexDirection: 'column',
               justifyContent: 'center',
@@ -150,6 +150,7 @@ export default function Alibaba({ onBack }) {
               transition: 'all 0.3s ease',
               cursor: 'pointer',
               height: '200px',
+              width: '320px',
               display: 'flex',
               flexDirection: 'column',
               justifyContent: 'center',
@@ -195,6 +196,54 @@ export default function Alibaba({ onBack }) {
               </p>
             </div>
           </Link>
+        </div>
+        {/* 技术栈展示 */}
+        <div style={{
+          background: 'rgba(0,0,0,0.3)',
+          backdropFilter: 'blur(20px)',
+          borderRadius: '16px',
+          padding: '32px',
+          border: '1px solid rgba(255,255,255,0.2)',
+          marginTop: '40px'
+        }}>
+          <h3 style={{
+            fontSize: '20px',
+            fontWeight: '600',
+            color: '#ffffff',
+            margin: '0 0 20px 0'
+          }}>
+            技术栈
+          </h3>
+          <div style={{
+            display: 'flex',
+            justifyContent: 'center',
+            gap: '16px',
+            flexWrap: 'wrap',
+            alignItems: 'center'
+          }}>
+            {[
+              { name: 'Java/C#/Python', icon: '⚛️' },
+              { name: 'Distributed System', icon: '⚡' },
+              { name: 'AI Agent/MCP', icon: '🗺️' },
+              { name: 'Azure/Alibaba Cloud', icon: '☁️' },
+            ].map(tech => (
+              <div 
+                key={tech.name}
+                style={{
+                  background: 'rgba(255,255,255,0.1)',
+                  padding: '8px 16px',
+                  borderRadius: '20px',
+                  color: '#ffffff',
+                  fontSize: '14px',
+                  fontWeight: '500',
+                  whiteSpace: 'nowrap'
+                }}
+              >
+                <span style={{ marginRight: '8px' }}>{tech.icon}</span>
+                {tech.name}
+              </div>
+            ))}
+          </div>
         </div>
       </div>
     </div>
