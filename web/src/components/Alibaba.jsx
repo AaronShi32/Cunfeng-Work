@@ -34,43 +34,39 @@ export default function Alibaba({ onBack }) {
           在阿里云平台参与的核心项目与技术实现
         </p>
 
-        {/* 返回按钮 */}
         <div style={{
-          textAlign: 'center',
-          marginBottom: '20px'
-        }}>
-          <button
-            onClick={onBack || (() => window.history.back())}
-            style={{
-              background: 'rgba(255,255,255,0.2)',
-              color: '#ffffff',
-              border: '1px solid rgba(255,255,255,0.3)',
-              padding: '12px 32px',
-              borderRadius: '8px',
-              fontSize: '14px',
-              fontWeight: '500',
-              cursor: 'pointer',
-              transition: 'all 0.3s ease'
-            }}
-            onMouseEnter={(e) => {
-              e.currentTarget.style.background = 'rgba(255,255,255,0.3)';
-            }}
-            onMouseLeave={(e) => {
-              e.currentTarget.style.background = 'rgba(255,255,255,0.2)';
-            }}
-          >
-            ← 返回主页
-          </button>
-        </div>
-
-        {/* 卡片区块居中 */}
-        <div style={{
-          display: 'flex',
-          justifyContent: 'center',
-          alignItems: 'center',
-          gap: '32px',
           marginBottom: '40px',
         }}>
+          <div style={{ textAlign: 'center', marginBottom: '20px' }}>
+            <button
+              onClick={onBack || (() => window.history.back())}
+              style={{
+                background: 'rgba(255,255,255,0.2)',
+                color: '#ffffff',
+                border: '1px solid rgba(255,255,255,0.3)',
+                padding: '12px 32px',
+                borderRadius: '8px',
+                fontSize: '14px',
+                fontWeight: '500',
+                cursor: 'pointer',
+                transition: 'all 0.3s ease'
+              }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.background = 'rgba(255,255,255,0.3)';
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.background = 'rgba(255,255,255,0.2)';
+              }}
+            >
+              ← 返回主页
+            </button>
+          </div>
+          <div style={{
+            display: 'flex',
+            justifyContent: 'center',
+            alignItems: 'center',
+            gap: '32px',
+          }}>
           {/* ENI 项目卡片 */}
           <Link 
             to="/samples"
@@ -197,6 +193,8 @@ export default function Alibaba({ onBack }) {
             </div>
           </Link>
         </div>
+        </div>
+
         {/* 技术栈展示 */}
         <div style={{
           background: 'rgba(0,0,0,0.3)',

@@ -58,34 +58,33 @@ export default function Microsoft() {
     <div style={{ 
       fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif',
       minHeight: '100vh',
-      background: 'linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%)',
-      padding: '40px 20px'
+      background: 'linear-gradient(135deg, #e7e9f2ff 0%, #353435ff 100%)',
+      padding: '60px 40px'
     }}>
       <div style={{
-        maxWidth: '1200px',
-        margin: '0 auto'
+        maxWidth: '800px',
+        margin: '0 auto',
+        textAlign: 'center'
       }}>
-        {/* 页面标题 */}
-        <div style={{
-          textAlign: 'center',
-          marginBottom: '40px'
+        <h1 style={{
+          fontSize: '56px',
+          fontWeight: '700',
+          color: '#ffffff',
+          margin: '0 0 20px 0',
+          textShadow: '0 2px 4px rgba(0,0,0,0.1)'
         }}>
-          <h1 style={{
-            fontSize: '36px',
-            fontWeight: '700',
-            color: '#0f172a',
-            margin: '0 0 16px 0'
-          }}>
-            Microsoft 项目
-          </h1>
-          <p style={{
-            fontSize: '18px',
-            color: '#475569',
-            margin: 0
-          }}>
-            微软云相关项目经历
-          </p>
-        </div>
+          微软工作经历
+        </h1>
+        
+        <p style={{
+          fontSize: '20px',
+          color: '#ffffff',
+          opacity: 0.9,
+          margin: '0 0 60px 0',
+          lineHeight: '1.6'
+        }}>
+          在微软平台参与的核心项目与技术实现
+        </p>
 
         {/* 项目卡片 */}
         <div style={{

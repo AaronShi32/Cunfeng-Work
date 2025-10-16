@@ -1,3 +1,8 @@
+import fabricDEWorkflow from '../../img/FCS/Fabric-DE-Workflow.jpg';
+import fcsComponent from '../../img/FCS/FCS Component.png';
+import controlPlaneWorkflow from '../../img/FCS/PYNB-ControlPlane-Workflow.png';
+import dataPlaneWorkflow from '../../img/FCS/PYNB-DataPlane-Workflow.png';
+
 // FCS 页面的所有数据和配置
 export const fcsConfig = {
   title: {
@@ -8,29 +13,59 @@ export const fcsConfig = {
   sections: [
     {
       id: "architecture",
-      title: "FCS 架构图",
+      title: "Fabric Data Engineering 架构",
       type: "image",
       content: {
-        src: "/FCS-Architecture.svg",
-        alt: "FCS Architecture Diagram",
+        src: fabricDEWorkflow,
+        alt: "Fabric-DE-Workflow",
+        link: "https://learn.microsoft.com/en-us/fabric/data-engineering/",
+        linkText: "Fabric Data Engineering 官方文档",
         fallback: {
           icon: "🐳",
-          text: "FCS-Architecture.svg",
-          description: "请将 FCS-Architecture.svg 文件放置在 public 目录中"
+          text: "Fabric-DE-Workflow.jpg",
+          description: "Fabric Data Engineering 架构"
         }
       }
     },
     {
       id: "lifecycle",
-      title: "容器生命周期管理",
+      title: "Fabric Container Service 架构",
       type: "image",
       content: {
-        src: "/FCS-Lifecycle.png",
-        alt: "FCS Container Lifecycle Management",
+        src: fcsComponent,
+        alt: "FCS Component",
         fallback: {
           icon: "♻️",
-          text: "FCS-Lifecycle.png",
-          description: "请将 FCS-Lifecycle.png 文件放置在 public 目录中"
+          text: "FCS Component.png",
+          description: "Fabric Container Service 架构"
+        }
+      }
+    },
+    {
+      id: "controlplane",
+      title: "PythonNotebook 控制面工作流",
+      type: "image",
+      content: {
+        src: controlPlaneWorkflow,
+        alt: "ControlPlane-Workflow",
+        fallback: {
+          icon: "⚙️",
+          text: "PYNB-ControlPlane-Workflow.png",
+          description: "控制面工作流图"
+        }
+      }
+    },
+    {
+      id: "dataplane",
+      title: "PythonNotebook 数据面工作流",
+      type: "image",
+      content: {
+        src: dataPlaneWorkflow,
+        alt: "DataPlane-Workflow",
+        fallback: {
+          icon: "📊",
+          text: "PYNB-DataPlane-Workflow.png",
+          description: "数据面工作流图"
         }
       }
     }

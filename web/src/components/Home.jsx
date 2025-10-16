@@ -250,9 +250,9 @@ export default function Home() {
               </div>
               </Link>
 
-              {/* Microsoft 卡片 - 修改为点击事件 */}
-              <div 
-                onClick={handleMicrosoftClick}
+              {/* Microsoft 卡片 - 使用路由链接 */}
+              <Link 
+                to="/microsoft"
                 style={{
                   textDecoration: 'none',
                   display: 'block'
@@ -303,7 +303,7 @@ export default function Home() {
                   微软云
                 </p>
               </div>
-              </div>
+              </Link>
             </>
           ) : (
             // Microsoft 二级卡片
