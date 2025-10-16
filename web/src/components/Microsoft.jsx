@@ -1,20 +1,8 @@
 
 import React, { useState } from 'react';
-import { ReactFlow } from '@xyflow/react';
 import ASI from './ASI';
 import Scout from './Scout';
 import FCS from './FCS';
-
-const nodes = [
-  { id: '1', type: 'input', data: { label: 'Start Node' }, position: { x: 250, y: 5 } },
-  { id: '2', data: { label: 'Middle Node' }, position: { x: 100, y: 100 } },
-  { id: '3', data: { label: 'End Node' }, position: { x: 400, y: 100 } },
-];
-
-const edges = [
-  { id: 'e1-2', source: '1', target: '2', animated: true },
-  { id: 'e2-3', source: '2', target: '3' },
-];
 
 export default function Microsoft() {
   const [showASI, setShowASI] = useState(false);
@@ -238,32 +226,6 @@ export default function Microsoft() {
               Fabric Container Service<br/>
               容器服务管理平台
             </p>
-          </div>
-        </div>
-
-        {/* React Flow 演示 */}
-        <div style={{
-          background: '#ffffff',
-          borderRadius: '16px',
-          padding: '32px',
-          boxShadow: '0 10px 25px rgba(0,0,0,0.1)'
-        }}>
-          <h2 style={{
-            fontSize: '24px',
-            fontWeight: '600',
-            color: '#1f2937',
-            margin: '0 0 24px 0',
-            textAlign: 'center'
-          }}>
-            React Flow Demo
-          </h2>
-          <div style={{ height: '400px' }}>
-            <ReactFlow 
-              nodes={nodes} 
-              edges={edges} 
-              fitView 
-              style={{ background: '#f8fafc' }} 
-            />
           </div>
         </div>
       </div>

@@ -37,7 +37,7 @@ export default function Alibaba({ onBack }) {
         <div style={{
           marginBottom: '40px',
         }}>
-          <div style={{ textAlign: 'center', marginBottom: '20px' }}>
+          <div style={{ textAlign: 'center', marginBottom: '10px' }}>
             <button
               onClick={onBack || (() => window.history.back())}
               style={{
