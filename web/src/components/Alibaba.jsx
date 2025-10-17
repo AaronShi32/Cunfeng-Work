@@ -6,7 +6,7 @@ export default function Alibaba({ onBack }) {
     <div style={{ 
       fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif',
       minHeight: '100vh',
-      background: 'linear-gradient(135deg, #e7e9f2ff 0%, #353435ff 100%)',
+      background: 'linear-gradient(135deg, #999db3ff 0%, #030303ff 100%)',
       padding: '60px 40px'
     }}>
       <div style={{
@@ -21,7 +21,7 @@ export default function Alibaba({ onBack }) {
           margin: '0 0 20px 0',
           textShadow: '0 2px 4px rgba(0,0,0,0.1)'
         }}>
-          阿里云项目经历
+          阿里云工作经历
         </h1>
         
         <p style={{

@@ -49,7 +49,7 @@ export default function Home() {
           <button
             onClick={handleBackToMain}
             style={{
-              background: 'rgba(255,255,255,0.2)',
+              background: 'rgba(47, 41, 41, 0.17)',
               color: '#ffffff',
               border: '1px solid rgba(255,255,255,0.3)',
               padding: '12px 32px',
@@ -154,7 +154,7 @@ export default function Home() {
     <div style={{ 
       fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif',
       minHeight: '100vh',
-      background: 'linear-gradient(135deg, #e7e9f2ff 0%, #353435ff 100%)',
+      background: 'linear-gradient(135deg, #999db3ff 0%, #030303ff 100%)',
       padding: '60px 40px'
     }}>
       <div style={{

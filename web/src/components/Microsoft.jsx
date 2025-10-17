@@ -46,7 +46,7 @@ export default function Microsoft() {
     <div style={{ 
       fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif',
       minHeight: '100vh',
-      background: 'linear-gradient(135deg, #e7e9f2ff 0%, #353435ff 100%)',
+      background: 'linear-gradient(135deg, #999db3ff 0%, #030303ff 100%)',
       padding: '60px 40px'
     }}>
       <div style={{
