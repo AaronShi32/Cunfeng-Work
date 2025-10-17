@@ -28,16 +28,16 @@ export default function Alibaba({ onBack }) {
           fontSize: '20px',
           color: '#ffffff',
           opacity: 0.9,
-          margin: '0 0 60px 0',
+          margin: '0 0 30px 0',
           lineHeight: '1.6'
         }}>
-          在阿里云平台参与的核心项目与技术实现
+          在阿里云参与的核心项目与技术实现
         </p>
 
         <div style={{
           marginBottom: '40px',
         }}>
-          <div style={{ textAlign: 'center', marginBottom: '10px' }}>
+          <div style={{ textAlign: 'center', marginBottom: '30px' }}>
             <button
               onClick={onBack || (() => window.history.back())}
               style={{
@@ -187,7 +187,7 @@ export default function Alibaba({ onBack }) {
                 margin: 0,
                 lineHeight: '1.5'
               }}>
-                零停机实例迁移<br/>
+                跨网络类型实例迁移<br/>
                 灾难恢复解决方案
               </p>
             </div>

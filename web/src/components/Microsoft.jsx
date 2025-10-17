@@ -68,18 +68,48 @@ export default function Microsoft() {
           fontSize: '20px',
           color: '#ffffff',
           opacity: 0.9,
-          margin: '0 0 60px 0',
+          margin: '0 0 30px 0',
           lineHeight: '1.6'
         }}>
-          在微软平台参与的核心项目与技术实现
+          在微软参与的核心项目与技术实现
         </p>
+
+        <div style={{
+          marginBottom: '40px',
+        }}>
+          <div style={{ textAlign: 'center', marginBottom: '30px' }}>
+            <button
+              onClick={() => window.history.back()}
+              style={{
+                background: 'rgba(255,255,255,0.2)',
+                color: '#ffffff',
+                border: '1px solid rgba(255,255,255,0.3)',
+                padding: '12px 32px',
+                borderRadius: '8px',
+                fontSize: '14px',
+                fontWeight: '500',
+                cursor: 'pointer',
+                transition: 'all 0.3s ease'
+              }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.background = 'rgba(255,255,255,0.3)';
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.background = 'rgba(255,255,255,0.2)';
+              }}
+            >
+              ← 返回主页
+            </button>
+          </div>
 
         {/* 项目卡片 */}
         <div style={{
-          display: 'grid',
-          gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))',
-          gap: '24px',
-          marginBottom: '40px'
+          display: 'flex',
+          justifyContent: 'center',
+          alignItems: 'center',
+          gap: '32px',
+          maxWidth: '1000px',
+          margin: '0 auto 40px auto'
         }}>
           {/* ASI 卡片 */}
           <div 
@@ -91,7 +121,12 @@ export default function Microsoft() {
               boxShadow: '0 10px 25px rgba(0,0,0,0.1)',
               transition: 'all 0.3s ease',
               cursor: 'pointer',
-              textAlign: 'center'
+              height: '200px',
+              flex: '1',
+              display: 'flex',
+              flexDirection: 'column',
+              justifyContent: 'center',
+              alignItems: 'center'
             }}
             onMouseEnter={(e) => {
               e.currentTarget.style.transform = 'translateY(-8px)';
@@ -140,7 +175,12 @@ export default function Microsoft() {
               boxShadow: '0 10px 25px rgba(0,0,0,0.1)',
               transition: 'all 0.3s ease',
               cursor: 'pointer',
-              textAlign: 'center'
+              height: '200px',
+              flex: '1',
+              display: 'flex',
+              flexDirection: 'column',
+              justifyContent: 'center',
+              alignItems: 'center'
             }}
             onMouseEnter={(e) => {
               e.currentTarget.style.transform = 'translateY(-8px)';
@@ -166,7 +206,7 @@ export default function Microsoft() {
               color: '#1f2937',
               margin: '0 0 8px 0'
             }}>
-              Scout 监控
+              Scout
             </h3>
             <p style={{
               fontSize: '14px',
@@ -174,8 +214,8 @@ export default function Microsoft() {
               margin: 0,
               lineHeight: '1.5'
             }}>
-              Service Monitoring & Analytics<br/>
-              服务监控与分析平台
+              AI-AzureData<br/>
+              智能分析引擎
             </p>
           </div>
 
@@ -189,7 +229,12 @@ export default function Microsoft() {
               boxShadow: '0 10px 25px rgba(0,0,0,0.1)',
               transition: 'all 0.3s ease',
               cursor: 'pointer',
-              textAlign: 'center'
+              height: '200px',
+              flex: '1',
+              display: 'flex',
+              flexDirection: 'column',
+              justifyContent: 'center',
+              alignItems: 'center'
             }}
             onMouseEnter={(e) => {
               e.currentTarget.style.transform = 'translateY(-8px)';
@@ -226,6 +271,56 @@ export default function Microsoft() {
               Fabric Container Service<br/>
               容器服务管理平台
             </p>
+          </div>
+        </div>
+        </div>
+
+        {/* 技术栈展示 */}
+        <div style={{
+          background: 'rgba(0,0,0,0.3)',
+          backdropFilter: 'blur(20px)',
+          borderRadius: '16px',
+          padding: '32px',
+          border: '1px solid rgba(255,255,255,0.2)',
+          marginTop: '40px'
+        }}>
+          <h3 style={{
+            fontSize: '20px',
+            fontWeight: '600',
+            color: '#ffffff',
+            margin: '0 0 20px 0'
+          }}>
+            技术栈
+          </h3>
+          <div style={{
+            display: 'flex',
+            justifyContent: 'center',
+            gap: '16px',
+            flexWrap: 'wrap',
+            alignItems: 'center'
+          }}>
+            {[
+              { name: 'C#/.NET', icon: '⚡' },
+              { name: 'Azure/AKS/ACI', icon: '☁️' },
+              { name: 'Service Fabric', icon: '🔧' },
+              { name: 'Kusto/PowerBI', icon: '📊' },
+            ].map(tech => (
+              <div 
+                key={tech.name}
+                style={{
+                  background: 'rgba(255,255,255,0.1)',
+                  padding: '8px 16px',
+                  borderRadius: '20px',
+                  color: '#ffffff',
+                  fontSize: '14px',
+                  fontWeight: '500',
+                  whiteSpace: 'nowrap'
+                }}
+              >
+                <span style={{ marginRight: '8px' }}>{tech.icon}</span>
+                {tech.name}
+              </div>
+            ))}
           </div>
         </div>
       </div>
