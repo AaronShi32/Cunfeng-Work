@@ -33,6 +33,73 @@ export const fcsConfig = {
           description: "请将 FCS-Lifecycle.png 文件放置在 public 目录中"
         }
       }
+    },
+    {
+      id: "business-data",
+      title: "📊 业务数据",
+      type: "table",
+      content: {
+        tableTitle: "FCS API 接口 30天 QPS 数据表格",
+        subtitle: "🏆 主要 API 接口 QPS 统计表",
+        columns: [
+          { key: "rank", label: "排名", width: "10%" },
+          { key: "api", label: "API 接口", width: "40%" },
+          { key: "method", label: "HTTP 方法", width: "20%" },
+          { key: "maxQps", label: "最大 QPS", width: "15%" },
+          { key: "avgQps", label: "平均 QPS", width: "15%" }
+        ],
+        data: [
+          {
+            rank: 1,
+            api: "/clusters/{id}",
+            method: "GET",
+            maxQps: "1,030.05",
+            avgQps: "506.37"
+          },
+          {
+            rank: 2,
+            api: "/clusters/{id}/nodes",
+            method: "GET",
+            maxQps: "965.54",
+            avgQps: "515.42"
+          },
+          {
+            rank: 3,
+            api: "/clusters/{id}",
+            method: "DELETE",
+            maxQps: "2.85",
+            avgQps: "1.04"
+          },
+          {
+            rank: 4,
+            api: "/clusters/{id}",
+            method: "PUT",
+            maxQps: "1.48",
+            avgQps: "0.86"
+          },
+          {
+            rank: 5,
+            api: "/clusterpools/{id}",
+            method: "DELETE",
+            maxQps: "1.17",
+            avgQps: "0.10"
+          },
+          {
+            rank: 6,
+            api: "/clusterpools/{id}",
+            method: "GET",
+            maxQps: "0.66",
+            avgQps: "0.27"
+          },
+          {
+            rank: 7,
+            api: "/clusterpools/{id}",
+            method: "PUT",
+            maxQps: "0.25",
+            avgQps: "0.06"
+          }
+        ]
+      }
     }
   ]
 };

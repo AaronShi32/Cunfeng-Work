@@ -2,6 +2,7 @@ import React from 'react';
 import { fcsConfig, fcsTheme } from '../data/fcsData';
 import PageHeader from './FCS/PageHeader';
 import ImageSection from './FCS/ImageSection';
+import TableSection from './FCS/TableSection';
 import NavigationButton from './FCS/NavigationButton';
 
 export default function FCS({ onBack }) {
@@ -18,6 +19,17 @@ export default function FCS({ onBack }) {
             src={section.content.src}
             alt={section.content.alt}
             fallback={section.content.fallback}
+          />
+        );
+      case 'table':
+        return (
+          <TableSection
+            key={section.id}
+            title={section.title}
+            tableTitle={section.content.tableTitle}
+            subtitle={section.content.subtitle}
+            columns={section.content.columns}
+            data={section.content.data}
           />
         );
       default:
