@@ -6,7 +6,7 @@ export default function Alibaba({ onBack }) {
     <div style={{ 
       fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif',
       minHeight: '100vh',
-      background: 'linear-gradient(135deg, #e7e9f2ff 0%, #353435ff 100%)',
+      background: 'linear-gradient(135deg, #999db3ff 0%, #030303ff 100%)',
       padding: '60px 40px'
     }}>
       <div style={{
@@ -21,56 +21,52 @@ export default function Alibaba({ onBack }) {
           margin: '0 0 20px 0',
           textShadow: '0 2px 4px rgba(0,0,0,0.1)'
         }}>
-          阿里云项目经历
+          阿里云工作经历
         </h1>
         
         <p style={{
           fontSize: '20px',
           color: '#ffffff',
           opacity: 0.9,
-          margin: '0 0 60px 0',
+          margin: '0 0 30px 0',
           lineHeight: '1.6'
         }}>
-          在阿里云平台参与的核心项目与技术实现
+          在阿里云参与的核心项目与技术实现
         </p>
 
-        {/* 返回按钮 */}
         <div style={{
-          textAlign: 'center',
-          marginBottom: '20px'
-        }}>
-          <button
-            onClick={onBack || (() => window.history.back())}
-            style={{
-              background: 'rgba(255,255,255,0.2)',
-              color: '#ffffff',
-              border: '1px solid rgba(255,255,255,0.3)',
-              padding: '12px 32px',
-              borderRadius: '8px',
-              fontSize: '14px',
-              fontWeight: '500',
-              cursor: 'pointer',
-              transition: 'all 0.3s ease'
-            }}
-            onMouseEnter={(e) => {
-              e.currentTarget.style.background = 'rgba(255,255,255,0.3)';
-            }}
-            onMouseLeave={(e) => {
-              e.currentTarget.style.background = 'rgba(255,255,255,0.2)';
-            }}
-          >
-            ← 返回主页
-          </button>
-        </div>
-
-        {/* 卡片区块居中 */}
-        <div style={{
-          display: 'flex',
-          justifyContent: 'center',
-          alignItems: 'center',
-          gap: '32px',
           marginBottom: '40px',
         }}>
+          <div style={{ textAlign: 'center', marginBottom: '30px' }}>
+            <button
+              onClick={onBack || (() => window.history.back())}
+              style={{
+                background: 'rgba(255,255,255,0.2)',
+                color: '#ffffff',
+                border: '1px solid rgba(255,255,255,0.3)',
+                padding: '12px 32px',
+                borderRadius: '8px',
+                fontSize: '14px',
+                fontWeight: '500',
+                cursor: 'pointer',
+                transition: 'all 0.3s ease'
+              }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.background = 'rgba(255,255,255,0.3)';
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.background = 'rgba(255,255,255,0.2)';
+              }}
+            >
+              ← 返回主页
+            </button>
+          </div>
+          <div style={{
+            display: 'flex',
+            justifyContent: 'center',
+            alignItems: 'center',
+            gap: '32px',
+          }}>
           {/* ENI 项目卡片 */}
           <Link 
             to="/samples"
@@ -191,12 +187,14 @@ export default function Alibaba({ onBack }) {
                 margin: 0,
                 lineHeight: '1.5'
               }}>
-                零停机实例迁移<br/>
+                跨网络类型实例迁移<br/>
                 灾难恢复解决方案
               </p>
             </div>
           </Link>
         </div>
+        </div>
+
         {/* 技术栈展示 */}
         <div style={{
           background: 'rgba(0,0,0,0.3)',

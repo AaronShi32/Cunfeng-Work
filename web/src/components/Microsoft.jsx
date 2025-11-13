@@ -1,20 +1,8 @@
 
 import React, { useState } from 'react';
-import { ReactFlow } from '@xyflow/react';
 import ASI from './ASI';
 import Scout from './Scout';
 import FCS from './FCS';
-
-const nodes = [
-  { id: '1', type: 'input', data: { label: 'Start Node' }, position: { x: 250, y: 5 } },
-  { id: '2', data: { label: 'Middle Node' }, position: { x: 100, y: 100 } },
-  { id: '3', data: { label: 'End Node' }, position: { x: 400, y: 100 } },
-];
-
-const edges = [
-  { id: 'e1-2', source: '1', target: '2', animated: true },
-  { id: 'e2-3', source: '2', target: '3' },
-];
 
 export default function Microsoft() {
   const [showASI, setShowASI] = useState(false);
@@ -58,41 +46,70 @@ export default function Microsoft() {
     <div style={{ 
       fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif',
       minHeight: '100vh',
-      background: 'linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%)',
-      padding: '40px 20px'
+      background: 'linear-gradient(135deg, #999db3ff 0%, #030303ff 100%)',
+      padding: '60px 40px'
     }}>
       <div style={{
-        maxWidth: '1200px',
-        margin: '0 auto'
+        maxWidth: '800px',
+        margin: '0 auto',
+        textAlign: 'center'
       }}>
-        {/* 页面标题 */}
-        <div style={{
-          textAlign: 'center',
-          marginBottom: '40px'
+        <h1 style={{
+          fontSize: '56px',
+          fontWeight: '700',
+          color: '#ffffff',
+          margin: '0 0 20px 0',
+          textShadow: '0 2px 4px rgba(0,0,0,0.1)'
         }}>
-          <h1 style={{
-            fontSize: '36px',
-            fontWeight: '700',
-            color: '#0f172a',
-            margin: '0 0 16px 0'
-          }}>
-            Microsoft 项目
-          </h1>
-          <p style={{
-            fontSize: '18px',
-            color: '#475569',
-            margin: 0
-          }}>
-            微软云相关项目经历
-          </p>
-        </div>
+          微软工作经历
+        </h1>
+        
+        <p style={{
+          fontSize: '20px',
+          color: '#ffffff',
+          opacity: 0.9,
+          margin: '0 0 30px 0',
+          lineHeight: '1.6'
+        }}>
+          在微软参与的核心项目与技术实现
+        </p>
+
+        <div style={{
+          marginBottom: '40px',
+        }}>
+          <div style={{ textAlign: 'center', marginBottom: '30px' }}>
+            <button
+              onClick={() => window.history.back()}
+              style={{
+                background: 'rgba(255,255,255,0.2)',
+                color: '#ffffff',
+                border: '1px solid rgba(255,255,255,0.3)',
+                padding: '12px 32px',
+                borderRadius: '8px',
+                fontSize: '14px',
+                fontWeight: '500',
+                cursor: 'pointer',
+                transition: 'all 0.3s ease'
+              }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.background = 'rgba(255,255,255,0.3)';
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.background = 'rgba(255,255,255,0.2)';
+              }}
+            >
+              ← 返回主页
+            </button>
+          </div>
 
         {/* 项目卡片 */}
         <div style={{
-          display: 'grid',
-          gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))',
-          gap: '24px',
-          marginBottom: '40px'
+          display: 'flex',
+          justifyContent: 'center',
+          alignItems: 'center',
+          gap: '32px',
+          maxWidth: '1000px',
+          margin: '0 auto 40px auto'
         }}>
           {/* ASI 卡片 */}
           <div 
@@ -104,7 +121,12 @@ export default function Microsoft() {
               boxShadow: '0 10px 25px rgba(0,0,0,0.1)',
               transition: 'all 0.3s ease',
               cursor: 'pointer',
-              textAlign: 'center'
+              height: '200px',
+              flex: '1',
+              display: 'flex',
+              flexDirection: 'column',
+              justifyContent: 'center',
+              alignItems: 'center'
             }}
             onMouseEnter={(e) => {
               e.currentTarget.style.transform = 'translateY(-8px)';
@@ -153,7 +175,12 @@ export default function Microsoft() {
               boxShadow: '0 10px 25px rgba(0,0,0,0.1)',
               transition: 'all 0.3s ease',
               cursor: 'pointer',
-              textAlign: 'center'
+              height: '200px',
+              flex: '1',
+              display: 'flex',
+              flexDirection: 'column',
+              justifyContent: 'center',
+              alignItems: 'center'
             }}
             onMouseEnter={(e) => {
               e.currentTarget.style.transform = 'translateY(-8px)';
@@ -179,7 +206,7 @@ export default function Microsoft() {
               color: '#1f2937',
               margin: '0 0 8px 0'
             }}>
-              Scout 监控
+              Scout
             </h3>
             <p style={{
               fontSize: '14px',
@@ -187,8 +214,8 @@ export default function Microsoft() {
               margin: 0,
               lineHeight: '1.5'
             }}>
-              Service Monitoring & Analytics<br/>
-              服务监控与分析平台
+              AI-AzureData<br/>
+              智能分析引擎
             </p>
           </div>
 
@@ -202,7 +229,12 @@ export default function Microsoft() {
               boxShadow: '0 10px 25px rgba(0,0,0,0.1)',
               transition: 'all 0.3s ease',
               cursor: 'pointer',
-              textAlign: 'center'
+              height: '200px',
+              flex: '1',
+              display: 'flex',
+              flexDirection: 'column',
+              justifyContent: 'center',
+              alignItems: 'center'
             }}
             onMouseEnter={(e) => {
               e.currentTarget.style.transform = 'translateY(-8px)';
@@ -241,30 +273,54 @@ export default function Microsoft() {
             </p>
           </div>
         </div>
+        </div>
 
-        {/* React Flow 演示 */}
+        {/* 技术栈展示 */}
         <div style={{
-          background: '#ffffff',
+          background: 'rgba(0,0,0,0.3)',
+          backdropFilter: 'blur(20px)',
           borderRadius: '16px',
           padding: '32px',
-          boxShadow: '0 10px 25px rgba(0,0,0,0.1)'
+          border: '1px solid rgba(255,255,255,0.2)',
+          marginTop: '40px'
         }}>
-          <h2 style={{
-            fontSize: '24px',
+          <h3 style={{
+            fontSize: '20px',
             fontWeight: '600',
-            color: '#1f2937',
-            margin: '0 0 24px 0',
-            textAlign: 'center'
+            color: '#ffffff',
+            margin: '0 0 20px 0'
           }}>
-            React Flow Demo
-          </h2>
-          <div style={{ height: '400px' }}>
-            <ReactFlow 
-              nodes={nodes} 
-              edges={edges} 
-              fitView 
-              style={{ background: '#f8fafc' }} 
-            />
+            技术栈
+          </h3>
+          <div style={{
+            display: 'flex',
+            justifyContent: 'center',
+            gap: '16px',
+            flexWrap: 'wrap',
+            alignItems: 'center'
+          }}>
+            {[
+              { name: 'C#/.NET', icon: '⚡' },
+              { name: 'Azure/AKS/ACI', icon: '☁️' },
+              { name: 'Service Fabric', icon: '🔧' },
+              { name: 'Kusto/PowerBI', icon: '📊' },
+            ].map(tech => (
+              <div 
+                key={tech.name}
+                style={{
+                  background: 'rgba(255,255,255,0.1)',
+                  padding: '8px 16px',
+                  borderRadius: '20px',
+                  color: '#ffffff',
+                  fontSize: '14px',
+                  fontWeight: '500',
+                  whiteSpace: 'nowrap'
+                }}
+              >
+                <span style={{ marginRight: '8px' }}>{tech.icon}</span>
+                {tech.name}
+              </div>
+            ))}
           </div>
         </div>
       </div>
