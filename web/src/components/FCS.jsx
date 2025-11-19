@@ -65,15 +65,14 @@ export default function FCS({ onBack }) {
         {/* 渲染前两个主要章节 */}
         {mainSections.map((section, index) => renderSection(section, index))}
 
-        {/* 并列渲染工作流章节 */}
+        {/* 从上到下渲染工作流章节 */}
         <div style={{
-          display: 'flex',
-          gap: '32px',
-          margin: '48px 0 32px 0',
-          alignItems: 'flex-start'
+          margin: '48px 0 32px 0'
         }}>
           {workflowSections.map((section, index) => (
-            <div key={section.id} style={{ flex: 1 }}>
+            <div key={section.id} style={{ 
+              marginBottom: index < workflowSections.length - 1 ? '32px' : '0'
+            }}>
               {renderSection(section, index)}
             </div>
           ))}
