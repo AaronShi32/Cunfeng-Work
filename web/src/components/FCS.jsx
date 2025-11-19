@@ -2,6 +2,7 @@ import React from 'react';
 import { fcsConfig, fcsTheme } from '../data/fcsData';
 import PageHeader from './FCS/PageHeader';
 import ImageSection from './FCS/ImageSection';
+import TableSection from './FCS/TableSection';
 import NavigationButton from './FCS/NavigationButton';
 import fabricDEWorkflow from '../../img/FCS/Fabric-DE-Workflow.jpg';
 import fcsComponent from '../../img/FCS/FCS Component.png';
@@ -28,6 +29,17 @@ export default function FCS({ onBack }) {
             link={section.content.link}
             linkText={section.content.linkText}
             fallback={section.content.fallback}
+          />
+        );
+      case 'table':
+        return (
+          <TableSection
+            key={section.id}
+            title={section.title}
+            tableTitle={section.content.tableTitle}
+            subtitle={section.content.subtitle}
+            columns={section.content.columns}
+            data={section.content.data}
           />
         );
       default:
