@@ -3,11 +3,13 @@ import React, { useState } from 'react';
 import ASI from './ASI';
 import Scout from './Scout';
 import FCS from './FCS';
+import Ongoing from './Ongoing';
 
 export default function Microsoft() {
   const [showASI, setShowASI] = useState(false);
   const [showScout, setShowScout] = useState(false);
   const [showFCS, setShowFCS] = useState(false);
+  const [showOngoing, setShowOngoing] = useState(false);
 
   const handleASIClick = () => {
     setShowASI(true);
@@ -21,10 +23,15 @@ export default function Microsoft() {
     setShowFCS(true);
   };
 
+  const handleOngoingClick = () => {
+    setShowOngoing(true);
+  };
+
   const handleBackToMicrosoft = () => {
     setShowASI(false);
     setShowScout(false);
     setShowFCS(false);
+    setShowOngoing(false);
   };
 
   // 如果显示ASI页面
@@ -40,6 +47,11 @@ export default function Microsoft() {
   // 如果显示FCS页面
   if (showFCS) {
     return <FCS onBack={handleBackToMicrosoft} />;
+  }
+
+  // 如果显示Ongoing页面
+  if (showOngoing) {
+    return <Ongoing onBack={handleBackToMicrosoft} />;
   }
 
   return (
@@ -104,11 +116,12 @@ export default function Microsoft() {
 
         {/* 项目卡片 */}
         <div style={{
-          display: 'flex',
+          display: 'grid',
+          gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))',
           justifyContent: 'center',
           alignItems: 'center',
-          gap: '32px',
-          maxWidth: '1000px',
+          gap: '24px',
+          maxWidth: '1200px',
           margin: '0 auto 40px auto'
         }}>
           {/* ASI 卡片 */}
@@ -270,6 +283,60 @@ export default function Microsoft() {
             }}>
               Fabric Container Service<br/>
               容器服务管理平台
+            </p>
+          </div>
+
+          {/* Ongoing 卡片 */}
+          <div 
+            onClick={handleOngoingClick}
+            style={{
+              background: '#ffffff',
+              borderRadius: '16px',
+              padding: '32px',
+              boxShadow: '0 10px 25px rgba(0,0,0,0.1)',
+              transition: 'all 0.3s ease',
+              cursor: 'pointer',
+              height: '200px',
+              flex: '1',
+              display: 'flex',
+              flexDirection: 'column',
+              justifyContent: 'center',
+              alignItems: 'center'
+            }}
+            onMouseEnter={(e) => {
+              e.currentTarget.style.transform = 'translateY(-8px)';
+              e.currentTarget.style.boxShadow = '0 20px 40px rgba(0,0,0,0.15)';
+            }}
+            onMouseLeave={(e) => {
+              e.currentTarget.style.transform = 'translateY(0)';
+              e.currentTarget.style.boxShadow = '0 10px 25px rgba(0,0,0,0.1)';
+            }}
+          >
+            <div style={{ 
+              fontSize: '48px', 
+              marginBottom: '16px',
+              lineHeight: '1',
+              display: 'flex',
+              justifyContent: 'center',
+              alignItems: 'center',
+              height: '48px'
+            }}>🚀</div>
+            <h3 style={{
+              fontSize: '24px',
+              fontWeight: '600',
+              color: '#1f2937',
+              margin: '0 0 8px 0'
+            }}>
+              Ongoing 项目
+            </h3>
+            <p style={{
+              fontSize: '14px',
+              color: '#6b7280',
+              margin: 0,
+              lineHeight: '1.5'
+            }}>
+              正在进行的项目<br/>
+              技术研究与创新
             </p>
           </div>
         </div>
