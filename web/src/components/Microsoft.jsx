@@ -273,7 +273,7 @@ export default function Microsoft() {
               color: '#1f2937',
               margin: '0 0 8px 0'
             }}>
-              FCS 容器服务
+              FCS
             </h3>
             <p style={{
               fontSize: '14px',
@@ -281,7 +281,7 @@ export default function Microsoft() {
               margin: 0,
               lineHeight: '1.5'
             }}>
-              Fabric Container Service<br/>
+              Microsoft Fabric<br/>
               容器服务管理平台
             </p>
           </div>

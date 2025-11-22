@@ -1,4 +1,5 @@
 import fabricDEWorkflow from '../../img/FCS/Fabric-DE-Workflow.jpg';
+import fabricArt from '../../img/FCS/FabricArt.png';
 import fcsComponent from '../../img/FCS/FCS Component.png';
 import controlPlaneWorkflow from '../../img/FCS/PYNB-ControlPlane-Workflow.png';
 import dataPlaneWorkflow from '../../img/FCS/PYNB-DataPlane-Workflow.png';
@@ -6,25 +7,38 @@ import dataPlaneWorkflow from '../../img/FCS/PYNB-DataPlane-Workflow.png';
 // FCS 页面的所有数据和配置
 export const fcsConfig = {
   title: {
-    main: "FCS (Fabric Container Service)",
-    subtitle: "容器服务管理平台"
+    main: "Fabric Container Service",
+    subtitle: "Microsoft Fabric 容器管理平台"
   },
   
   sections: [
     {
       id: "architecture",
-      title: "Fabric Data Engineering 架构",
-      type: "image",
+      title: "Microsoft Fabric - Analytics - Data Engineering 架构",
+      type: "images-side-by-side",
       content: {
-        src: fabricDEWorkflow,
-        alt: "Fabric-DE-Workflow",
-        link: "https://learn.microsoft.com/en-us/fabric/data-engineering/",
-        linkText: "Fabric Data Engineering 官方文档",
-        fallback: {
-          icon: "🐳",
-          text: "Fabric-DE-Workflow.jpg",
-          description: "Fabric Data Engineering 架构"
-        }
+        images: [
+          {
+            src: fabricArt,
+            alt: "Fabric-Architecture",
+            fallback: {
+              icon: "🎨",
+              text: "FabricArt.png",
+              description: "Fabric 架构图"
+            }
+          },
+          {
+            src: fabricDEWorkflow,
+            alt: "Fabric-DE-Workflow",
+            link: "https://learn.microsoft.com/en-us/fabric/data-engineering/",
+            linkText: "Fabric Data Engineering 官方文档",
+            fallback: {
+              icon: "🐳",
+              text: "Fabric-DE-Workflow.jpg",
+              description: "Fabric Data Engineering 架构"
+            }
+          }
+        ]
       }
     },
     {

@@ -31,6 +31,44 @@ export default function FCS({ onBack }) {
             fallback={section.content.fallback}
           />
         );
+      case 'images-side-by-side':
+        return (
+          <div key={section.id} style={{
+            background: fcsTheme.colors.cardBackground,
+            borderRadius: '16px',
+            padding: fcsTheme.spacing.cardPadding,
+            boxShadow: fcsTheme.shadows.card,
+            marginBottom: fcsTheme.spacing.sectionMargin
+          }}>
+            <h2 style={{
+              fontSize: fcsTheme.typography.sectionTitle.fontSize,
+              fontWeight: fcsTheme.typography.sectionTitle.fontWeight,
+              color: fcsTheme.colors.textPrimary,
+              margin: '0 0 24px 0',
+              textAlign: 'center'
+            }}>
+              {section.title}
+            </h2>
+            <div style={{
+              display: 'flex',
+              gap: '24px',
+              alignItems: 'flex-start'
+            }}>
+              {section.content.images.map((img, idx) => (
+                <div key={idx} style={{ flex: 1 }}>
+                  <ImageSection
+                    title=""
+                    src={img.src}
+                    alt={img.alt}
+                    link={img.link}
+                    linkText={img.linkText}
+                    fallback={img.fallback}
+                  />
+                </div>
+              ))}
+            </div>
+          </div>
+        );
       case 'table':
         return (
           <TableSection

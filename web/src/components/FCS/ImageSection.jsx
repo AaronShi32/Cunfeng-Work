@@ -12,14 +12,16 @@ const ImageSection = ({ title, src, alt, fallback, link, linkText }) => {
       border: `1px solid ${fcsTheme.colors.border}`,
       textAlign: 'center'
     }}>
-      <h2 style={{
-        fontSize: fcsTheme.typography.sectionTitle.fontSize,
-        fontWeight: fcsTheme.typography.sectionTitle.fontWeight,
-        color: fcsTheme.colors.textPrimary,
-        margin: '0 0 24px 0'
-      }}>
-        {title}
-      </h2>
+      {title && (
+        <h2 style={{
+          fontSize: fcsTheme.typography.sectionTitle.fontSize,
+          fontWeight: fcsTheme.typography.sectionTitle.fontWeight,
+          color: fcsTheme.colors.textPrimary,
+          margin: '0 0 24px 0'
+        }}>
+          {title}
+        </h2>
+      )}
       
       {/* 显示链接（如果存在） */}
       {link && (
