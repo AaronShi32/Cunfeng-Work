@@ -51,7 +51,7 @@ export default function Microsoft() {
 
   // 如果显示Ongoing页面
   if (showOngoing) {
-    return <Ongoing onBack={handleBackToMicrosoft} />;
+    return <Ongoing onBack={handleBackToMicrosoft} />
   }
 
   return (
@@ -124,6 +124,59 @@ export default function Microsoft() {
           maxWidth: '1200px',
           margin: '0 auto 40px auto'
         }}>
+          {/* HDInsight 卡片 */}
+          <div 
+            style={{
+              background: '#ffffff',
+              borderRadius: '16px',
+              padding: '32px',
+              boxShadow: '0 10px 25px rgba(0,0,0,0.1)',
+              transition: 'all 0.3s ease',
+              cursor: 'pointer',
+              height: '200px',
+              flex: '1',
+              display: 'flex',
+              flexDirection: 'column',
+              justifyContent: 'center',
+              alignItems: 'center'
+            }}
+            onMouseEnter={(e) => {
+              e.currentTarget.style.transform = 'translateY(-8px)';
+              e.currentTarget.style.boxShadow = '0 20px 40px rgba(0,0,0,0.15)';
+            }}
+            onMouseLeave={(e) => {
+              e.currentTarget.style.transform = 'translateY(0)';
+              e.currentTarget.style.boxShadow = '0 10px 25px rgba(0,0,0,0.1)';
+            }}
+          >
+            <div style={{ 
+              fontSize: '48px', 
+              marginBottom: '16px',
+              lineHeight: '1',
+              display: 'flex',
+              justifyContent: 'center',
+              alignItems: 'center',
+              height: '48px'
+            }}>🐘</div>
+            <h3 style={{
+              fontSize: '24px',
+              fontWeight: '600',
+              color: '#1f2937',
+              margin: '0 0 8px 0'
+            }}>
+              HDInsight
+            </h3>
+            <p style={{
+              fontSize: '14px',
+              color: '#6b7280',
+              margin: 0,
+              lineHeight: '1.5'
+            }}>
+              Azure HDInsight<br/>
+              大数据分析平台
+            </p>
+          </div>
+
           {/* ASI 卡片 */}
           <div 
             onClick={handleASIClick}
@@ -286,7 +339,7 @@ export default function Microsoft() {
             </p>
           </div>
 
-          {/* Ongoing 卡片 */}
+          {/* 其他卡片 */}
           <div 
             onClick={handleOngoingClick}
             style={{
@@ -327,7 +380,7 @@ export default function Microsoft() {
               color: '#1f2937',
               margin: '0 0 8px 0'
             }}>
-              Ongoing 项目
+              其他项目
             </h3>
             <p style={{
               fontSize: '14px',
@@ -335,8 +388,7 @@ export default function Microsoft() {
               margin: 0,
               lineHeight: '1.5'
             }}>
-              正在进行的项目<br/>
-              技术研究与创新
+              正在进行的项目
             </p>
           </div>
         </div>
