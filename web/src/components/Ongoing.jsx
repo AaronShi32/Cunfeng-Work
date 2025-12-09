@@ -1,6 +1,9 @@
-import React from 'react';
+import React, { useState } from 'react';
+import retriableSessionImage from '../../img/Ongoing/Ongoing-Fabric-NBS-RetriableSession.svg';
 
 export default function Ongoing({ onBack }) {
+  const [showImage, setShowImage] = useState(false);
+
   return (
     <div style={{ 
       fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif',
@@ -75,13 +78,26 @@ export default function Ongoing({ onBack }) {
           marginBottom: '40px'
         }}>
           {/* 项目1 */}
-          <div style={{
+          <div 
+            onClick={() => setShowImage(true)}
+            style={{
             background: '#ffffff',
             borderRadius: '12px',
             padding: '24px',
             boxShadow: '0 4px 6px rgba(0,0,0,0.07)',
-            border: '1px solid #e5e7eb'
-          }}>
+            border: '1px solid #e5e7eb',
+            cursor: 'pointer',
+            transition: 'all 0.3s ease'
+          }}
+            onMouseEnter={(e) => {
+              e.currentTarget.style.transform = 'translateY(-4px)';
+              e.currentTarget.style.boxShadow = '0 8px 12px rgba(0,0,0,0.15)';
+            }}
+            onMouseLeave={(e) => {
+              e.currentTarget.style.transform = 'translateY(0)';
+              e.currentTarget.style.boxShadow = '0 4px 6px rgba(0,0,0,0.07)';
+            }}
+          >
             <div style={{
               display: 'flex',
               alignItems: 'center',
@@ -150,6 +166,88 @@ export default function Ongoing({ onBack }) {
             </div>
           </div>
         </div>
+
+        {/* 图片弹出层 */}
+        {showImage && (
+          <div 
+            onClick={() => setShowImage(false)}
+            style={{
+              position: 'fixed',
+              top: 0,
+              left: 0,
+              right: 0,
+              bottom: 0,
+              background: 'rgba(0, 0, 0, 0.85)',
+              display: 'flex',
+              justifyContent: 'center',
+              alignItems: 'center',
+              zIndex: 1000,
+              cursor: 'pointer',
+              overflow: 'hidden'
+            }}
+          >
+            <div 
+              onClick={(e) => e.stopPropagation()}
+              style={{
+                position: 'relative',
+                width: '85vw',
+                height: '85vh',
+                background: '#ffffff',
+                borderRadius: '16px',
+                padding: '20px',
+                boxShadow: '0 20px 60px rgba(0,0,0,0.3)',
+                display: 'flex',
+                justifyContent: 'center',
+                alignItems: 'center'
+              }}
+            >
+              <button
+                onClick={() => setShowImage(false)}
+                style={{
+                  position: 'absolute',
+                  top: '15px',
+                  right: '15px',
+                  background: '#ef4444',
+                  color: '#ffffff',
+                  border: 'none',
+                  borderRadius: '50%',
+                  width: '40px',
+                  height: '40px',
+                  fontSize: '24px',
+                  cursor: 'pointer',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  fontWeight: 'bold',
+                  transition: 'all 0.3s ease',
+                  zIndex: 10
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.background = '#dc2626';
+                  e.currentTarget.style.transform = 'scale(1.1)';
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.background = '#ef4444';
+                  e.currentTarget.style.transform = 'scale(1)';
+                }}
+              >
+                ×
+              </button>
+              <img 
+                src={retriableSessionImage} 
+                alt="Retriable Session Workflow"
+                style={{
+                  maxWidth: '100%',
+                  maxHeight: '100%',
+                  width: 'auto',
+                  height: 'auto',
+                  objectFit: 'contain',
+                  display: 'block'
+                }}
+              />
+            </div>
+          </div>
+        )}
       </div>
     </div>
   );
