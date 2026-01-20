@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import retriableSessionImage from '../../img/Ongoing/Ongoing-Fabric-NBS-RetriableSession.svg';
+import retriableSessionImage from '../../img/Fabric/Notebook-RetriableSession-2025-09-04-1233.png';
 
 export default function Ongoing({ onBack }) {
   const [showImage, setShowImage] = useState(false);
@@ -110,7 +110,7 @@ export default function Ongoing({ onBack }) {
                 color: '#1f2937',
                 margin: 0
               }}>
-                Spark Batch/Session 重试作业
+                Notebook Session 重试作业
               </h3>
             </div>
             <p style={{
@@ -126,7 +126,7 @@ export default function Ongoing({ onBack }) {
               gap: '8px',
               marginBottom: '12px'
             }}>
-              {['Spark', 'Session', 'Batch', 'Notebook'].map(tech => (
+              {['Spark', 'Notebook', 'Batch', 'RTI'].map(tech => (
                 <span 
                   key={tech}
                   style={{
@@ -235,7 +235,7 @@ export default function Ongoing({ onBack }) {
               </button>
               <img 
                 src={retriableSessionImage} 
-                alt="Retriable Session Workflow"
+                alt="Notebook Retriable Session Architecture"
                 style={{
                   maxWidth: '100%',
                   maxHeight: '100%',

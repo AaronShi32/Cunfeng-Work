@@ -238,15 +238,6 @@ export default function Home() {
                 }}>
                   Alibaba
                 </h3>
-                <p style={{
-                  fontSize: '14px',
-                  color: '#6b7280',
-                  textAlign: 'center',
-                  margin: 0,
-                  lineHeight: '1.5'
-                }}>
-                  阿里云<br/>
-                </p>
               </div>
               </Link>
 
@@ -293,15 +284,6 @@ export default function Home() {
                 }}>
                   Microsoft
                 </h3>
-                <p style={{
-                  fontSize: '14px',
-                  color: '#6b7280',
-                  textAlign: 'center',
-                  margin: 0,
-                  lineHeight: '1.5'
-                }}>
-                  微软云
-                </p>
               </div>
               </Link>
             </>
