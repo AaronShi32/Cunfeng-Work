@@ -1,24 +1,24 @@
 
 import React, { useState } from 'react';
-import Scout from './Scout';
 import FCS from './FCS';
 import Ongoing from './Ongoing';
 import hdiImage from '../../img/HDI/HDI-2025-09-04-1233.png';
 import asiImage from '../../img/ASI/ASI-2026-01-20-1022.png';
+import scoutImage from '../../img/Scout/Scout-2026-01-20-1022.png';
 
 export default function Microsoft() {
-  const [showScout, setShowScout] = useState(false);
   const [showFCS, setShowFCS] = useState(false);
   const [showOngoing, setShowOngoing] = useState(false);
   const [showHDIImage, setShowHDIImage] = useState(false);
   const [showASIImage, setShowASIImage] = useState(false);
+  const [showScoutImage, setShowScoutImage] = useState(false);
 
   const handleASIClick = () => {
     setShowASIImage(true);
   };
 
   const handleScoutClick = () => {
-    setShowScout(true);
+    setShowScoutImage(true);
   };
 
   const handleFCSClick = () => {
@@ -30,15 +30,9 @@ export default function Microsoft() {
   };
 
   const handleBackToMicrosoft = () => {
-    setShowScout(false);
     setShowFCS(false);
     setShowOngoing(false);
   };
-
-  // 如果显示Scout页面
-  if (showScout) {
-    return <Scout onBack={handleBackToMicrosoft} />;
-  }
 
   // 如果显示FCS页面
   if (showFCS) {
@@ -592,6 +586,88 @@ export default function Microsoft() {
             <img 
               src={asiImage} 
               alt="ASI Architecture"
+              style={{
+                maxWidth: '100%',
+                maxHeight: '100%',
+                width: 'auto',
+                height: 'auto',
+                objectFit: 'contain',
+                display: 'block'
+              }}
+            />
+          </div>
+        </div>
+      )}
+
+      {/* Scout 图片弹出层 */}
+      {showScoutImage && (
+        <div 
+          onClick={() => setShowScoutImage(false)}
+          style={{
+            position: 'fixed',
+            top: 0,
+            left: 0,
+            right: 0,
+            bottom: 0,
+            background: 'rgba(0, 0, 0, 0.85)',
+            display: 'flex',
+            justifyContent: 'center',
+            alignItems: 'center',
+            zIndex: 1000,
+            cursor: 'pointer',
+            overflow: 'hidden'
+          }}
+        >
+          <div 
+            onClick={(e) => e.stopPropagation()}
+            style={{
+              position: 'relative',
+              width: '85vw',
+              height: '85vh',
+              background: '#ffffff',
+              borderRadius: '16px',
+              padding: '20px',
+              boxShadow: '0 20px 60px rgba(0,0,0,0.3)',
+              display: 'flex',
+              justifyContent: 'center',
+              alignItems: 'center'
+            }}
+          >
+            <button
+              onClick={() => setShowScoutImage(false)}
+              style={{
+                position: 'absolute',
+                top: '15px',
+                right: '15px',
+                background: '#ef4444',
+                color: '#ffffff',
+                border: 'none',
+                borderRadius: '50%',
+                width: '40px',
+                height: '40px',
+                fontSize: '24px',
+                cursor: 'pointer',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                fontWeight: 'bold',
+                transition: 'all 0.3s ease',
+                zIndex: 10
+              }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.background = '#dc2626';
+                e.currentTarget.style.transform = 'scale(1.1)';
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.background = '#ef4444';
+                e.currentTarget.style.transform = 'scale(1)';
+              }}
+            >
+              ×
+            </button>
+            <img 
+              src={scoutImage} 
+              alt="Scout Architecture"
               style={{
                 maxWidth: '100%',
                 maxHeight: '100%',
