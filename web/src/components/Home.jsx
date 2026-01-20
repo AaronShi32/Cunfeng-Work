@@ -3,22 +3,16 @@ import React, { useState } from 'react';
 import alibabaLogo from '../../img/Others/Alibaba.png';
 import microsoftLogo from '../../img/Others/Microsoft.svg';
 import { Link } from 'react-router-dom';
-import ASI from './ASI';
 import Scout from './Scout';
 import FCS from './FCS';
 
 export default function Home() {
   const [showMicrosoftSubCards, setShowMicrosoftSubCards] = useState(false);
-  const [showASI, setShowASI] = useState(false);
   const [showScout, setShowScout] = useState(false);
   const [showFCS, setShowFCS] = useState(false);
 
   const handleMicrosoftClick = () => {
     setShowMicrosoftSubCards(true);
-  };
-
-  const handleASIClick = () => {
-    setShowASI(true);
   };
 
   const handleScoutClick = () => {
@@ -31,48 +25,9 @@ export default function Home() {
 
   const handleBackToMain = () => {
     setShowMicrosoftSubCards(false);
-    setShowASI(false);
     setShowScout(false);
     setShowFCS(false);
   };
-
-  // 如果显示ASI页面
-  if (showASI) {
-    return (
-      <div>
-        <div style={{
-          position: 'absolute',
-          top: '20px',
-          left: '20px',
-          zIndex: 1000
-        }}>
-          <button
-            onClick={handleBackToMain}
-            style={{
-              background: 'rgba(47, 41, 41, 0.17)',
-              color: '#ffffff',
-              border: '1px solid rgba(255,255,255,0.3)',
-              padding: '12px 32px',
-              borderRadius: '8px',
-              fontSize: '14px',
-              fontWeight: '500',
-              cursor: 'pointer',
-              transition: 'all 0.3s ease'
-            }}
-            onMouseEnter={(e) => {
-              e.currentTarget.style.background = 'rgba(255,255,255,0.3)';
-            }}
-            onMouseLeave={(e) => {
-              e.currentTarget.style.background = 'rgba(255,255,255,0.2)';
-            }}
-          >
-            ← 返回主页
-          </button>
-        </div>
-        <ASI onBack={handleBackToMain} />
-      </div>
-    );
-  }
 
   // 如果显示Scout页面
   if (showScout) {
@@ -317,63 +272,6 @@ export default function Home() {
                 >
                   ← 返回主页
                 </button>
-              </div>
-
-              {/* ASI 卡片 */}
-              <div 
-                onClick={handleASIClick}
-                style={{
-                  textDecoration: 'none',
-                  display: 'block'
-                }}
-              >
-                <div style={{
-                  background: '#ffffff',
-                  borderRadius: '16px',
-                  padding: '32px',
-                  boxShadow: '0 10px 25px rgba(0,0,0,0.1)',
-                  transition: 'all 0.3s ease',
-                  cursor: 'pointer',
-                  height: '200px',
-                  display: 'flex',
-                  flexDirection: 'column',
-                  justifyContent: 'center',
-                  alignItems: 'center'
-                }}
-                onMouseEnter={(e) => {
-                  e.currentTarget.style.transform = 'translateY(-8px)';
-                  e.currentTarget.style.boxShadow = '0 20px 40px rgba(0,0,0,0.15)';
-                }}
-                onMouseLeave={(e) => {
-                  e.currentTarget.style.transform = 'translateY(0)';
-                  e.currentTarget.style.boxShadow = '0 10px 25px rgba(0,0,0,0.1)';
-                }}
-              >
-                <div style={{
-                  fontSize: '48px',
-                  marginBottom: '16px'
-                }}>
-                  📊
-                </div>
-                <h3 style={{
-                  fontSize: '24px',
-                  fontWeight: '600',
-                  color: '#1f2937',
-                  margin: '0 0 8px 0'
-                }}>
-                  ASI
-                </h3>
-                <p style={{
-                  fontSize: '14px',
-                  color: '#6b7280',
-                  textAlign: 'center',
-                  margin: 0,
-                  lineHeight: '1.5'
-                }}>
-                  Azure Service Insights<br/>
-                  服务监控与分析报告
-                </p>
-              </div>
               </div>
 
               {/* Scout 卡片 */}

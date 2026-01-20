@@ -1,6 +1,5 @@
 
 import React, { useState } from 'react';
-import ASI from './ASI';
 import Scout from './Scout';
 import FCS from './FCS';
 import Ongoing from './Ongoing';
@@ -8,7 +7,6 @@ import hdiImage from '../../img/HDI/HDI-2025-09-04-1233.png';
 import asiImage from '../../img/ASI/ASI-2026-01-20-1022.png';
 
 export default function Microsoft() {
-  const [showASI, setShowASI] = useState(false);
   const [showScout, setShowScout] = useState(false);
   const [showFCS, setShowFCS] = useState(false);
   const [showOngoing, setShowOngoing] = useState(false);
@@ -32,7 +30,6 @@ export default function Microsoft() {
   };
 
   const handleBackToMicrosoft = () => {
-    setShowASI(false);
     setShowScout(false);
     setShowFCS(false);
     setShowOngoing(false);
