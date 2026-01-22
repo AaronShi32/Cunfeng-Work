@@ -1,48 +1,18 @@
 
 import React, { useState } from 'react';
-import FCS from './FCS';
-import Ongoing from './Ongoing';
+import { Link } from 'react-router-dom';
 import hdiImage from '../../img/HDI/HDI-2025-09-04-1233.png';
+import fcsImage from '../../img/FCS/FCS-2026-01-20-1331.png';
 import asiImage from '../../img/ASI/ASI-2026-01-20-1022.png';
 import scoutImage from '../../img/Scout/Scout-2026-01-20-1022.png';
+import ongoingImage from '../../img/Fabric/Notebook-RetriableSession-2025-09-04-1233.png';
 
 export default function Microsoft() {
-  const [showFCS, setShowFCS] = useState(false);
-  const [showOngoing, setShowOngoing] = useState(false);
   const [showHDIImage, setShowHDIImage] = useState(false);
+  const [showFCSImage, setShowFCSImage] = useState(false);
   const [showASIImage, setShowASIImage] = useState(false);
   const [showScoutImage, setShowScoutImage] = useState(false);
-
-  const handleASIClick = () => {
-    setShowASIImage(true);
-  };
-
-  const handleScoutClick = () => {
-    setShowScoutImage(true);
-  };
-
-  const handleFCSClick = () => {
-    setShowFCS(true);
-  };
-
-  const handleOngoingClick = () => {
-    setShowOngoing(true);
-  };
-
-  const handleBackToMicrosoft = () => {
-    setShowFCS(false);
-    setShowOngoing(false);
-  };
-
-  // 如果显示FCS页面
-  if (showFCS) {
-    return <FCS onBack={handleBackToMicrosoft} />;
-  }
-
-  // 如果显示Ongoing页面
-  if (showOngoing) {
-    return <Ongoing onBack={handleBackToMicrosoft} />
-  }
+  const [showOngoingImage, setShowOngoingImage] = useState(false);
 
   return (
     <div style={{ 
@@ -168,10 +138,12 @@ export default function Microsoft() {
             </p>
           </div>
 
-          {/* ASI 卡片 */}
-          <div 
-            onClick={handleASIClick}
+          {/* ASI 卡片 - 点击显示弹窗 */}
+          <div
+            onClick={() => setShowASIImage(true)}
             style={{
+              textDecoration: 'none',
+              color: 'inherit',
               background: '#ffffff',
               borderRadius: '16px',
               padding: '32px',
@@ -222,9 +194,9 @@ export default function Microsoft() {
             </p>
           </div>
 
-          {/* Scout 卡片 */}
-          <div 
-            onClick={handleScoutClick}
+          {/* Scout 卡片 - 点击显示弹窗 */}
+          <div
+            onClick={() => setShowScoutImage(true)}
             style={{
               background: '#ffffff',
               borderRadius: '16px',
@@ -276,9 +248,9 @@ export default function Microsoft() {
             </p>
           </div>
 
-          {/* FCS 卡片 */}
+          {/* FCS 卡片 - 点击显示弹窗 */}
           <div 
-            onClick={handleFCSClick}
+            onClick={() => setShowFCSImage(true)}
             style={{
               background: '#ffffff',
               borderRadius: '16px',
@@ -330,9 +302,9 @@ export default function Microsoft() {
             </p>
           </div>
 
-          {/* 其他卡片 */}
-          <div 
-            onClick={handleOngoingClick}
+          {/* 其他卡片 - 点击显示弹窗 */}
+          <div
+            onClick={() => setShowOngoingImage(true)}
             style={{
               background: '#ffffff',
               borderRadius: '16px',
@@ -371,7 +343,7 @@ export default function Microsoft() {
               color: '#1f2937',
               margin: '0 0 8px 0'
             }}>
-              其他项目
+              Retry Session
             </h3>
             <p style={{
               fontSize: '14px',
@@ -379,7 +351,8 @@ export default function Microsoft() {
               margin: 0,
               lineHeight: '1.5'
             }}>
-              正在进行的项目
+              Mircosoft Fabric<br/>
+              重试作业
             </p>
           </div>
         </div>
@@ -517,7 +490,89 @@ export default function Microsoft() {
         </div>
       )}
 
-      {/* ASI 图片弹出层 */}
+      {/* FCS 图片弹出层 - 与 HDI 样式保持一致 */}
+      {showFCSImage && (
+        <div 
+          onClick={() => setShowFCSImage(false)}
+          style={{
+            position: 'fixed',
+            top: 0,
+            left: 0,
+            right: 0,
+            bottom: 0,
+            background: 'rgba(0, 0, 0, 0.85)',
+            display: 'flex',
+            justifyContent: 'center',
+            alignItems: 'center',
+            zIndex: 1000,
+            cursor: 'pointer',
+            overflow: 'hidden'
+          }}
+        >
+          <div 
+            onClick={(e) => e.stopPropagation()}
+            style={{
+              position: 'relative',
+              width: '85vw',
+              height: '85vh',
+              background: '#ffffff',
+              borderRadius: '16px',
+              padding: '20px',
+              boxShadow: '0 20px 60px rgba(0,0,0,0.3)',
+              display: 'flex',
+              justifyContent: 'center',
+              alignItems: 'center'
+            }}
+          >
+            <button
+              onClick={() => setShowFCSImage(false)}
+              style={{
+                position: 'absolute',
+                top: '15px',
+                right: '15px',
+                background: '#ef4444',
+                color: '#ffffff',
+                border: 'none',
+                borderRadius: '50%',
+                width: '40px',
+                height: '40px',
+                fontSize: '24px',
+                cursor: 'pointer',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                fontWeight: 'bold',
+                transition: 'all 0.3s ease',
+                zIndex: 10
+              }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.background = '#dc2626';
+                e.currentTarget.style.transform = 'scale(1.1)';
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.background = '#ef4444';
+                e.currentTarget.style.transform = 'scale(1)';
+              }}
+            >
+              ×
+            </button>
+            <img 
+              src={fcsImage} 
+              alt="FCS Architecture"
+              style={{
+                maxWidth: '100%',
+                maxHeight: '100%',
+                width: 'auto',
+                height: 'auto',
+                objectFit: 'contain',
+                display: 'block'
+              }}
+            />
+          </div>
+        </div>
+      )}
+
+      {/* ASI 图片弹出层 - 与 HDI 样式保持一致 */}
       {showASIImage && (
         <div 
           onClick={() => setShowASIImage(false)}
@@ -599,7 +654,7 @@ export default function Microsoft() {
         </div>
       )}
 
-      {/* Scout 图片弹出层 */}
+      {/* Scout 图片弹出层 - 与 HDI 样式保持一致 */}
       {showScoutImage && (
         <div 
           onClick={() => setShowScoutImage(false)}
@@ -680,6 +735,89 @@ export default function Microsoft() {
           </div>
         </div>
       )}
+
+      {/* Ongoing 图片弹出层 - 与 HDI 样式保持一致 */}
+      {showOngoingImage && (
+        <div 
+          onClick={() => setShowOngoingImage(false)}
+          style={{
+            position: 'fixed',
+            top: 0,
+            left: 0,
+            right: 0,
+            bottom: 0,
+            background: 'rgba(0, 0, 0, 0.85)',
+            display: 'flex',
+            justifyContent: 'center',
+            alignItems: 'center',
+            zIndex: 1000,
+            cursor: 'pointer',
+            overflow: 'hidden'
+          }}
+        >
+          <div 
+            onClick={(e) => e.stopPropagation()}
+            style={{
+              position: 'relative',
+              width: '85vw',
+              height: '85vh',
+              background: '#ffffff',
+              borderRadius: '16px',
+              padding: '20px',
+              boxShadow: '0 20px 60px rgba(0,0,0,0.3)',
+              display: 'flex',
+              justifyContent: 'center',
+              alignItems: 'center'
+            }}
+          >
+            <button
+              onClick={() => setShowOngoingImage(false)}
+              style={{
+                position: 'absolute',
+                top: '15px',
+                right: '15px',
+                background: '#ef4444',
+                color: '#ffffff',
+                border: 'none',
+                borderRadius: '50%',
+                width: '40px',
+                height: '40px',
+                fontSize: '24px',
+                cursor: 'pointer',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                fontWeight: 'bold',
+                transition: 'all 0.3s ease',
+                zIndex: 10
+              }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.background = '#dc2626';
+                e.currentTarget.style.transform = 'scale(1.1)';
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.background = '#ef4444';
+                e.currentTarget.style.transform = 'scale(1)';
+              }}
+            >
+              ×
+            </button>
+            <img 
+              src={ongoingImage} 
+              alt="Ongoing Project"
+              style={{
+                maxWidth: '100%',
+                maxHeight: '100%',
+                width: 'auto',
+                height: 'auto',
+                objectFit: 'contain',
+                display: 'block'
+              }}
+            />
+          </div>
+        </div>
+      )}
+
     </div>
   );
 }

@@ -6,6 +6,7 @@ import Microsoft from './components/Microsoft';
 import Alibaba from './components/Alibaba';
 import ENI from './components/ENI';
 import InstanceMigration from './components/InstanceMigration';
+import ASI from './components/ASI';
 
 export default function App() {
   return (
@@ -16,6 +17,7 @@ export default function App() {
         <Route path="/alibaba" element={<Alibaba />} />
         <Route path="/samples" element={<ENI />} />
         <Route path="/instance-migration" element={<InstanceMigration />} />
+        <Route path="/asi" element={<ASI />} />
       </Routes>
     </BrowserRouter>
   );
