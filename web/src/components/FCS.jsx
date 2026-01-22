@@ -1,124 +1,64 @@
 import React from 'react';
-import { fcsConfig, fcsTheme } from '../data/fcsData';
-import PageHeader from './FCS/PageHeader';
-import ImageSection from './FCS/ImageSection';
-import TableSection from './FCS/TableSection';
-import NavigationButton from './FCS/NavigationButton';
-import fabricDEWorkflow from '../../img/FCS/Fabric-DE-Workflow.jpg';
-import fcsComponent from '../../img/FCS/FCS Component.png';
-import controlPlaneWorkflow from '../../img/FCS/PYNB-ControlPlane-Workflow.png';
-import dataPlaneWorkflow from '../../img/FCS/PYNB-DataPlane-Workflow.png';
+import fcsImage from '../../img/FCS/FCS-2026-01-20-1331.png';
 
 export default function FCS({ onBack }) {
-  const { title, sections } = fcsConfig;
-
-  // 分离前两个章节和后两个章节
-  const mainSections = sections.slice(0, 2); // FCS架构图 和 容器生命周期管理
-  const workflowSections = sections.slice(2); // ControlPlane 和 DataPlane
-
-  // 根据类型渲染不同的组件
-  const renderSection = (section, index) => {
-    switch (section.type) {
-      case 'image':
-        return (
-          <ImageSection
-            key={section.id}
-            title={section.title}
-            src={section.content.src}
-            alt={section.content.alt}
-            link={section.content.link}
-            linkText={section.content.linkText}
-            fallback={section.content.fallback}
-          />
-        );
-      case 'images-side-by-side':
-        return (
-          <div key={section.id} style={{
-            background: fcsTheme.colors.cardBackground,
-            borderRadius: '16px',
-            padding: fcsTheme.spacing.cardPadding,
-            boxShadow: fcsTheme.shadows.card,
-            marginBottom: fcsTheme.spacing.sectionMargin
-          }}>
-            <h2 style={{
-              fontSize: fcsTheme.typography.sectionTitle.fontSize,
-              fontWeight: fcsTheme.typography.sectionTitle.fontWeight,
-              color: fcsTheme.colors.textPrimary,
-              margin: '0 0 24px 0',
-              textAlign: 'center'
-            }}>
-              {section.title}
-            </h2>
-            <div style={{
-              display: 'flex',
-              gap: '24px',
-              alignItems: 'flex-start'
-            }}>
-              {section.content.images.map((img, idx) => (
-                <div key={idx} style={{ flex: 1 }}>
-                  <ImageSection
-                    title=""
-                    src={img.src}
-                    alt={img.alt}
-                    link={img.link}
-                    linkText={img.linkText}
-                    fallback={img.fallback}
-                  />
-                </div>
-              ))}
-            </div>
-          </div>
-        );
-      case 'table':
-        return (
-          <TableSection
-            key={section.id}
-            title={section.title}
-            tableTitle={section.content.tableTitle}
-            subtitle={section.content.subtitle}
-            columns={section.content.columns}
-            data={section.content.data}
-          />
-        );
-      default:
-        return null;
-    }
-  };
-
   return (
     <div style={{
       minHeight: '100vh',
-      background: fcsTheme.colors.background,
-      padding: fcsTheme.spacing.containerPadding
+      background: 'linear-gradient(135deg, #999db3ff 0%, #030303ff 100%)',
+      padding: '60px 40px',
+      display: 'flex',
+      flexDirection: 'column',
+      alignItems: 'center',
+      justifyContent: 'center'
     }}>
+      {/* 返回按钮 */}
+      <button
+        onClick={onBack || (() => window.history.back())}
+        style={{
+          position: 'absolute',
+          top: '20px',
+          left: '20px',
+          background: 'rgba(255,255,255,0.2)',
+          color: '#ffffff',
+          border: '1px solid rgba(255,255,255,0.3)',
+          padding: '12px 32px',
+          borderRadius: '8px',
+          fontSize: '14px',
+          fontWeight: '500',
+          cursor: 'pointer',
+          transition: 'all 0.3s ease'
+        }}
+        onMouseEnter={(e) => {
+          e.currentTarget.style.background = 'rgba(255,255,255,0.3)';
+        }}
+        onMouseLeave={(e) => {
+          e.currentTarget.style.background = 'rgba(255,255,255,0.2)';
+        }}
+      >
+        ← 返回
+      </button>
+
+      {/* 图片容器 */}
       <div style={{
-        maxWidth: '1200px',
-        margin: '0 auto'
+        maxWidth: '800px',
+        width: '100%',
+        background: '#ffffff',
+        borderRadius: '16px',
+        padding: '24px',
+        boxShadow: '0 20px 40px rgba(0,0,0,0.2)'
       }}>
-        <PageHeader 
-          title={title.main} 
-          subtitle={title.subtitle} 
+        <img
+          src={fcsImage}
+          alt="FCS Architecture"
+          style={{
+            width: '100%',
+            height: 'auto',
+            maxHeight: '600px',
+            borderRadius: '8px',
+            objectFit: 'contain'
+          }}
         />
-
-        {/* 渲染前两个主要章节 */}
-        {mainSections.map((section, index) => renderSection(section, index))}
-
-        {/* 从上到下渲染工作流章节 */}
-        <div style={{
-          margin: '48px 0 32px 0'
-        }}>
-          {workflowSections.map((section, index) => (
-            <div key={section.id} style={{ 
-              marginBottom: index < workflowSections.length - 1 ? '32px' : '0'
-            }}>
-              {renderSection(section, index)}
-            </div>
-          ))}
-        </div>
-
-        <NavigationButton onClick={onBack || (() => window.history.back())}>
-          ← 返回上一页
-        </NavigationButton>
       </div>
     </div>
   );
