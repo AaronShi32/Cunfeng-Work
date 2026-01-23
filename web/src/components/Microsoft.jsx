@@ -1,6 +1,7 @@
 
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
+import ZoomableImageModal from './ZoomableImageModal';
 import hdiImage from '../../img/HDI/HDI-2025-09-04-1233.png';
 import fcsImage from '../../img/FCS/FCS-2026-01-20-1331.png';
 import asiImage from '../../img/ASI/ASI-2026-01-20-1022.png';
@@ -408,415 +409,40 @@ export default function Microsoft() {
         </div>
       </div>
 
-      {/* HDI 图片弹出层 */}
-      {showHDIImage && (
-        <div 
-          onClick={() => setShowHDIImage(false)}
-          style={{
-            position: 'fixed',
-            top: 0,
-            left: 0,
-            right: 0,
-            bottom: 0,
-            background: 'rgba(0, 0, 0, 0.85)',
-            display: 'flex',
-            justifyContent: 'center',
-            alignItems: 'center',
-            zIndex: 1000,
-            cursor: 'pointer',
-            overflow: 'hidden'
-          }}
-        >
-          <div 
-            onClick={(e) => e.stopPropagation()}
-            style={{
-              position: 'relative',
-              width: '85vw',
-              height: '85vh',
-              background: '#ffffff',
-              borderRadius: '16px',
-              padding: '20px',
-              boxShadow: '0 20px 60px rgba(0,0,0,0.3)',
-              display: 'flex',
-              justifyContent: 'center',
-              alignItems: 'center'
-            }}
-          >
-            <button
-              onClick={() => setShowHDIImage(false)}
-              style={{
-                position: 'absolute',
-                top: '15px',
-                right: '15px',
-                background: '#ef4444',
-                color: '#ffffff',
-                border: 'none',
-                borderRadius: '50%',
-                width: '40px',
-                height: '40px',
-                fontSize: '24px',
-                cursor: 'pointer',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                fontWeight: 'bold',
-                transition: 'all 0.3s ease',
-                zIndex: 10
-              }}
-              onMouseEnter={(e) => {
-                e.currentTarget.style.background = '#dc2626';
-                e.currentTarget.style.transform = 'scale(1.1)';
-              }}
-              onMouseLeave={(e) => {
-                e.currentTarget.style.background = '#ef4444';
-                e.currentTarget.style.transform = 'scale(1)';
-              }}
-            >
-              ×
-            </button>
-            <img 
-              src={hdiImage} 
-              alt="HDInsight Architecture"
-              style={{
-                maxWidth: '100%',
-                maxHeight: '100%',
-                width: 'auto',
-                height: 'auto',
-                objectFit: 'contain',
-                display: 'block'
-              }}
-            />
-          </div>
-        </div>
-      )}
+      <ZoomableImageModal 
+        imageSrc={hdiImage} 
+        imageAlt="HDInsight Architecture"
+        isOpen={showHDIImage} 
+        onClose={() => setShowHDIImage(false)} 
+      />
 
-      {/* FCS 图片弹出层 - 与 HDI 样式保持一致 */}
-      {showFCSImage && (
-        <div 
-          onClick={() => setShowFCSImage(false)}
-          style={{
-            position: 'fixed',
-            top: 0,
-            left: 0,
-            right: 0,
-            bottom: 0,
-            background: 'rgba(0, 0, 0, 0.85)',
-            display: 'flex',
-            justifyContent: 'center',
-            alignItems: 'center',
-            zIndex: 1000,
-            cursor: 'pointer',
-            overflow: 'hidden'
-          }}
-        >
-          <div 
-            onClick={(e) => e.stopPropagation()}
-            style={{
-              position: 'relative',
-              width: '85vw',
-              height: '85vh',
-              background: '#ffffff',
-              borderRadius: '16px',
-              padding: '20px',
-              boxShadow: '0 20px 60px rgba(0,0,0,0.3)',
-              display: 'flex',
-              justifyContent: 'center',
-              alignItems: 'center'
-            }}
-          >
-            <button
-              onClick={() => setShowFCSImage(false)}
-              style={{
-                position: 'absolute',
-                top: '15px',
-                right: '15px',
-                background: '#ef4444',
-                color: '#ffffff',
-                border: 'none',
-                borderRadius: '50%',
-                width: '40px',
-                height: '40px',
-                fontSize: '24px',
-                cursor: 'pointer',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                fontWeight: 'bold',
-                transition: 'all 0.3s ease',
-                zIndex: 10
-              }}
-              onMouseEnter={(e) => {
-                e.currentTarget.style.background = '#dc2626';
-                e.currentTarget.style.transform = 'scale(1.1)';
-              }}
-              onMouseLeave={(e) => {
-                e.currentTarget.style.background = '#ef4444';
-                e.currentTarget.style.transform = 'scale(1)';
-              }}
-            >
-              ×
-            </button>
-            <img 
-              src={fcsImage} 
-              alt="FCS Architecture"
-              style={{
-                maxWidth: '100%',
-                maxHeight: '100%',
-                width: 'auto',
-                height: 'auto',
-                objectFit: 'contain',
-                display: 'block'
-              }}
-            />
-          </div>
-        </div>
-      )}
+      <ZoomableImageModal 
+        imageSrc={fcsImage} 
+        imageAlt="FCS Architecture"
+        isOpen={showFCSImage} 
+        onClose={() => setShowFCSImage(false)} 
+      />
 
-      {/* ASI 图片弹出层 - 与 HDI 样式保持一致 */}
-      {showASIImage && (
-        <div 
-          onClick={() => setShowASIImage(false)}
-          style={{
-            position: 'fixed',
-            top: 0,
-            left: 0,
-            right: 0,
-            bottom: 0,
-            background: 'rgba(0, 0, 0, 0.85)',
-            display: 'flex',
-            justifyContent: 'center',
-            alignItems: 'center',
-            zIndex: 1000,
-            cursor: 'pointer',
-            overflow: 'hidden'
-          }}
-        >
-          <div 
-            onClick={(e) => e.stopPropagation()}
-            style={{
-              position: 'relative',
-              width: '85vw',
-              height: '85vh',
-              background: '#ffffff',
-              borderRadius: '16px',
-              padding: '20px',
-              boxShadow: '0 20px 60px rgba(0,0,0,0.3)',
-              display: 'flex',
-              justifyContent: 'center',
-              alignItems: 'center'
-            }}
-          >
-            <button
-              onClick={() => setShowASIImage(false)}
-              style={{
-                position: 'absolute',
-                top: '15px',
-                right: '15px',
-                background: '#ef4444',
-                color: '#ffffff',
-                border: 'none',
-                borderRadius: '50%',
-                width: '40px',
-                height: '40px',
-                fontSize: '24px',
-                cursor: 'pointer',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                fontWeight: 'bold',
-                transition: 'all 0.3s ease',
-                zIndex: 10
-              }}
-              onMouseEnter={(e) => {
-                e.currentTarget.style.background = '#dc2626';
-                e.currentTarget.style.transform = 'scale(1.1)';
-              }}
-              onMouseLeave={(e) => {
-                e.currentTarget.style.background = '#ef4444';
-                e.currentTarget.style.transform = 'scale(1)';
-              }}
-            >
-              ×
-            </button>
-            <img 
-              src={asiImage} 
-              alt="ASI Architecture"
-              style={{
-                maxWidth: '100%',
-                maxHeight: '100%',
-                width: 'auto',
-                height: 'auto',
-                objectFit: 'contain',
-                display: 'block'
-              }}
-            />
-          </div>
-        </div>
-      )}
+      <ZoomableImageModal 
+        imageSrc={asiImage} 
+        imageAlt="ASI Architecture"
+        isOpen={showASIImage} 
+        onClose={() => setShowASIImage(false)} 
+      />
 
-      {/* Scout 图片弹出层 - 与 HDI 样式保持一致 */}
-      {showScoutImage && (
-        <div 
-          onClick={() => setShowScoutImage(false)}
-          style={{
-            position: 'fixed',
-            top: 0,
-            left: 0,
-            right: 0,
-            bottom: 0,
-            background: 'rgba(0, 0, 0, 0.85)',
-            display: 'flex',
-            justifyContent: 'center',
-            alignItems: 'center',
-            zIndex: 1000,
-            cursor: 'pointer',
-            overflow: 'hidden'
-          }}
-        >
-          <div 
-            onClick={(e) => e.stopPropagation()}
-            style={{
-              position: 'relative',
-              width: '85vw',
-              height: '85vh',
-              background: '#ffffff',
-              borderRadius: '16px',
-              padding: '20px',
-              boxShadow: '0 20px 60px rgba(0,0,0,0.3)',
-              display: 'flex',
-              justifyContent: 'center',
-              alignItems: 'center'
-            }}
-          >
-            <button
-              onClick={() => setShowScoutImage(false)}
-              style={{
-                position: 'absolute',
-                top: '15px',
-                right: '15px',
-                background: '#ef4444',
-                color: '#ffffff',
-                border: 'none',
-                borderRadius: '50%',
-                width: '40px',
-                height: '40px',
-                fontSize: '24px',
-                cursor: 'pointer',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                fontWeight: 'bold',
-                transition: 'all 0.3s ease',
-                zIndex: 10
-              }}
-              onMouseEnter={(e) => {
-                e.currentTarget.style.background = '#dc2626';
-                e.currentTarget.style.transform = 'scale(1.1)';
-              }}
-              onMouseLeave={(e) => {
-                e.currentTarget.style.background = '#ef4444';
-                e.currentTarget.style.transform = 'scale(1)';
-              }}
-            >
-              ×
-            </button>
-            <img 
-              src={scoutImage} 
-              alt="Scout Architecture"
-              style={{
-                maxWidth: '100%',
-                maxHeight: '100%',
-                width: 'auto',
-                height: 'auto',
-                objectFit: 'contain',
-                display: 'block'
-              }}
-            />
-          </div>
-        </div>
-      )}
+      <ZoomableImageModal 
+        imageSrc={scoutImage} 
+        imageAlt="Scout Architecture"
+        isOpen={showScoutImage} 
+        onClose={() => setShowScoutImage(false)} 
+      />
 
-      {/* Ongoing 图片弹出层 - 与 HDI 样式保持一致 */}
-      {showOngoingImage && (
-        <div 
-          onClick={() => setShowOngoingImage(false)}
-          style={{
-            position: 'fixed',
-            top: 0,
-            left: 0,
-            right: 0,
-            bottom: 0,
-            background: 'rgba(0, 0, 0, 0.85)',
-            display: 'flex',
-            justifyContent: 'center',
-            alignItems: 'center',
-            zIndex: 1000,
-            cursor: 'pointer',
-            overflow: 'hidden'
-          }}
-        >
-          <div 
-            onClick={(e) => e.stopPropagation()}
-            style={{
-              position: 'relative',
-              width: '85vw',
-              height: '85vh',
-              background: '#ffffff',
-              borderRadius: '16px',
-              padding: '20px',
-              boxShadow: '0 20px 60px rgba(0,0,0,0.3)',
-              display: 'flex',
-              justifyContent: 'center',
-              alignItems: 'center'
-            }}
-          >
-            <button
-              onClick={() => setShowOngoingImage(false)}
-              style={{
-                position: 'absolute',
-                top: '15px',
-                right: '15px',
-                background: '#ef4444',
-                color: '#ffffff',
-                border: 'none',
-                borderRadius: '50%',
-                width: '40px',
-                height: '40px',
-                fontSize: '24px',
-                cursor: 'pointer',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                fontWeight: 'bold',
-                transition: 'all 0.3s ease',
-                zIndex: 10
-              }}
-              onMouseEnter={(e) => {
-                e.currentTarget.style.background = '#dc2626';
-                e.currentTarget.style.transform = 'scale(1.1)';
-              }}
-              onMouseLeave={(e) => {
-                e.currentTarget.style.background = '#ef4444';
-                e.currentTarget.style.transform = 'scale(1)';
-              }}
-            >
-              ×
-            </button>
-            <img 
-              src={ongoingImage} 
-              alt="Ongoing Project"
-              style={{
-                maxWidth: '100%',
-                maxHeight: '100%',
-                width: 'auto',
-                height: 'auto',
-                objectFit: 'contain',
-                display: 'block'
-              }}
-            />
-          </div>
-        </div>
-      )}
+      <ZoomableImageModal 
+        imageSrc={ongoingImage} 
+        imageAlt="Ongoing Project"
+        isOpen={showOngoingImage} 
+        onClose={() => setShowOngoingImage(false)} 
+      />
 
     </div>
   );

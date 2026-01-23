@@ -1,7 +1,6 @@
 import React, { useState, useRef } from 'react';
-import asiImage from '../../img/ASI/ASI-2026-01-20-1022.png';
 
-export default function ASI({ onBack }) {
+export default function ZoomableImageModal({ imageSrc, imageAlt, isOpen, onClose }) {
   const [zoom, setZoom] = useState(1);
   const [position, setPosition] = useState({ x: 0, y: 0 });
   const [isDragging, setIsDragging] = useState(false);
@@ -39,86 +38,83 @@ export default function ASI({ onBack }) {
     setZoom(1);
     setPosition({ x: 0, y: 0 });
   };
-  return (
-    <div style={{
-      minHeight: '100vh',
-      background: 'linear-gradient(135deg, #999db3ff 0%, #030303ff 100%)',
-      padding: '60px 40px',
-      display: 'flex',
-      flexDirection: 'column',
-      alignItems: 'center',
-      justifyContent: 'center'
-    }}>
-      {/* 返回按钮 */}
-      <button
-        onClick={onBack || (() => window.history.back())}
-        style={{
-          position: 'absolute',
-          top: '20px',
-          left: '20px',
-          background: 'rgba(255,255,255,0.2)',
-          color: '#ffffff',
-          border: '1px solid rgba(255,255,255,0.3)',
-          padding: '12px 32px',
-          borderRadius: '8px',
-          fontSize: '14px',
-          fontWeight: '500',
-          cursor: 'pointer',
-          transition: 'all 0.3s ease'
-        }}
-        onMouseEnter={(e) => {
-          e.currentTarget.style.background = 'rgba(255,255,255,0.3)';
-        }}
-        onMouseLeave={(e) => {
-          e.currentTarget.style.background = 'rgba(255,255,255,0.2)';
-        }}
-      >
-        ← 返回
-      </button>
 
-      {/* 图片容器 */}
+  if (!isOpen) return null;
+
+  return (
+    <div 
+      onClick={onClose}
+      style={{
+        position: 'fixed',
+        top: 0,
+        left: 0,
+        right: 0,
+        bottom: 0,
+        background: 'rgba(0, 0, 0, 0.85)',
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center',
+        zIndex: 1000,
+        cursor: 'pointer',
+        overflow: 'hidden'
+      }}
+    >
       <div 
         ref={containerRef}
+        onClick={(e) => e.stopPropagation()}
         onWheel={handleWheel}
         onMouseDown={handleMouseDown}
         onMouseMove={handleMouseMove}
         onMouseUp={handleMouseUp}
         onMouseLeave={handleMouseUp}
         style={{
-          maxWidth: '800px',
-          width: '100%',
+          position: 'relative',
+          width: '85vw',
+          height: '85vh',
           background: '#ffffff',
           borderRadius: '16px',
-          padding: '24px',
-          boxShadow: '0 20px 40px rgba(0,0,0,0.2)',
+          padding: '20px',
+          boxShadow: '0 20px 60px rgba(0,0,0,0.3)',
+          display: 'flex',
+          justifyContent: 'center',
+          alignItems: 'center',
           overflow: 'hidden',
           cursor: zoom > 1 ? (isDragging ? 'grabbing' : 'grab') : 'pointer'
         }}
       >
-        <div
+        {/* 关闭按钮 */}
+        <button
+          onClick={onClose}
           style={{
-            transform: `translate(${position.x}px, ${position.y}px) scale(${zoom})`,
-            transformOrigin: 'center center',
-            transition: isDragging ? 'none' : 'transform 0.1s ease-out',
-            cursor: zoom > 1 ? (isDragging ? 'grabbing' : 'grab') : 'pointer'
+            position: 'absolute',
+            top: '15px',
+            right: '15px',
+            background: '#ef4444',
+            color: '#ffffff',
+            border: 'none',
+            borderRadius: '50%',
+            width: '40px',
+            height: '40px',
+            fontSize: '24px',
+            cursor: 'pointer',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            fontWeight: 'bold',
+            transition: 'all 0.3s ease',
+            zIndex: 10
+          }}
+          onMouseEnter={(e) => {
+            e.currentTarget.style.background = '#dc2626';
+            e.currentTarget.style.transform = 'scale(1.1)';
+          }}
+          onMouseLeave={(e) => {
+            e.currentTarget.style.background = '#ef4444';
+            e.currentTarget.style.transform = 'scale(1)';
           }}
         >
-          <img
-            src={asiImage}
-            alt="ASI Architecture"
-            style={{
-              width: '100%',
-              height: 'auto',
-              maxHeight: '600px',
-              borderRadius: '8px',
-              objectFit: 'contain',
-              display: 'block',
-              userSelect: 'none',
-              pointerEvents: 'none',
-              draggable: false
-            }}
-          />
-        </div>
+          ×
+        </button>
 
         {/* 重置缩放按钮 */}
         {zoom > 1 && (
@@ -126,8 +122,8 @@ export default function ASI({ onBack }) {
             onClick={resetZoom}
             style={{
               position: 'absolute',
-              bottom: '40px',
-              right: '40px',
+              bottom: '15px',
+              left: '15px',
               background: '#3b82f6',
               color: '#ffffff',
               border: 'none',
@@ -155,19 +151,45 @@ export default function ASI({ onBack }) {
         <div
           style={{
             position: 'absolute',
-            bottom: '40px',
-            left: '40px',
+            bottom: '15px',
+            right: '15px',
             background: 'rgba(0, 0, 0, 0.6)',
             color: '#ffffff',
             padding: '8px 12px',
             borderRadius: '6px',
             fontSize: '12px',
             zIndex: 10,
-            textAlign: 'left'
+            textAlign: 'right'
           }}
         >
           <div>鼠标滚轮: 缩放</div>
           {zoom > 1 && <div>拖动: 移动图片</div>}
+        </div>
+
+        {/* 图片容器 */}
+        <div
+          style={{
+            transform: `translate(${position.x}px, ${position.y}px) scale(${zoom})`,
+            transformOrigin: 'center center',
+            transition: isDragging ? 'none' : 'transform 0.1s ease-out',
+            cursor: zoom > 1 ? (isDragging ? 'grabbing' : 'grab') : 'pointer'
+          }}
+        >
+          <img 
+            src={imageSrc} 
+            alt={imageAlt}
+            style={{
+              maxWidth: '100%',
+              maxHeight: '100%',
+              width: 'auto',
+              height: 'auto',
+              objectFit: 'contain',
+              display: 'block',
+              userSelect: 'none',
+              pointerEvents: 'none'
+            }}
+            draggable="false"
+          />
         </div>
       </div>
     </div>
