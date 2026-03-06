@@ -1,0 +1,42 @@
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(24px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+.animateFadeIn {
+  animation: fadeIn 0.5s ease-out both;
+}
+
+.animateCard {
+  animation: fadeInUp 0.5s ease-out both;
+}
+
+.animateCard:nth-child(1) { animation-delay: 0s; }
+.animateCard:nth-child(2) { animation-delay: 0.08s; }
+.animateCard:nth-child(3) { animation-delay: 0.16s; }
+.animateCard:nth-child(4) { animation-delay: 0.24s; }
+.animateCard:nth-child(5) { animation-delay: 0.32s; }
+.animateCard:nth-child(6) { animation-delay: 0.40s; }
+
+.animateSection {
+  animation: fadeInUp 0.6s ease-out both;
+}
+
+.animateSectionDelay1 {
+  animation: fadeInUp 0.6s ease-out 0.2s both;
+}
+
+.animateSectionDelay2 {
+  animation: fadeInUp 0.6s ease-out 0.4s both;
+}

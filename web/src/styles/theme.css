@@ -1,0 +1,64 @@
+:root {
+  /* Colors */
+  --color-bg-dark-start: #999db3;
+  --color-bg-dark-end: #030303;
+  --color-white: #ffffff;
+  --color-text-primary: #1f2937;
+  --color-text-secondary: #6b7280;
+  --color-text-muted: #64748b;
+  --color-text-body: #475569;
+
+  /* Card */
+  --card-bg: #ffffff;
+  --card-radius: 16px;
+  --card-padding: 32px;
+  --card-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+  --card-shadow-hover: 0 20px 40px rgba(0, 0, 0, 0.15);
+
+  /* Glass */
+  --glass-bg: rgba(0, 0, 0, 0.3);
+  --glass-border: 1px solid rgba(255, 255, 255, 0.2);
+  --glass-blur: blur(20px);
+
+  /* Button */
+  --btn-ghost-bg: rgba(255, 255, 255, 0.2);
+  --btn-ghost-bg-hover: rgba(255, 255, 255, 0.3);
+  --btn-ghost-border: 1px solid rgba(255, 255, 255, 0.3);
+
+  /* Links */
+  --link-alibaba-start: #ff6600;
+  --link-alibaba-end: #ff8533;
+  --link-alibaba-shadow: rgba(255, 102, 0, 0.3);
+  --link-microsoft-start: #3b82f6;
+  --link-microsoft-end: #1d4ed8;
+  --link-microsoft-shadow: rgba(59, 130, 246, 0.3);
+
+  /* Spacing */
+  --page-padding: 60px 40px;
+  --section-gap: 40px;
+
+  /* Typography */
+  --font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-size-hero: 56px;
+  --font-size-title: 36px;
+  --font-size-heading: 24px;
+  --font-size-subheading: 20px;
+  --font-size-body: 16px;
+  --font-size-small: 14px;
+  --font-size-xs: 12px;
+
+  /* Transitions */
+  --transition-base: all 0.3s ease;
+  --transition-fast: all 0.15s ease;
+}
+
+@media (max-width: 768px) {
+  :root {
+    --page-padding: 32px 16px;
+    --font-size-hero: 36px;
+    --font-size-title: 28px;
+    --font-size-heading: 20px;
+    --font-size-subheading: 17px;
+    --card-padding: 24px;
+  }
+}

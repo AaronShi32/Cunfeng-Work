@@ -1,0 +1,95 @@
+.backButton {
+  background: var(--btn-ghost-bg);
+  color: var(--color-white);
+  border: var(--btn-ghost-border);
+  padding: 12px 32px;
+  border-radius: 8px;
+  font-size: var(--font-size-small);
+  font-weight: 500;
+  cursor: pointer;
+  transition: var(--transition-base);
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.backButton:hover {
+  background: var(--btn-ghost-bg-hover);
+}
+
+.linkButton {
+  display: inline-flex;
+  align-items: center;
+  padding: 12px 20px;
+  color: var(--color-white);
+  text-decoration: none;
+  border-radius: 8px;
+  font-size: var(--font-size-small);
+  font-weight: 500;
+  transition: var(--transition-base);
+}
+
+.linkButton:hover {
+  transform: translateY(-2px);
+}
+
+.linkButtonAlibaba {
+  composes: linkButton;
+  background: linear-gradient(135deg, var(--link-alibaba-start) 0%, var(--link-alibaba-end) 100%);
+  box-shadow: 0 4px 12px var(--link-alibaba-shadow);
+}
+
+.linkButtonAlibaba:hover {
+  box-shadow: 0 6px 20px rgba(255, 102, 0, 0.4);
+}
+
+.linkButtonMicrosoft {
+  composes: linkButton;
+  background: linear-gradient(135deg, var(--link-microsoft-start) 0%, var(--link-microsoft-end) 100%);
+  box-shadow: 0 4px 12px var(--link-microsoft-shadow);
+}
+
+.linkButtonMicrosoft:hover {
+  box-shadow: 0 6px 20px rgba(59, 130, 246, 0.4);
+}
+
+.linkButtonIcon {
+  margin-right: 8px;
+}
+
+.techBar {
+  background: var(--glass-bg);
+  backdrop-filter: var(--glass-blur);
+  border-radius: var(--card-radius);
+  padding: var(--card-padding);
+  border: var(--glass-border);
+}
+
+.techBarTitle {
+  font-size: var(--font-size-subheading);
+  font-weight: 600;
+  color: var(--color-white);
+  margin: 0 0 20px 0;
+}
+
+.techTags {
+  display: flex;
+  justify-content: center;
+  gap: 16px;
+  flex-wrap: wrap;
+  align-items: center;
+}
+
+.techTag {
+  background: rgba(255, 255, 255, 0.1);
+  padding: 8px 16px;
+  border-radius: 20px;
+  color: var(--color-white);
+  font-size: var(--font-size-small);
+  font-weight: 500;
+  white-space: nowrap;
+}
+
+.techTagIcon {
+  margin-right: 8px;
+}
