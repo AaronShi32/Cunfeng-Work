@@ -1,0 +1,445 @@
+<!DOCTYPE html>
+<html lang=zh>
+<head>
+    <meta charset="utf-8">
+    
+    <title>读书笔记-程序员的自我修养（五） | 着陆的橘子</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+    <meta name="description" content="静态链接 到底做了什么？ 模块间符号的引用，其实就是链接器的主要职责，即把各个模块之间相互引用的部分都处理好，使得各个模块之间能够正确地衔接，通俗一点来讲：两个目标文件如何链接成一个可执行文件。实质 上是将各个 目标文件 中的 地址，结合其他目标文件，包括了 运行时库（Runtime Library），确定其正确的地址，以下：  任务一： 空间与地址分配（Address and Storage）：">
+<meta name="keywords" content="读书">
+<meta property="og:type" content="article">
+<meta property="og:title" content="读书笔记-程序员的自我修养（五）">
+<meta property="og:url" content="https://aaronshi32.github.io/2017/05/18/读书笔记-程序员的自我修养（五）/index.html">
+<meta property="og:site_name" content="着陆的橘子">
+<meta property="og:description" content="静态链接 到底做了什么？ 模块间符号的引用，其实就是链接器的主要职责，即把各个模块之间相互引用的部分都处理好，使得各个模块之间能够正确地衔接，通俗一点来讲：两个目标文件如何链接成一个可执行文件。实质 上是将各个 目标文件 中的 地址，结合其他目标文件，包括了 运行时库（Runtime Library），确定其正确的地址，以下：  任务一： 空间与地址分配（Address and Storage）：">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:updated_time" content="2017-05-18T02:39:00.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="读书笔记-程序员的自我修养（五）">
+<meta name="twitter:description" content="静态链接 到底做了什么？ 模块间符号的引用，其实就是链接器的主要职责，即把各个模块之间相互引用的部分都处理好，使得各个模块之间能够正确地衔接，通俗一点来讲：两个目标文件如何链接成一个可执行文件。实质 上是将各个 目标文件 中的 地址，结合其他目标文件，包括了 运行时库（Runtime Library），确定其正确的地址，以下：  任务一： 空间与地址分配（Address and Storage）：">
+    
+
+    
+
+    
+
+    <link rel="stylesheet" href="/blog/libs/font-awesome/css/font-awesome.min.css">
+    <link rel="stylesheet" href="/blog/libs/open-sans/styles.css">
+    <link rel="stylesheet" href="/blog/libs/source-code-pro/styles.css">
+
+    <link rel="stylesheet" href="/blog/css/style.css">
+
+    <script src="/blog/libs/jquery/2.1.3/jquery.min.js"></script>
+    
+    
+        <link rel="stylesheet" href="/blog/libs/lightgallery/css/lightgallery.min.css">
+    
+    
+        <link rel="stylesheet" href="/blog/libs/justified-gallery/justifiedGallery.min.css">
+    
+    
+    
+    
+
+
+</head>
+
+<body>
+    <div id="container">
+        <header id="header">
+    <div id="header-main" class="header-inner">
+        <div class="outer">
+            <a href="/blog/" id="logo">
+                <i class="logo"></i>
+                <span class="site-title">着陆的橘子</span>
+            </a>
+            <nav id="main-nav">
+                
+                    <a class="main-nav-link" href="/.">主页</a>
+                
+                    <a class="main-nav-link" href="/about/cv.pdf">关于</a>
+                
+            </nav>
+            
+                
+                <nav id="sub-nav">
+                    <div class="profile" id="profile-nav">
+                        <a id="profile-anchor" href="javascript:;">
+                            <img class="avatar" src="/css/images/avatar.png" />
+                            <i class="fa fa-caret-down"></i>
+                        </a>
+                    </div>
+                </nav>
+            
+            <div id="search-form-wrap">
+
+    <form class="search-form">
+        <input type="text" class="ins-search-input search-form-input" placeholder="文章" />
+        <button type="submit" class="search-form-submit"></button>
+    </form>
+    <div class="ins-search">
+    <div class="ins-search-mask"></div>
+    <div class="ins-search-container">
+        <div class="ins-input-wrapper">
+            <input type="text" class="ins-search-input" placeholder="想要查找什么..." />
+            <span class="ins-close ins-selectable"><i class="fa fa-times-circle"></i></span>
+        </div>
+        <div class="ins-section-wrapper">
+            <div class="ins-section-container"></div>
+        </div>
+    </div>
+</div>
+<script>
+(function (window) {
+    var INSIGHT_CONFIG = {
+        TRANSLATION: {
+            POSTS: '文章',
+            PAGES: '页面',
+            CATEGORIES: '分类',
+            TAGS: '标签',
+            UNTITLED: '(未命名)',
+        },
+        ROOT_URL: '/',
+        CONTENT_URL: '/content.json',
+    };
+    window.INSIGHT_CONFIG = INSIGHT_CONFIG;
+})(window);
+</script>
+<script src="/blog/js/insight.js"></script>
+
+</div>
+        </div>
+    </div>
+    <div id="main-nav-mobile" class="header-sub header-inner">
+        <table class="menu outer">
+            <tr>
+                
+                    <td><a class="main-nav-link" href="/.">主页</a></td>
+                
+                    <td><a class="main-nav-link" href="/about/cv.pdf">关于</a></td>
+                
+                <td>
+                    
+    <div class="search-form">
+        <input type="text" class="ins-search-input search-form-input" placeholder="搜索" />
+    </div>
+
+                </td>
+            </tr>
+        </table>
+    </div>
+</header>
+
+        <div class="outer">
+            
+                
+
+<aside id="profile">
+    <div class="inner profile-inner">
+        <div class="base-info profile-block">
+            <img id="avatar" src="/css/images/avatar.png" />
+            <h2 id="name">AaronShi32</h2>
+            <h3 id="title">Senior Software Developer</h3>
+            <span id="location"><i class="fa fa-map-marker"></i>Beijing, China</span>
+            <a id="follow" target="_blank" href="https://github.com/AaronShi32">Follow</a>
+        </div>
+        <div class="article-info profile-block">
+            <div class="article-info-block">
+                48
+                <span>文章</span>
+            </div>
+            <div class="article-info-block">
+                10
+                <span>标签</span>
+            </div>
+        </div>
+        
+        <div class="profile-block social-links">
+            <table>
+                <tr>
+                    
+                    
+                    <td>
+                        <a href="https://github.com/AaronShi32" target="_blank" title="github" >
+                            <i class="fa fa-github"></i>
+                        </a>
+                    </td>
+                    
+                    <td>
+                        <a href="https://www.linkedin.com/in/cfshi" target="_blank" title="linkedin-square" >
+                            <i class="fa fa-linkedin-square"></i>
+                        </a>
+                    </td>
+                    
+                </tr>
+            </table>
+        </div>
+        
+    </div>
+</aside>
+
+            
+            <section id="main"><article id="post-读书笔记-程序员的自我修养（五）" class="article article-type-post" itemscope itemprop="blogPost">
+    <div class="article-inner">
+        
+        
+            <header class="article-header">
+                
+    
+        <h1 class="article-title" itemprop="name">
+            读书笔记-程序员的自我修养（五）
+        </h1>
+    
+
+                
+                    <div class="article-meta">
+                        
+    <div class="article-date">
+        <i class="fa fa-calendar"></i>
+        <a href="/blog/2017/05/18/读书笔记-程序员的自我修养（五）/">
+            <time datetime="2017-05-18T02:37:18.000Z" itemprop="datePublished">2017-05-18</time>
+        </a>
+    </div>
+
+
+                        
+                        
+    <div class="article-tag">
+        <i class="fa fa-tag"></i>
+        <a class="tag-link" href="/blog/tags/读书/">读书</a>
+    </div>
+
+                    </div>
+                
+            </header>
+        
+        
+        <div class="article-entry" itemprop="articleBody">
+        
+            
+            <h3 id="静态链接-到底做了什么？"><a href="#静态链接-到底做了什么？" class="headerlink" title="静态链接 到底做了什么？"></a><strong>静态链接</strong> 到底做了什么？</h3><ul>
+<li><p><strong>模块间符号的引用</strong>，其实就是链接器的主要职责，即把各个模块之间相互引用的部分都处理好，使得各个模块之间能够正确地衔接，通俗一点来讲：<code>两个目标文件如何链接成一个可执行文件</code>。<strong>实质</strong> 上是将各个 <strong>目标文件</strong> 中的 <strong>地址</strong>，结合其他目标文件，包括了 <strong>运行时库（Runtime Library）</strong>，确定其正确的地址，以下：</p>
+</li>
+<li><p>任务一： <strong>空间与地址分配（Address and Storage）：合并-重组各个目标文件的段，以完成空间和地址的分配</strong></p>
+<ul>
+<li><p>共识：可执行文件中的代码段和数据段都是由输入的目标文件中合并而来的</p>
+</li>
+<li><p>【摒弃】 方案一：按序叠加：直接将各个目标文件中的相应段依次叠加到一起，缺点就是：内存空间大量碎片化。</p>
+</li>
+<li><p>方案二：相似段合并：1. <strong>空间与地址分配</strong>：先扫描所有输入的目标文件，获取各个段的长度，属性，位置，将输入目标文件中的符号表中所有的符号定义和引用统一放到一个 <strong>全局符号表</strong> 中。2. <strong>符号解析与重定位</strong>：根据第一部收集的所有信息，进行<strong>符号解析</strong>、<strong>重定位</strong>、<strong>调整代码中的地址（增加偏移量）</strong> 等</p>
+</li>
+</ul>
+</li>
+<li><p>任务二： <strong>符号解析与重定位（Resolution and Relocation）</strong></p>
+<ul>
+<li><p><strong>重定位</strong> ：输入目标文件中，凡是引用了 <strong>外部符号</strong>，全用 <strong>0x0000000</strong> 这 4 个字节来代替，凡是引用了 <strong>外部函数</strong>，全用  <strong>0xFFFFFFFC</strong> 这四个字节来代替。链接器负责把目标文件被外部引用的函数符号的 <strong>偏移量</strong>，来 <strong>替换</strong> 这些初始代替量，链接写入输出 <strong>可执行文件</strong> 中</p>
+</li>
+<li><p><strong>重定位表</strong> ：<strong>链接器用于识别哪些引用的符号或者函数需要重定位</strong>，使用  <code>objdump -r a.o</code> 来查看</p>
+</li>
+<li><p><strong>符号解析</strong> ：之所以链接是因为目标文件中用到的符号被定义在其他目标文件中，使用 <code>objdump -s a.o</code> 来查看符号表，其中 <strong>UND</strong> 的符号就是未定义类型，就是 <strong>待链接对象</strong>，即链接的过程经历了符号解析</p>
+</li>
+<li><p><strong>指令修正方式</strong>：由于不同处理器的指令千差万别，寻址的方式也不尽相同，因此在链接过程中替换目标文件地址，需要经历指令修正来确保地址有效性，其中 <strong>绝对寻址修正</strong> 后的地址为该符号的实际地址，<strong>相对寻址修成</strong> 后的地址为符号距离被修正位置的地址差</p>
+</li>
+</ul>
+</li>
+<li><p>番外介绍：特殊模块：<strong>COMMON块</strong></p>
+<ul>
+<li>作用：用于链接时存放待链接的 <strong>多个命名相同的弱符号</strong>，作为<strong>储备池</strong>，因为链接器无法区分符号类型，故无法判断是否一致，因此链接器链接的选择原则是： <strong>取占用空间最大的那个弱符号为准</strong></li>
+</ul>
+</li>
+<li><p>任务三： <strong>静态库链接（.a/.lib）</strong></p>
+<ul>
+<li><p>静态库可以简单的看成 <strong>一组目标文件的集合</strong>，用 <code>ar</code> <code>lib</code> 等工具可以看静态库的内容</p>
+</li>
+<li><p>静态库里面的一个目标文件只包含一个函数，避免链接函数过多导致程序臃肿，空间浪费</p>
+</li>
+<li><p>使用 <code>gcc -static --verbose -fno-builtin hello.c</code> 查看详细的链接过程，涉及到的目标文件非常多，过程也相当复杂</p>
+</li>
+</ul>
+</li>
+<li><p>综上：链接的 <strong>过程控制</strong></p>
+<ul>
+<li><p>链接过程要确定的内容有：使用哪些目标文件？使用哪些库文件？是否在最终可执行文件中保留调试信息？输出文件格式是什么？是否导出符号表等</p>
+</li>
+<li><p>链接器支持 <strong>使用命令行参数控制</strong>、<strong>将链接指令存放在目标文件里</strong>、<strong>使用链接控制脚本</strong> 来完成以上内容</p>
+</li>
+<li><p>ld 链接器的链接脚本语法继承于 AT&amp;T 链接器命令语言的语法，风格有点像 C 语言，分为 <strong>命令语句</strong> 和 <strong>赋值语句</strong></p>
+</li>
+<li><p><strong>BFD库</strong> 的出现，旨在解决不同软硬件平台上，通过一种 <strong>统一</strong> 的接口来处理不同的目标文件格式</p>
+</li>
+</ul>
+</li>
+</ul>
+
+        
+        </div>
+        <footer class="article-footer">
+            <div class="share-container">
+
+
+
+</div>
+
+    <a data-url="https://aaronshi32.github.io/2017/05/18/读书笔记-程序员的自我修养（五）/" data-id="cjm7udfaz002kues6h349leiw" class="article-share-link"><i class="fa fa-share"></i>如需转载，请注明出处</a>
+<script>
+    (function ($) {
+        // Prevent duplicate binding
+        if (typeof(__SHARE_BUTTON_BINDED__) === 'undefined' || !__SHARE_BUTTON_BINDED__) {
+            __SHARE_BUTTON_BINDED__ = true;
+        } else {
+            return;
+        }
+        $('body').on('click', function() {
+            $('.article-share-box.on').removeClass('on');
+        }).on('click', '.article-share-link', function(e) {
+            e.stopPropagation();
+
+            var $this = $(this),
+                url = $this.attr('data-url'),
+                encodedUrl = encodeURIComponent(url),
+                id = 'article-share-box-' + $this.attr('data-id'),
+                offset = $this.offset(),
+                box;
+
+            if ($('#' + id).length) {
+                box = $('#' + id);
+
+                if (box.hasClass('on')){
+                    box.removeClass('on');
+                    return;
+                }
+            } else {
+                var html = [
+                    '<div id="' + id + '" class="article-share-box">',
+                        '<input class="article-share-input" value="' + url + '">',
+                        '<div class="article-share-links">',
+                            '<a href="https://twitter.com/intent/tweet?url=' + encodedUrl + '" class="fa fa-twitter article-share-twitter" target="_blank" title="Twitter"></a>',
+                            '<a href="https://www.facebook.com/sharer.php?u=' + encodedUrl + '" class="fa fa-facebook article-share-facebook" target="_blank" title="Facebook"></a>',
+                            '<a href="http://pinterest.com/pin/create/button/?url=' + encodedUrl + '" class="fa fa-pinterest article-share-pinterest" target="_blank" title="Pinterest"></a>',
+                            '<a href="https://plus.google.com/share?url=' + encodedUrl + '" class="fa fa-google article-share-google" target="_blank" title="Google+"></a>',
+                        '</div>',
+                    '</div>'
+                ].join('');
+
+              box = $(html);
+
+              $('body').append(box);
+            }
+
+            $('.article-share-box.on').hide();
+
+            box.css({
+                top: offset.top + 25,
+                left: offset.left
+            }).addClass('on');
+
+        }).on('click', '.article-share-box', function (e) {
+            e.stopPropagation();
+        }).on('click', '.article-share-box-input', function () {
+            $(this).select();
+        }).on('click', '.article-share-box-link', function (e) {
+            e.preventDefault();
+            e.stopPropagation();
+
+            window.open(this.href, 'article-share-box-window-' + Date.now(), 'width=500,height=450');
+        });
+    })(jQuery);
+</script>
+
+            
+    
+
+        </footer>
+    </div>
+    
+        
+<nav id="article-nav">
+    
+        <a href="/blog/2017/05/24/读书笔记-程序员的自我修养（六）/" id="article-nav-newer" class="article-nav-link-wrap">
+            <strong class="article-nav-caption">上一篇</strong>
+            <div class="article-nav-title">
+                
+                    读书笔记-程序员的自我修养（六）
+                
+            </div>
+        </a>
+    
+    
+        <a href="/blog/2017/05/13/读书笔记-程序员的自我修养（四）/" id="article-nav-older" class="article-nav-link-wrap">
+            <strong class="article-nav-caption">下一篇</strong>
+            <div class="article-nav-title">读书笔记-程序员的自我修养（四）</div>
+        </a>
+    
+</nav>
+
+
+    
+</article>
+
+
+    
+    <section id="comments">
+    
+    </section>
+
+</section>
+            
+                <aside id="sidebar">
+   
+        
+    
+        
+    <div class="widget-wrap">
+        <h3 class="widget-title">归档</h3>
+        <div class="widget">
+            <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/blog/archives/2018/08/">八月 2018</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/blog/archives/2018/07/">七月 2018</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/blog/archives/2018/06/">六月 2018</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/blog/archives/2018/05/">五月 2018</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/blog/archives/2018/04/">四月 2018</a><span class="archive-list-count">6</span></li><li class="archive-list-item"><a class="archive-list-link" href="/blog/archives/2018/03/">三月 2018</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/blog/archives/2018/02/">二月 2018</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/blog/archives/2018/01/">一月 2018</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/blog/archives/2017/12/">十二月 2017</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/blog/archives/2017/11/">十一月 2017</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/blog/archives/2017/10/">十月 2017</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/blog/archives/2017/08/">八月 2017</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/blog/archives/2017/07/">七月 2017</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/blog/archives/2017/06/">六月 2017</a><span class="archive-list-count">4</span></li><li class="archive-list-item"><a class="archive-list-link" href="/blog/archives/2017/05/">五月 2017</a><span class="archive-list-count">6</span></li><li class="archive-list-item"><a class="archive-list-link" href="/blog/archives/2017/03/">三月 2017</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/blog/archives/2017/02/">二月 2017</a><span class="archive-list-count">4</span></li><li class="archive-list-item"><a class="archive-list-link" href="/blog/archives/2017/01/">一月 2017</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/blog/archives/2016/12/">十二月 2016</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/blog/archives/2016/11/">十一月 2016</a><span class="archive-list-count">6</span></li><li class="archive-list-item"><a class="archive-list-link" href="/blog/archives/2016/10/">十月 2016</a><span class="archive-list-count">1</span></li></ul>
+        </div>
+    </div>
+
+    
+        
+    <div class="widget-wrap">
+        <h3 class="widget-title">标签</h3>
+        <div class="widget">
+            <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/blog/tags/JavaScript/">JavaScript</a><span class="tag-list-count">4</span></li><li class="tag-list-item"><a class="tag-list-link" href="/blog/tags/人工智能/">人工智能</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/blog/tags/基础知识/">基础知识</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/blog/tags/工具/">工具</a><span class="tag-list-count">6</span></li><li class="tag-list-item"><a class="tag-list-link" href="/blog/tags/日常/">日常</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/blog/tags/框架/">框架</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/blog/tags/疑难杂症/">疑难杂症</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/blog/tags/系统/">系统</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/blog/tags/读书/">读书</a><span class="tag-list-count">28</span></li><li class="tag-list-item"><a class="tag-list-link" href="/blog/tags/面试/">面试</a><span class="tag-list-count">8</span></li></ul>
+        </div>
+    </div>
+
+    
+    <div id="toTop" class="fa fa-angle-up"></div>
+</aside>
+            
+        </div>
+        <footer id="footer">
+    <div class="outer">
+        <div id="footer-info" class="inner">
+            &copy; 2018 AaronShi<br>
+            Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>. Theme by <a href="http://github.com/ppoffice">PPOffice</a>
+        </div>
+    </div>
+</footer>
+        
+
+    
+        <script src="/blog/libs/lightgallery/js/lightgallery.min.js"></script>
+        <script src="/blog/libs/lightgallery/js/lg-thumbnail.min.js"></script>
+        <script src="/blog/libs/lightgallery/js/lg-pager.min.js"></script>
+        <script src="/blog/libs/lightgallery/js/lg-autoplay.min.js"></script>
+        <script src="/blog/libs/lightgallery/js/lg-fullscreen.min.js"></script>
+        <script src="/blog/libs/lightgallery/js/lg-zoom.min.js"></script>
+        <script src="/blog/libs/lightgallery/js/lg-hash.min.js"></script>
+        <script src="/blog/libs/lightgallery/js/lg-share.min.js"></script>
+        <script src="/blog/libs/lightgallery/js/lg-video.min.js"></script>
+    
+    
+        <script src="/blog/libs/justified-gallery/jquery.justifiedGallery.min.js"></script>
+    
+
+
+
+<!-- Custom Scripts -->
+<script src="/blog/js/main.js"></script>
+
+    </div>
+</body>
+</html>

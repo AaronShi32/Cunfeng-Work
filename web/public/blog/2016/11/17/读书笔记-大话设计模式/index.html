@@ -1,0 +1,539 @@
+<!DOCTYPE html>
+<html lang=zh>
+<head>
+    <meta charset="utf-8">
+    
+    <title>读书笔记-大话设计模式 | 着陆的橘子</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+    <meta name="description" content="迪米特法则 合成/聚合复用原则 原型模式 模板模式 外观模式 建造者模式 适配器模式 备忘录模式 组合模式 迭代器模式 桥接模式 命令模式 职责链模式 中介模式 享元模式 解释器模式 访问者模式  迪米特法则 也叫最少知识原则，即：类的设计要降低耦合，如果两个类不必彼此直接通信，那么这两个类就不应当发生直接的相互作用。如果其中一个类需要调用另一个类的某一个方法的话，可以通过第三者转发这个调用">
+<meta name="keywords" content="读书">
+<meta property="og:type" content="article">
+<meta property="og:title" content="读书笔记-大话设计模式">
+<meta property="og:url" content="https://aaronshi32.github.io/2016/11/17/读书笔记-大话设计模式/index.html">
+<meta property="og:site_name" content="着陆的橘子">
+<meta property="og:description" content="迪米特法则 合成/聚合复用原则 原型模式 模板模式 外观模式 建造者模式 适配器模式 备忘录模式 组合模式 迭代器模式 桥接模式 命令模式 职责链模式 中介模式 享元模式 解释器模式 访问者模式  迪米特法则 也叫最少知识原则，即：类的设计要降低耦合，如果两个类不必彼此直接通信，那么这两个类就不应当发生直接的相互作用。如果其中一个类需要调用另一个类的某一个方法的话，可以通过第三者转发这个调用">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:updated_time" content="2018-04-25T09:00:29.157Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="读书笔记-大话设计模式">
+<meta name="twitter:description" content="迪米特法则 合成/聚合复用原则 原型模式 模板模式 外观模式 建造者模式 适配器模式 备忘录模式 组合模式 迭代器模式 桥接模式 命令模式 职责链模式 中介模式 享元模式 解释器模式 访问者模式  迪米特法则 也叫最少知识原则，即：类的设计要降低耦合，如果两个类不必彼此直接通信，那么这两个类就不应当发生直接的相互作用。如果其中一个类需要调用另一个类的某一个方法的话，可以通过第三者转发这个调用">
+    
+
+    
+
+    
+
+    <link rel="stylesheet" href="/blog/libs/font-awesome/css/font-awesome.min.css">
+    <link rel="stylesheet" href="/blog/libs/open-sans/styles.css">
+    <link rel="stylesheet" href="/blog/libs/source-code-pro/styles.css">
+
+    <link rel="stylesheet" href="/blog/css/style.css">
+
+    <script src="/blog/libs/jquery/2.1.3/jquery.min.js"></script>
+    
+    
+        <link rel="stylesheet" href="/blog/libs/lightgallery/css/lightgallery.min.css">
+    
+    
+        <link rel="stylesheet" href="/blog/libs/justified-gallery/justifiedGallery.min.css">
+    
+    
+    
+    
+
+
+</head>
+
+<body>
+    <div id="container">
+        <header id="header">
+    <div id="header-main" class="header-inner">
+        <div class="outer">
+            <a href="/blog/" id="logo">
+                <i class="logo"></i>
+                <span class="site-title">着陆的橘子</span>
+            </a>
+            <nav id="main-nav">
+                
+                    <a class="main-nav-link" href="/.">主页</a>
+                
+                    <a class="main-nav-link" href="/about/cv.pdf">关于</a>
+                
+            </nav>
+            
+                
+                <nav id="sub-nav">
+                    <div class="profile" id="profile-nav">
+                        <a id="profile-anchor" href="javascript:;">
+                            <img class="avatar" src="/css/images/avatar.png" />
+                            <i class="fa fa-caret-down"></i>
+                        </a>
+                    </div>
+                </nav>
+            
+            <div id="search-form-wrap">
+
+    <form class="search-form">
+        <input type="text" class="ins-search-input search-form-input" placeholder="文章" />
+        <button type="submit" class="search-form-submit"></button>
+    </form>
+    <div class="ins-search">
+    <div class="ins-search-mask"></div>
+    <div class="ins-search-container">
+        <div class="ins-input-wrapper">
+            <input type="text" class="ins-search-input" placeholder="想要查找什么..." />
+            <span class="ins-close ins-selectable"><i class="fa fa-times-circle"></i></span>
+        </div>
+        <div class="ins-section-wrapper">
+            <div class="ins-section-container"></div>
+        </div>
+    </div>
+</div>
+<script>
+(function (window) {
+    var INSIGHT_CONFIG = {
+        TRANSLATION: {
+            POSTS: '文章',
+            PAGES: '页面',
+            CATEGORIES: '分类',
+            TAGS: '标签',
+            UNTITLED: '(未命名)',
+        },
+        ROOT_URL: '/',
+        CONTENT_URL: '/content.json',
+    };
+    window.INSIGHT_CONFIG = INSIGHT_CONFIG;
+})(window);
+</script>
+<script src="/blog/js/insight.js"></script>
+
+</div>
+        </div>
+    </div>
+    <div id="main-nav-mobile" class="header-sub header-inner">
+        <table class="menu outer">
+            <tr>
+                
+                    <td><a class="main-nav-link" href="/.">主页</a></td>
+                
+                    <td><a class="main-nav-link" href="/about/cv.pdf">关于</a></td>
+                
+                <td>
+                    
+    <div class="search-form">
+        <input type="text" class="ins-search-input search-form-input" placeholder="搜索" />
+    </div>
+
+                </td>
+            </tr>
+        </table>
+    </div>
+</header>
+
+        <div class="outer">
+            
+                
+
+<aside id="profile">
+    <div class="inner profile-inner">
+        <div class="base-info profile-block">
+            <img id="avatar" src="/css/images/avatar.png" />
+            <h2 id="name">AaronShi32</h2>
+            <h3 id="title">Senior Software Developer</h3>
+            <span id="location"><i class="fa fa-map-marker"></i>Beijing, China</span>
+            <a id="follow" target="_blank" href="https://github.com/AaronShi32">Follow</a>
+        </div>
+        <div class="article-info profile-block">
+            <div class="article-info-block">
+                48
+                <span>文章</span>
+            </div>
+            <div class="article-info-block">
+                10
+                <span>标签</span>
+            </div>
+        </div>
+        
+        <div class="profile-block social-links">
+            <table>
+                <tr>
+                    
+                    
+                    <td>
+                        <a href="https://github.com/AaronShi32" target="_blank" title="github" >
+                            <i class="fa fa-github"></i>
+                        </a>
+                    </td>
+                    
+                    <td>
+                        <a href="https://www.linkedin.com/in/cfshi" target="_blank" title="linkedin-square" >
+                            <i class="fa fa-linkedin-square"></i>
+                        </a>
+                    </td>
+                    
+                </tr>
+            </table>
+        </div>
+        
+    </div>
+</aside>
+
+            
+            <section id="main"><article id="post-读书笔记-大话设计模式" class="article article-type-post" itemscope itemprop="blogPost">
+    <div class="article-inner">
+        
+        
+            <header class="article-header">
+                
+    
+        <h1 class="article-title" itemprop="name">
+            读书笔记-大话设计模式
+        </h1>
+    
+
+                
+                    <div class="article-meta">
+                        
+    <div class="article-date">
+        <i class="fa fa-calendar"></i>
+        <a href="/blog/2016/11/17/读书笔记-大话设计模式/">
+            <time datetime="2016-11-17T09:53:00.000Z" itemprop="datePublished">2016-11-17</time>
+        </a>
+    </div>
+
+
+                        
+                        
+    <div class="article-tag">
+        <i class="fa fa-tag"></i>
+        <a class="tag-link" href="/blog/tags/读书/">读书</a>
+    </div>
+
+                    </div>
+                
+            </header>
+        
+        
+        <div class="article-entry" itemprop="articleBody">
+        
+            
+            <ul>
+<li><a href="##迪米特法则">迪米特法则</a></li>
+<li><a href="##合成/聚合复用原则">合成/聚合复用原则</a></li>
+<li><a href="##原型模式">原型模式</a></li>
+<li><a href="##模板模式">模板模式</a></li>
+<li><a href="##外观模式">外观模式</a></li>
+<li><a href="##建造者模式">建造者模式</a></li>
+<li><a href="##适配器模式">适配器模式</a></li>
+<li><a href="##备忘录模式">备忘录模式</a></li>
+<li><a href="##组合模式">组合模式</a></li>
+<li><a href="##迭代器模式">迭代器模式</a></li>
+<li><a href="##桥接模式">桥接模式</a></li>
+<li><a href="##命令模式">命令模式</a></li>
+<li><a href="##职责链模式">职责链模式</a></li>
+<li><a href="##中介模式">中介模式</a></li>
+<li><a href="##享元模式">享元模式</a></li>
+<li><a href="##解释器模式">解释器模式</a></li>
+<li><a href="##访问者模式">访问者模式</a></li>
+</ul>
+<h4 id="迪米特法则"><a href="#迪米特法则" class="headerlink" title="迪米特法则"></a>迪米特法则</h4><ul>
+<li><p>也叫最少知识原则，即：类的设计要降低耦合，如果两个类不必彼此直接通信，那么这两个类就不应当发生直接的相互作用。如果其中一个类需要调用另一个类的某一个方法的话，可以通过第三者转发这个调用</p>
+</li>
+<li><p>在类的结构设计上，每一个类都应当尽量降低成员的访问权限，设计时应当考虑两个类是直接发生调用关系，还是通过第三方来搭建关系</p>
+</li>
+</ul>
+<h4 id="合成-聚合复用原则"><a href="#合成-聚合复用原则" class="headerlink" title="合成/聚合复用原则"></a>合成/聚合复用原则</h4><ul>
+<li><p>尽量使用合成/聚合，尽量不要使用类继承，因为父类的改变，会影响到所有子类</p>
+</li>
+<li><p>聚合表示一种弱的拥有关系，体现的是A对象可以包含B对象，但B对象不是A对象的一部分。合成是一种强的拥有关系，体现的是严格的部分和整体的关系。</p>
+</li>
+<li><p>大雁拥有翅膀（合成），许多大雁聚合成雁群（聚合）</p>
+</li>
+</ul>
+<hr>
+
+<h4 id="原型模式"><a href="#原型模式" class="headerlink" title="原型模式"></a>原型模式</h4><ul>
+<li><p>深复制：把引用对象的变量指向复制过的新对象，而不是原有的被引用的对象</p>
+</li>
+<li><p>浅复制：被复制对象的鄋变量都含有与原来的对象相同的值，而所有对其他对象的引用都仍然指向原来的对象</p>
+</li>
+<li><p><strong>如何实现深复制：</strong> 用 私有构造函数 创建引用对象，然后再clone方法里调用私有构造函数，完成克隆，其他的值引用则在clone里面直接赋值就好了</p>
+</li>
+</ul>
+<h4 id="模板模式"><a href="#模板模式" class="headerlink" title="模板模式"></a>模板模式</h4><ul>
+<li><p>定义一个操作中的算法的骨架，而将一些步骤延迟到子类中，模板方法是的子类可以不改变一个算法的结构即可重定义该算法的某些特定步骤</p>
+</li>
+<li><p>一切逻辑都在父类中写好，需要延迟交给子类的部分，通过让子类@Override方法来实现，或者抽象类实现逻辑，具体类实现细节</p>
+</li>
+</ul>
+<h4 id="外观模式"><a href="#外观模式" class="headerlink" title="外观模式"></a>外观模式</h4><ul>
+<li><p>为子系统中的一组接口提供一个一致的界面，此模式定义了一个高层接口，这个接口使得这一子系统更加容易使用，比如，基金是各种股票的外观模式，购买者只需要和基金打交道就好了</p>
+</li>
+<li><p>分层的处理：Facade类，承上启下的作用，对外暴露的接口简单，统一</p>
+</li>
+</ul>
+<h4 id="建造者模式"><a href="#建造者模式" class="headerlink" title="建造者模式"></a>建造者模式</h4><ul>
+<li><p>Builder 和 Director： Builder是抽象类，用于让开发者实现一些细节步骤，Director里面包含了Buider的实例，用于封装一些操作逻辑，这样开发者每次只需要根据自己的需求实现Builder，然后交给Director就可以了，不用care操作逻辑是否有遗漏</p>
+</li>
+<li><p>适用于当创建复杂对象的算法应该独立于该对象的组成部分以及他们的装配方式时适用的模式，即将一个复杂对象的构建与它的表示分离，使得同样的构建过程（Director）可以创建不同的表示(Builder)</p>
+</li>
+</ul>
+<h4 id="状态模式"><a href="#状态模式" class="headerlink" title="状态模式"></a>状态模式</h4><ul>
+<li><p>当一个对象的内在状态改变时允许改变其行为，这个对象看起来像是改变了其类</p>
+</li>
+<li><p>状态模式主要解决的是当控制一个对象状态转换的条件表达式过于复杂时，把状态的判断逻辑转移到表示不同状态的一系列类当中（<strong>实际！</strong>）</p>
+</li>
+</ul>
+<h4 id="适配器模式"><a href="#适配器模式" class="headerlink" title="适配器模式"></a>适配器模式</h4><ul>
+<li><p>将一个类的接口转换成客户希望的另外一个接口，Adapter模式使得原本由于接口不兼容而不能一起工作的那些类可以一起工作。</p>
+</li>
+<li><p>使用一个已经存在的类，但如果它的接口，也就是它的方法和你的要求不相同时，就应该考虑用适配器模式，即：使用一个Adapter类实现抽象接口，里面持有待适配的对象，在Override接口方法的时候，将待适配对象的方法实现到接口中</p>
+</li>
+</ul>
+<h4 id="备忘录模式"><a href="#备忘录模式" class="headerlink" title="备忘录模式"></a>备忘录模式</h4><ul>
+<li><p>在不破坏封装性的前提下，捕获一个对象的内部状态，并在该对象之外保存这个状态。</p>
+</li>
+<li><p>Originator(发起人，负责创建一个备忘录，即在SaveStatus时创建个Mememto) 和 Memento(备忘录，负责创建状态副本，保存在自己的类中) 和 Caretaker（管理者，负责管理内部的状态副本get和set）</p>
+</li>
+</ul>
+<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title">Originator</span> &#123;</span><br><span class="line"></span><br><span class="line">  <span class="function"><span class="keyword">public</span> Mememto <span class="title">SaveState</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">	<span class="keyword">return</span> <span class="keyword">new</span> Memento(vit,atk,def)	</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">RecoveryState</span>(<span class="params">Mememto state</span>)</span>&#123;</span><br><span class="line">	<span class="keyword">this</span>.vit = state.vit;</span><br><span class="line">	<span class="keyword">this</span>.atk = state.atk;</span><br><span class="line">	<span class="keyword">this</span>.def = state.def;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title">Memento</span> &#123;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">private</span> <span class="keyword">int</span> vit;</span><br><span class="line">  <span class="keyword">private</span> <span class="keyword">int</span> atk;</span><br><span class="line">  <span class="keyword">private</span> <span class="keyword">int</span> def;</span><br><span class="line">  <span class="function"><span class="keyword">public</span> <span class="title">Memento</span>(<span class="params"><span class="keyword">int</span> vit, <span class="keyword">int</span> atk, <span class="keyword">int</span> def</span>)</span>&#123;</span><br><span class="line">	<span class="keyword">this</span>.vit = vit;</span><br><span class="line">	<span class="keyword">this</span>.atk = atk;</span><br><span class="line">	<span class="keyword">this</span>.def = def;</span><br><span class="line">  &#125;</span><br><span class="line">  /...</span><br><span class="line">	<span class="keyword">get</span>/<span class="keyword">set</span></span><br><span class="line">  .../</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title">Caretaker</span> &#123;</span><br><span class="line">  <span class="keyword">private</span> Memento memento;</span><br><span class="line">  /...</span><br><span class="line">	<span class="keyword">get</span>/<span class="keyword">set</span></span><br><span class="line">  .../</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">//----------To Do----------</span></span><br><span class="line"></span><br><span class="line">Caretaker.memento = Originator.SaveState();</span><br><span class="line">Originator.RecoveryState(Caretaker.memento);</span><br></pre></td></tr></table></figure>
+<h4 id="组合模式"><a href="#组合模式" class="headerlink" title="组合模式"></a>组合模式</h4><ul>
+<li><p>将对象组合成属性结构以表示”部分-整体”的层次结构。组合模式使得用户对单个对象和组合对象的使用具有<strong>一致性</strong></p>
+</li>
+<li><p>“部分-整体” 的关系实质上为 “树叶-根”的关系，所有的组件实现统一的接口，这个接口包含扩展组件的能力，即</p>
+</li>
+</ul>
+<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">abstarct <span class="keyword">class</span> <span class="title">Component</span>&#123;</span><br><span class="line">			</span><br><span class="line">  <span class="keyword">protected</span> <span class="keyword">string</span> name;</span><br><span class="line"></span><br><span class="line">  <span class="function"><span class="keyword">public</span> <span class="title">Component</span>(<span class="params"><span class="keyword">string</span> name</span>)</span>&#123;</span><br><span class="line">	<span class="keyword">this</span>.name = name;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="function"><span class="keyword">public</span> abstarct <span class="keyword">void</span> <span class="title">Add</span>(<span class="params">Compoent c</span>)</span>; <span class="comment">// 扩展能力</span></span><br><span class="line">  <span class="function"><span class="keyword">public</span> abstarct <span class="keyword">void</span> <span class="title">Remove</span>(<span class="params">Compoent c</span>)</span>; <span class="comment">// 扩展能力</span></span><br><span class="line">  <span class="function"><span class="keyword">public</span> abstarct <span class="keyword">void</span> <span class="title">Display</span>(<span class="params">Compoent c</span>)</span>; <span class="comment">// 各司其职</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h4 id="迭代器模式"><a href="#迭代器模式" class="headerlink" title="迭代器模式"></a>迭代器模式</h4><ul>
+<li><p>提供一种方法顺序访问一个聚合对象中各个元素，而又不暴露该对象的内部表示，即当你需要访问一个聚集对象，而且不管这些对象是什么，就应该考虑用迭代器模式</p>
+</li>
+<li><p>迭代器抽象类（Iterator） 和 迭代器具体类 (ConcreteIterator) </p>
+</li>
+<li><p>聚集抽象类（Aggregate）和 聚集具体类（ConcreteAggregate）</p>
+</li>
+</ul>
+<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line">abstaract <span class="keyword">class</span> <span class="title">Iterator</span> &#123;</span><br><span class="line"></span><br><span class="line">  <span class="function"><span class="keyword">public</span> <span class="keyword">abstract</span> <span class="keyword">object</span> <span class="title">First</span>(<span class="params"></span>)</span>;</span><br><span class="line">  <span class="function"><span class="keyword">public</span> <span class="keyword">abstract</span> <span class="keyword">object</span> <span class="title">Next</span>(<span class="params"></span>)</span>;</span><br><span class="line">  <span class="function"><span class="keyword">public</span> <span class="keyword">abstract</span> <span class="keyword">bool</span> <span class="title">IsDone</span>(<span class="params"></span>)</span>;</span><br><span class="line">  <span class="function"><span class="keyword">public</span> <span class="keyword">abstract</span> <span class="keyword">object</span> <span class="title">CurrentItem</span>(<span class="params"></span>)</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">abstaract <span class="keyword">class</span> <span class="title">Aggregate</span> &#123;</span><br><span class="line">  <span class="function"><span class="keyword">public</span> <span class="keyword">abstract</span> Iterator <span class="title">createIterator</span>(<span class="params"></span>)</span>;</span><br><span class="line">&#125;</span><br><span class="line">		</span><br><span class="line">class ConcreteAggregate：Aggregate &#123;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">private</span> IList&lt;<span class="keyword">object</span>&gt; items = <span class="keyword">new</span> List&lt;<span class="keyword">object</span>&gt;();</span><br><span class="line">  <span class="keyword">public</span> orerride Iterator createIterator&#123;</span><br><span class="line">	<span class="keyword">return</span> <span class="keyword">new</span> ConcreteIterator(<span class="keyword">this</span>);</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line">		</span><br><span class="line"><span class="keyword">class</span> <span class="title">ConcreteIterator</span> : <span class="title">Iterator</span> &#123;</span><br><span class="line">  </span><br><span class="line"><span class="keyword">private</span> ConcreteAggregate aggregate;</span><br><span class="line">  <span class="function"><span class="keyword">public</span> <span class="title">ConcreteIterator</span>(<span class="params">ConcreteAggregate aggregate</span>)</span>&#123;</span><br><span class="line">	<span class="keyword">this</span>.aggregate = aggregate;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="comment">/**</span></span><br><span class="line"><span class="comment">   * Override methods in Iterator</span></span><br><span class="line"><span class="comment">   * /</span></span><br><span class="line"><span class="comment">&#125;</span></span><br></pre></td></tr></table></figure>
+<h4 id="桥接模式"><a href="#桥接模式" class="headerlink" title="桥接模式"></a>桥接模式</h4><ul>
+<li><p>将抽象部分与它的实现部分分离，使它们都可以独立的变化</p>
+</li>
+<li><p>Abstraction 和 Implementor </p>
+</li>
+</ul>
+<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">abstract</span> <span class="keyword">class</span> <span class="title">Implementor</span> &#123;</span><br><span class="line">  <span class="function"><span class="keyword">public</span> abstarct <span class="keyword">void</span> <span class="title">Operation</span>(<span class="params"></span>)</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title">ConcreteImplementorA</span> : <span class="title">Implenmentor</span>&#123;</span><br><span class="line">  <span class="function"><span class="keyword">public</span> <span class="keyword">override</span> <span class="keyword">void</span> <span class="title">Operation</span>(<span class="params"></span>)</span></span><br><span class="line"><span class="function">&#125;</span></span><br><span class="line"><span class="function"></span></span><br><span class="line"><span class="function">class ConcreteImplementorB : Implenmentor</span>&#123;</span><br><span class="line">  <span class="function"><span class="keyword">public</span> <span class="keyword">override</span> <span class="keyword">void</span> <span class="title">Operation</span>(<span class="params"></span>)</span></span><br><span class="line"><span class="function">&#125;</span></span><br><span class="line"><span class="function"></span></span><br><span class="line"><span class="function">class Abstraction </span>&#123;</span><br><span class="line">  <span class="keyword">protected</span> Implementor implementor;</span><br><span class="line">  <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">SetImplementor</span>(<span class="params">Implementor implementor</span>)</span>&#123;</span><br><span class="line">	<span class="keyword">this</span>.implementor = implementor;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="function"><span class="keyword">public</span> <span class="keyword">virtual</span> <span class="keyword">void</span> <span class="title">Operation</span>(<span class="params"></span>)</span>&#123;&#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title">RefinedAbstraction</span>: <span class="title">Abstraction</span>&#123;</span><br><span class="line">  <span class="function"><span class="keyword">public</span> <span class="keyword">override</span> <span class="keyword">void</span> <span class="title">Operation</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">	implementor.Operation();</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">static</span> <span class="keyword">void</span> <span class="title">Main</span>(<span class="params"><span class="keyword">string</span>[] args</span>)</span>&#123;</span><br><span class="line">  Abstraction ab = <span class="keyword">new</span> RefinedAbstraction();</span><br><span class="line">  ab.SetImpelementor(<span class="keyword">new</span> ConcreteImplementorA());</span><br><span class="line">  ad.Operation();</span><br><span class="line">  ab.SetImpelementor(<span class="keyword">new</span> ConcreteImplementorB());</span><br><span class="line">  ad.Operation();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h4 id="命令模式"><a href="#命令模式" class="headerlink" title="命令模式"></a>命令模式</h4><ul>
+<li><p>分离两个类的职责，统一规划到中间的消息队列管理：客户 - 服务员 - 烤肉者</p>
+</li>
+<li><p>将一个请求封装为一个对象，从而使你可用不同的请求对客户进行参数化，对请求排队或记录请求日志，以及支持可撤销的操作，它将请求一个操作的对象与知道怎么执行一个操作的对象分隔开: Command 和 Receiver 绑定，而 Command 的调度执行，由 Invoker 负责</p>
+</li>
+</ul>
+<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">abstract</span> <span class="keyword">class</span> <span class="title">Command</span>&#123;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">protected</span> Receiver receiver;</span><br><span class="line">  <span class="function"><span class="keyword">public</span> <span class="title">Command</span>(<span class="params">Receiver receiver</span>)</span>&#123;</span><br><span class="line">	<span class="keyword">this</span>.receiver = receiver;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="function"><span class="keyword">abstract</span> <span class="keyword">public</span> <span class="keyword">void</span> <span class="title">Execute</span>(<span class="params"></span>)</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title">ConcreteCommand</span> : <span class="title">Command</span>&#123;</span><br><span class="line"></span><br><span class="line">  <span class="function"><span class="keyword">public</span> <span class="title">ConcreteCommand</span>(<span class="params">Receiver receiver</span>): <span class="title">base</span>(<span class="params">receiver</span>)</span>&#123;&#125;</span><br><span class="line">  <span class="function"><span class="keyword">public</span> <span class="keyword">override</span> <span class="keyword">void</span> <span class="title">Execute</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">	receiver.Action();			</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title">Invoker</span>&#123;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">private</span> Command command;</span><br><span class="line">  <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">SetCommand</span>(<span class="params">Command command</span>)</span>&#123;</span><br><span class="line">	<span class="keyword">this</span>.command = command;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">ExecuteCommand</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">	command.Execute();</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title">Receiver</span>&#123;</span><br><span class="line">  <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">Action</span>(<span class="params"></span>)</span>&#123;&#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">Main</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">  Receiver r = <span class="keyword">new</span> Receiver();</span><br><span class="line">  Command c = <span class="keyword">new</span> ConcreteCommand(r);</span><br><span class="line">  Invoker i = <span class="keyword">new</span> Invoker();</span><br><span class="line">  i.SetCommand(c);</span><br><span class="line">  i.ExecuteCommand();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h4 id="职责链模式"><a href="#职责链模式" class="headerlink" title="职责链模式"></a>职责链模式</h4><ul>
+<li><p>使多个对象都有机会处理请求，从而避免请求的发送者和接收者之间的耦合关系，将这个对象连成一个链，并沿着这条链传递该请求，知道有一个对象处理它为止（Chain）</p>
+</li>
+<li><p>接收者和发送者都没有对方的明确信息，且链中的对象自己也并不知道链的结构。结果是职责链可简化对象的相互连接，仅需要保持一个向后引用</p>
+</li>
+<li><p>随时增加或修改处理一个请求的结构，增强了给对象指派职责的灵活性，<strong>最坏情况</strong>：到末端都得不到处理，需要事先考虑全面</p>
+</li>
+</ul>
+<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">abstract</span> <span class="keyword">class</span> <span class="title">Handler</span>&#123;</span><br><span class="line">  </span><br><span class="line">  <span class="keyword">protected</span> Handler successor;</span><br><span class="line">  <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">SetSuccessor</span>(<span class="params">Handler successor</span>)</span>&#123;</span><br><span class="line">	<span class="keyword">this</span>.successor = successor;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="function"><span class="keyword">public</span> <span class="keyword">abstract</span> <span class="keyword">void</span> <span class="title">HandleRequest</span>(<span class="params"><span class="keyword">int</span> request</span>)</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title">ConcreteHandler1</span> : <span class="title">Handler</span> &#123;</span><br><span class="line">  <span class="function"><span class="keyword">public</span> <span class="keyword">override</span> <span class="keyword">void</span> <span class="title">HandleRequest</span>(<span class="params"><span class="keyword">int</span> request</span>)</span>&#123;</span><br><span class="line">	<span class="keyword">if</span>(request &gt;= <span class="number">0</span> &amp;&amp; request &lt; <span class="number">10</span>)&#123;</span><br><span class="line">	  <span class="comment">// do handle request</span></span><br><span class="line">	&#125;<span class="keyword">else</span> <span class="keyword">if</span>(successor != <span class="literal">null</span>)&#123;</span><br><span class="line">	  successor.HandleRequest(request);</span><br><span class="line">	&#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h4 id="中介模式"><a href="#中介模式" class="headerlink" title="中介模式"></a>中介模式</h4><ul>
+<li><p>对象之间大量的连接使得一个对象不可能在没有其他对象的支持下工作，系统表现为一个不可分割的整理，所谓低耦合的解决方案：中介模式其中之一</p>
+</li>
+<li><p>用一个中介对象来封装一系列的对象交互。中介者使得各对象不需要显示地相互引用，从而使其耦合松散，并且可以独立的改变他们之间的交互。</p>
+</li>
+<li><p>缺点：把交互的复杂性变成了中介者的复杂性，需要着重考虑，对象之间多对多的交互，首先应当考虑系统设计上的合理性</p>
+</li>
+</ul>
+<h4 id="享元模式"><a href="#享元模式" class="headerlink" title="享元模式"></a>享元模式</h4><ul>
+<li><p>如果一个应用程序使用了大量的对象，而大量的这些对象造成了很大的存储开销时就应该考虑使用享元模式，还有就是对象的大多数的外部状态，如果删除不影响的话，那么可以用相对较少的共享对象取代很多组对象，此时也应该考虑使用享元模式，比如：线程池</p>
+</li>
+<li><p>享元模式共享的是对象，对象数量是有限制的，因此会在工厂内部保存对象的引用，而工厂模式是生成对象，对象数量是无限制的</p>
+</li>
+</ul>
+<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">abstract</span> <span class="keyword">class</span> <span class="title">Flyweight</span>&#123;</span><br><span class="line">  <span class="function"><span class="keyword">public</span> <span class="keyword">abstract</span> <span class="keyword">void</span> <span class="title">Operation</span>(<span class="params"><span class="keyword">int</span> ee</span>)</span></span><br><span class="line"><span class="function">&#125;</span></span><br><span class="line"><span class="function"></span></span><br><span class="line"><span class="function">class ConcreteFlyweight : Flyweight</span>&#123;</span><br><span class="line">  <span class="function"><span class="keyword">public</span> <span class="keyword">override</span> <span class="keyword">void</span> <span class="title">Operation</span>(<span class="params"><span class="keyword">int</span> ee</span>)</span>&#123;&#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title">FlyweightFactory</span>&#123;</span><br><span class="line">  </span><br><span class="line">  <span class="keyword">private</span> Hashtable flyweights = <span class="keyword">new</span> Hashtable();</span><br><span class="line"></span><br><span class="line">  <span class="function"><span class="keyword">public</span> <span class="title">FlyweightFactory</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">	<span class="comment">//内部保留有限的对象数</span></span><br><span class="line">	flyweights.Add(<span class="string">"X"</span>, <span class="keyword">new</span> ConcreteFlyweight());</span><br><span class="line">	flyweights.Add(<span class="string">"Y"</span>, <span class="keyword">new</span> ConcreteFlyweight());</span><br><span class="line">	flyweights.Add(<span class="string">"Z"</span>, <span class="keyword">new</span> ConcreteFlyweight());</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="function"><span class="keyword">public</span> Flyweight <span class="title">GetFlyweight</span>(<span class="params"><span class="keyword">string</span> key</span>)</span>&#123;</span><br><span class="line">	<span class="keyword">return</span> ((Flyweight)flyweights[key]);</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h4 id="解释器模式"><a href="#解释器模式" class="headerlink" title="解释器模式"></a>解释器模式</h4><ul>
+<li><p>同样的一个抽象操作，需要不同的实施方法，则考虑解释器模式</p>
+</li>
+<li><p>缺点在于需要维护多个解释器实现</p>
+</li>
+</ul>
+<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">abstract</span> <span class="keyword">class</span> <span class="title">AbstractExpression</span> &#123;</span><br><span class="line">  <span class="function"><span class="keyword">public</span> <span class="keyword">abstract</span> <span class="keyword">void</span> <span class="title">Interpret</span>(<span class="params">Context ctx</span>)</span></span><br><span class="line"><span class="function">&#125;</span></span><br><span class="line"><span class="function"></span></span><br><span class="line"><span class="function">TerminalExpression: AbstractExpression </span>&#123;</span><br><span class="line">  <span class="function"><span class="keyword">public</span> <span class="keyword">override</span> <span class="keyword">void</span> <span class="title">Interpret</span>(<span class="params">Context ctx</span>)</span>&#123;&#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">NonterminalExpression: AbstractExpression &#123;</span><br><span class="line">  <span class="function"><span class="keyword">public</span> <span class="keyword">override</span> <span class="keyword">void</span> <span class="title">Interpret</span>(<span class="params">Context ctx</span>)</span>&#123;&#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 全局信息</span></span><br><span class="line"><span class="keyword">class</span> <span class="title">Context</span> &#123;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">private</span> <span class="keyword">string</span> input;</span><br><span class="line">  <span class="keyword">private</span> <span class="keyword">string</span> output;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">static</span> <span class="keyword">void</span> <span class="title">Main</span>(<span class="params"><span class="keyword">string</span>[] args</span>)</span>&#123;</span><br><span class="line">  Context ctx = <span class="keyword">new</span> Context();</span><br><span class="line">  AbstractExpression terminal = <span class="keyword">new</span> TerminalExpression();</span><br><span class="line">  terminal.interpret(ctx);</span><br><span class="line">  AbstractExpression terminal = <span class="keyword">new</span> NonterminalExpression();</span><br><span class="line">  nonterminal.interpret(ctx);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h4 id="访问者模式"><a href="#访问者模式" class="headerlink" title="访问者模式"></a>访问者模式</h4><ul>
+<li><p>表示一个作用于某对象结构中的各元素的操作，它使你可以在不改变各元素的类前提下定义作用于这些元素的新操作。</p>
+</li>
+<li><p>访问者模式的目的是要把处理从数据结构分离出来，有稳定的数据结构，又有易于变化的算法，使用访问者模式就是比较合理的，因为增加算法的操作变得尤为容易</p>
+</li>
+</ul>
+<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">abstract</span> <span class="keyword">class</span> <span class="title">Visitor</span> &#123;</span><br><span class="line">  <span class="function"><span class="keyword">public</span> <span class="keyword">abstract</span> <span class="keyword">void</span> <span class="title">useAlgorithmA</span>(<span class="params">concreteElementA A</span>)</span>;</span><br><span class="line">  <span class="function"><span class="keyword">public</span> <span class="keyword">abstract</span> <span class="keyword">void</span> <span class="title">useAlgorithmB</span>(<span class="params">concreteElementB B</span>)</span></span><br><span class="line"><span class="function">&#125;</span></span><br><span class="line"><span class="function"></span></span><br><span class="line"><span class="function">ConcreteVisitor1: Visitor </span>&#123;</span><br><span class="line">  <span class="comment">// implements</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">ConcreteVisitor2: Visitor &#123;</span><br><span class="line">  <span class="comment">// implements</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">abstract</span> <span class="keyword">class</span> <span class="title">Element</span>&#123;</span><br><span class="line">  <span class="function"><span class="keyword">public</span> <span class="keyword">abstract</span> <span class="keyword">void</span> <span class="title">Accept</span>(<span class="params">Visitor visitor</span>)</span>;</span><br><span class="line">&#125;</span><br><span class="line">	</span><br><span class="line">ConcreteElementr1 : Element &#123;</span><br><span class="line">  <span class="function"><span class="keyword">public</span> <span class="keyword">override</span> <span class="keyword">void</span> <span class="title">Accept</span>(<span class="params">Visitor visitor</span>)</span>&#123;</span><br><span class="line">	visitor.useAlgorithmA(<span class="keyword">this</span>);</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">ConcreteElementr2 : Element &#123;</span><br><span class="line">  <span class="function"><span class="keyword">public</span> <span class="keyword">override</span> <span class="keyword">void</span> <span class="title">Accept</span>(<span class="params">Visitor visitor</span>)</span>&#123;</span><br><span class="line">	visitor.useAlgorithmB(<span class="keyword">this</span>);</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title">Contorller</span> &#123;</span><br><span class="line">  <span class="comment">//整合 visitor 和 element, 使得对外操作统一</span></span><br><span class="line">  <span class="keyword">private</span> IList&lt;Element&gt; elements = <span class="keyword">new</span> List&lt;Element&gt;();</span><br><span class="line"></span><br><span class="line">  <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">Attach</span>(<span class="params">Element element</span>)</span>&#123;</span><br><span class="line">	elements.Add(element);</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">Detach</span>(<span class="params">Element element</span>)</span>&#123;</span><br><span class="line">	elements.Remove(element);</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">Accept</span>(<span class="params">Visitor visitor</span>)</span>&#123;</span><br><span class="line">	<span class="keyword">foreach</span>(Element e <span class="keyword">in</span> elements)&#123;</span><br><span class="line">	  e.Accept(visitor);</span><br><span class="line">	&#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+        
+        </div>
+        <footer class="article-footer">
+            <div class="share-container">
+
+
+
+</div>
+
+    <a data-url="https://aaronshi32.github.io/2016/11/17/读书笔记-大话设计模式/" data-id="cjm7udfap001tues6q5d71xpj" class="article-share-link"><i class="fa fa-share"></i>如需转载，请注明出处</a>
+<script>
+    (function ($) {
+        // Prevent duplicate binding
+        if (typeof(__SHARE_BUTTON_BINDED__) === 'undefined' || !__SHARE_BUTTON_BINDED__) {
+            __SHARE_BUTTON_BINDED__ = true;
+        } else {
+            return;
+        }
+        $('body').on('click', function() {
+            $('.article-share-box.on').removeClass('on');
+        }).on('click', '.article-share-link', function(e) {
+            e.stopPropagation();
+
+            var $this = $(this),
+                url = $this.attr('data-url'),
+                encodedUrl = encodeURIComponent(url),
+                id = 'article-share-box-' + $this.attr('data-id'),
+                offset = $this.offset(),
+                box;
+
+            if ($('#' + id).length) {
+                box = $('#' + id);
+
+                if (box.hasClass('on')){
+                    box.removeClass('on');
+                    return;
+                }
+            } else {
+                var html = [
+                    '<div id="' + id + '" class="article-share-box">',
+                        '<input class="article-share-input" value="' + url + '">',
+                        '<div class="article-share-links">',
+                            '<a href="https://twitter.com/intent/tweet?url=' + encodedUrl + '" class="fa fa-twitter article-share-twitter" target="_blank" title="Twitter"></a>',
+                            '<a href="https://www.facebook.com/sharer.php?u=' + encodedUrl + '" class="fa fa-facebook article-share-facebook" target="_blank" title="Facebook"></a>',
+                            '<a href="http://pinterest.com/pin/create/button/?url=' + encodedUrl + '" class="fa fa-pinterest article-share-pinterest" target="_blank" title="Pinterest"></a>',
+                            '<a href="https://plus.google.com/share?url=' + encodedUrl + '" class="fa fa-google article-share-google" target="_blank" title="Google+"></a>',
+                        '</div>',
+                    '</div>'
+                ].join('');
+
+              box = $(html);
+
+              $('body').append(box);
+            }
+
+            $('.article-share-box.on').hide();
+
+            box.css({
+                top: offset.top + 25,
+                left: offset.left
+            }).addClass('on');
+
+        }).on('click', '.article-share-box', function (e) {
+            e.stopPropagation();
+        }).on('click', '.article-share-box-input', function () {
+            $(this).select();
+        }).on('click', '.article-share-box-link', function (e) {
+            e.preventDefault();
+            e.stopPropagation();
+
+            window.open(this.href, 'article-share-box-window-' + Date.now(), 'width=500,height=450');
+        });
+    })(jQuery);
+</script>
+
+            
+    
+
+        </footer>
+    </div>
+    
+        
+<nav id="article-nav">
+    
+        <a href="/blog/2016/11/17/JS文档生成工具-Jsdoc/" id="article-nav-newer" class="article-nav-link-wrap">
+            <strong class="article-nav-caption">上一篇</strong>
+            <div class="article-nav-title">
+                
+                    JS文档生成工具-Jsdoc
+                
+            </div>
+        </a>
+    
+    
+        <a href="/blog/2016/11/16/Node命令行工具-Yargs和Commander/" id="article-nav-older" class="article-nav-link-wrap">
+            <strong class="article-nav-caption">下一篇</strong>
+            <div class="article-nav-title">Node命令行工具-Yargs和Commander</div>
+        </a>
+    
+</nav>
+
+
+    
+</article>
+
+
+    
+    <section id="comments">
+    
+    </section>
+
+</section>
+            
+                <aside id="sidebar">
+   
+        
+    
+        
+    <div class="widget-wrap">
+        <h3 class="widget-title">归档</h3>
+        <div class="widget">
+            <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/blog/archives/2018/08/">八月 2018</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/blog/archives/2018/07/">七月 2018</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/blog/archives/2018/06/">六月 2018</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/blog/archives/2018/05/">五月 2018</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/blog/archives/2018/04/">四月 2018</a><span class="archive-list-count">6</span></li><li class="archive-list-item"><a class="archive-list-link" href="/blog/archives/2018/03/">三月 2018</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/blog/archives/2018/02/">二月 2018</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/blog/archives/2018/01/">一月 2018</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/blog/archives/2017/12/">十二月 2017</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/blog/archives/2017/11/">十一月 2017</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/blog/archives/2017/10/">十月 2017</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/blog/archives/2017/08/">八月 2017</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/blog/archives/2017/07/">七月 2017</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/blog/archives/2017/06/">六月 2017</a><span class="archive-list-count">4</span></li><li class="archive-list-item"><a class="archive-list-link" href="/blog/archives/2017/05/">五月 2017</a><span class="archive-list-count">6</span></li><li class="archive-list-item"><a class="archive-list-link" href="/blog/archives/2017/03/">三月 2017</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/blog/archives/2017/02/">二月 2017</a><span class="archive-list-count">4</span></li><li class="archive-list-item"><a class="archive-list-link" href="/blog/archives/2017/01/">一月 2017</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/blog/archives/2016/12/">十二月 2016</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/blog/archives/2016/11/">十一月 2016</a><span class="archive-list-count">6</span></li><li class="archive-list-item"><a class="archive-list-link" href="/blog/archives/2016/10/">十月 2016</a><span class="archive-list-count">1</span></li></ul>
+        </div>
+    </div>
+
+    
+        
+    <div class="widget-wrap">
+        <h3 class="widget-title">标签</h3>
+        <div class="widget">
+            <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/blog/tags/JavaScript/">JavaScript</a><span class="tag-list-count">4</span></li><li class="tag-list-item"><a class="tag-list-link" href="/blog/tags/人工智能/">人工智能</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/blog/tags/基础知识/">基础知识</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/blog/tags/工具/">工具</a><span class="tag-list-count">6</span></li><li class="tag-list-item"><a class="tag-list-link" href="/blog/tags/日常/">日常</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/blog/tags/框架/">框架</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/blog/tags/疑难杂症/">疑难杂症</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/blog/tags/系统/">系统</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/blog/tags/读书/">读书</a><span class="tag-list-count">28</span></li><li class="tag-list-item"><a class="tag-list-link" href="/blog/tags/面试/">面试</a><span class="tag-list-count">8</span></li></ul>
+        </div>
+    </div>
+
+    
+    <div id="toTop" class="fa fa-angle-up"></div>
+</aside>
+            
+        </div>
+        <footer id="footer">
+    <div class="outer">
+        <div id="footer-info" class="inner">
+            &copy; 2018 AaronShi<br>
+            Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>. Theme by <a href="http://github.com/ppoffice">PPOffice</a>
+        </div>
+    </div>
+</footer>
+        
+
+    
+        <script src="/blog/libs/lightgallery/js/lightgallery.min.js"></script>
+        <script src="/blog/libs/lightgallery/js/lg-thumbnail.min.js"></script>
+        <script src="/blog/libs/lightgallery/js/lg-pager.min.js"></script>
+        <script src="/blog/libs/lightgallery/js/lg-autoplay.min.js"></script>
+        <script src="/blog/libs/lightgallery/js/lg-fullscreen.min.js"></script>
+        <script src="/blog/libs/lightgallery/js/lg-zoom.min.js"></script>
+        <script src="/blog/libs/lightgallery/js/lg-hash.min.js"></script>
+        <script src="/blog/libs/lightgallery/js/lg-share.min.js"></script>
+        <script src="/blog/libs/lightgallery/js/lg-video.min.js"></script>
+    
+    
+        <script src="/blog/libs/justified-gallery/jquery.justifiedGallery.min.js"></script>
+    
+
+
+
+<!-- Custom Scripts -->
+<script src="/blog/js/main.js"></script>
+
+    </div>
+</body>
+</html>

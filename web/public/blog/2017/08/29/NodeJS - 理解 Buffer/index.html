@@ -1,0 +1,428 @@
+<!DOCTYPE html>
+<html lang=zh>
+<head>
+    <meta charset="utf-8">
+    
+    <title>NodeJS - 理解 Buffer | 着陆的橘子</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+    <meta name="description" content="简介Buffer 是一个像 Array 的对象，主要用于操作字节，数组元素为 16 进制的两位数，即 0 到 255的数值，如果超出或者不足，小数等情况，会使用叠加，递减，省略小数部分的措施保证元素数值合法性，此外，采用 JavaScript 和 C++ 相结合的模式，将性能部分用 C++ 来实现，非性能相关的部分用 JavaScript 来实现 内存分配机制Buffer 对象的内存分配不是在 V">
+<meta name="keywords" content="读书">
+<meta property="og:type" content="article">
+<meta property="og:title" content="NodeJS - 理解 Buffer">
+<meta property="og:url" content="https://aaronshi32.github.io/2017/08/29/NodeJS - 理解 Buffer/index.html">
+<meta property="og:site_name" content="着陆的橘子">
+<meta property="og:description" content="简介Buffer 是一个像 Array 的对象，主要用于操作字节，数组元素为 16 进制的两位数，即 0 到 255的数值，如果超出或者不足，小数等情况，会使用叠加，递减，省略小数部分的措施保证元素数值合法性，此外，采用 JavaScript 和 C++ 相结合的模式，将性能部分用 C++ 来实现，非性能相关的部分用 JavaScript 来实现 内存分配机制Buffer 对象的内存分配不是在 V">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:image" content="https://aaronshi32.github.io/2017/08/29/NodeJS%20-%20理解%20Buffer/buffer-allocate.png">
+<meta property="og:updated_time" content="2017-08-29T03:31:12.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="NodeJS - 理解 Buffer">
+<meta name="twitter:description" content="简介Buffer 是一个像 Array 的对象，主要用于操作字节，数组元素为 16 进制的两位数，即 0 到 255的数值，如果超出或者不足，小数等情况，会使用叠加，递减，省略小数部分的措施保证元素数值合法性，此外，采用 JavaScript 和 C++ 相结合的模式，将性能部分用 C++ 来实现，非性能相关的部分用 JavaScript 来实现 内存分配机制Buffer 对象的内存分配不是在 V">
+<meta name="twitter:image" content="https://aaronshi32.github.io/2017/08/29/NodeJS%20-%20理解%20Buffer/buffer-allocate.png">
+    
+
+    
+
+    
+
+    <link rel="stylesheet" href="/blog/libs/font-awesome/css/font-awesome.min.css">
+    <link rel="stylesheet" href="/blog/libs/open-sans/styles.css">
+    <link rel="stylesheet" href="/blog/libs/source-code-pro/styles.css">
+
+    <link rel="stylesheet" href="/blog/css/style.css">
+
+    <script src="/blog/libs/jquery/2.1.3/jquery.min.js"></script>
+    
+    
+        <link rel="stylesheet" href="/blog/libs/lightgallery/css/lightgallery.min.css">
+    
+    
+        <link rel="stylesheet" href="/blog/libs/justified-gallery/justifiedGallery.min.css">
+    
+    
+    
+    
+
+
+</head>
+
+<body>
+    <div id="container">
+        <header id="header">
+    <div id="header-main" class="header-inner">
+        <div class="outer">
+            <a href="/blog/" id="logo">
+                <i class="logo"></i>
+                <span class="site-title">着陆的橘子</span>
+            </a>
+            <nav id="main-nav">
+                
+                    <a class="main-nav-link" href="/.">主页</a>
+                
+                    <a class="main-nav-link" href="/about/cv.pdf">关于</a>
+                
+            </nav>
+            
+                
+                <nav id="sub-nav">
+                    <div class="profile" id="profile-nav">
+                        <a id="profile-anchor" href="javascript:;">
+                            <img class="avatar" src="/css/images/avatar.png" />
+                            <i class="fa fa-caret-down"></i>
+                        </a>
+                    </div>
+                </nav>
+            
+            <div id="search-form-wrap">
+
+    <form class="search-form">
+        <input type="text" class="ins-search-input search-form-input" placeholder="文章" />
+        <button type="submit" class="search-form-submit"></button>
+    </form>
+    <div class="ins-search">
+    <div class="ins-search-mask"></div>
+    <div class="ins-search-container">
+        <div class="ins-input-wrapper">
+            <input type="text" class="ins-search-input" placeholder="想要查找什么..." />
+            <span class="ins-close ins-selectable"><i class="fa fa-times-circle"></i></span>
+        </div>
+        <div class="ins-section-wrapper">
+            <div class="ins-section-container"></div>
+        </div>
+    </div>
+</div>
+<script>
+(function (window) {
+    var INSIGHT_CONFIG = {
+        TRANSLATION: {
+            POSTS: '文章',
+            PAGES: '页面',
+            CATEGORIES: '分类',
+            TAGS: '标签',
+            UNTITLED: '(未命名)',
+        },
+        ROOT_URL: '/',
+        CONTENT_URL: '/content.json',
+    };
+    window.INSIGHT_CONFIG = INSIGHT_CONFIG;
+})(window);
+</script>
+<script src="/blog/js/insight.js"></script>
+
+</div>
+        </div>
+    </div>
+    <div id="main-nav-mobile" class="header-sub header-inner">
+        <table class="menu outer">
+            <tr>
+                
+                    <td><a class="main-nav-link" href="/.">主页</a></td>
+                
+                    <td><a class="main-nav-link" href="/about/cv.pdf">关于</a></td>
+                
+                <td>
+                    
+    <div class="search-form">
+        <input type="text" class="ins-search-input search-form-input" placeholder="搜索" />
+    </div>
+
+                </td>
+            </tr>
+        </table>
+    </div>
+</header>
+
+        <div class="outer">
+            
+                
+
+<aside id="profile">
+    <div class="inner profile-inner">
+        <div class="base-info profile-block">
+            <img id="avatar" src="/css/images/avatar.png" />
+            <h2 id="name">AaronShi32</h2>
+            <h3 id="title">Senior Software Developer</h3>
+            <span id="location"><i class="fa fa-map-marker"></i>Beijing, China</span>
+            <a id="follow" target="_blank" href="https://github.com/AaronShi32">Follow</a>
+        </div>
+        <div class="article-info profile-block">
+            <div class="article-info-block">
+                48
+                <span>文章</span>
+            </div>
+            <div class="article-info-block">
+                10
+                <span>标签</span>
+            </div>
+        </div>
+        
+        <div class="profile-block social-links">
+            <table>
+                <tr>
+                    
+                    
+                    <td>
+                        <a href="https://github.com/AaronShi32" target="_blank" title="github" >
+                            <i class="fa fa-github"></i>
+                        </a>
+                    </td>
+                    
+                    <td>
+                        <a href="https://www.linkedin.com/in/cfshi" target="_blank" title="linkedin-square" >
+                            <i class="fa fa-linkedin-square"></i>
+                        </a>
+                    </td>
+                    
+                </tr>
+            </table>
+        </div>
+        
+    </div>
+</aside>
+
+            
+            <section id="main"><article id="post-NodeJS - 理解 Buffer" class="article article-type-post" itemscope itemprop="blogPost">
+    <div class="article-inner">
+        
+        
+            <header class="article-header">
+                
+    
+        <h1 class="article-title" itemprop="name">
+            NodeJS - 理解 Buffer
+        </h1>
+    
+
+                
+                    <div class="article-meta">
+                        
+    <div class="article-date">
+        <i class="fa fa-calendar"></i>
+        <a href="/blog/2017/08/29/NodeJS - 理解 Buffer/">
+            <time datetime="2017-08-29T03:22:52.000Z" itemprop="datePublished">2017-08-29</time>
+        </a>
+    </div>
+
+
+                        
+                        
+    <div class="article-tag">
+        <i class="fa fa-tag"></i>
+        <a class="tag-link" href="/blog/tags/读书/">读书</a>
+    </div>
+
+                    </div>
+                
+            </header>
+        
+        
+        <div class="article-entry" itemprop="articleBody">
+        
+            
+            <h4 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h4><p>Buffer 是一个像 Array 的对象，主要用于操作字节，数组元素为 16 进制的两位数，即 0 到 255的数值，如果超出或者不足，小数等情况，会使用叠加，递减，省略小数部分的措施保证元素数值合法性，此外，采用 JavaScript 和 C++ 相结合的模式，将性能部分用 C++ 来实现，非性能相关的部分用 JavaScript 来实现</p>
+<h4 id="内存分配机制"><a href="#内存分配机制" class="headerlink" title="内存分配机制"></a>内存分配机制</h4><p>Buffer 对象的内存分配不是在 V8 的堆内存中，而是在 Node 的 C++ 层面实现内存的申请，采用 slab 动态内存管理机制（先申请，后分配），以 4KB 作为界限来区分 Buffer 是大对象还是小对象，针对大对象，每次都 alloc 一个足够长的 SlowBuffer 对象（C++层）作为 slab 单元，针对小对象，则共用一个 slab，当不足以分配时（可分配小于 4KB），才会 alloc 一个新的 slab 内存进行再分配。<strong>需要注意的是当且仅当一个 slab 上面的所有小对象在作用域释放并都可以回收时，slab 的 8KB 才会被回收，此处会存在由于编码不当导致的内存泄漏，浪费问题</strong></p>
+<p>在 Buffer 中创建一个数组，需要注意以下规则：</p>
+<ul>
+<li>Buffer 是内存拷贝，而不是内存共享</li>
+<li>Buffer 占用内存被解释为一个数组，而不是字节数组。比如，new Uint32Array(new Buffer([1,2,3,4])) 创建了 4 个 Uint32Array，它的成员为 [1,2,3,4]，而不是 [0x1020304] 或 [0x4030201]</li>
+</ul>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 4KB 作为界限的由来：createPool 判断条件</span></span><br><span class="line">Buffer.poolSize = <span class="number">8</span> * <span class="number">1024</span>; </span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">allocate</span>(<span class="params">size</span>) </span>&#123;</span><br><span class="line">  <span class="keyword">if</span> (size &lt;= <span class="number">0</span>) &#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">new</span> FastBuffer();</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">if</span> (size &lt; (Buffer.poolSize &gt;&gt;&gt; <span class="number">1</span>)) &#123;</span><br><span class="line">    <span class="keyword">if</span> (size &gt; (poolSize - poolOffset))</span><br><span class="line">      createPool();</span><br><span class="line">    <span class="keyword">var</span> b = <span class="keyword">new</span> FastBuffer(allocPool, poolOffset, size);</span><br><span class="line">    poolOffset += size;</span><br><span class="line">    alignPool();</span><br><span class="line">    <span class="keyword">return</span> b;</span><br><span class="line">  &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">    <span class="keyword">return</span> createUnsafeBuffer(size);</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><strong>四种</strong> 内存分配的 API</p>
+<ul>
+<li><p>Buffer.from</p>
+</li>
+<li><p>Buffer.alloc</p>
+</li>
+<li><p>Buffer.allocUnSafe</p>
+</li>
+<li><p>Buffer.allocUnSafeSlow</p>
+</li>
+</ul>
+<img src="/2017/08/29/NodeJS%20-%20理解%20Buffer/buffer-allocate.png" title="Buffer内存分配机制">
+<h4 id="支持与字符串相互转换"><a href="#支持与字符串相互转换" class="headerlink" title="支持与字符串相互转换"></a>支持与字符串相互转换</h4><p>目前支持的字符串编码类型有：ASCII，UTF-8，UTF-16LE/UCS-2，Base64，Binary，Hex，可以用 isEncoding() 来判断是否支持编码</p>
+<p>对于不支持的编码类型，可以通过 <code>iconv</code> 和 <code>iconv-lite</code> 两个模块来支持更多编码类型转换</p>
+<p>转换成 Buffer：new Buffer(str，[encoding]) 和 buf.write(string，[offset]，[length]，[encoding])</p>
+<p>转换成 String：buf.toString([encoding]，[start]，[end])</p>
+<h4 id="正确的拼接方式"><a href="#正确的拼接方式" class="headerlink" title="正确的拼接方式"></a>正确的拼接方式</h4><p>用一个数组来存储接收到的所有 Buffer 片段并记录下所有片段的总长度，然后调用 Buffer.concat() 方法生成一个合并的 Buffer 对象</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br></pre></td><td class="code"><pre><span class="line">Buffer.concat = <span class="function"><span class="keyword">function</span> <span class="title">concat</span>(<span class="params">list, length</span>) </span>&#123;</span><br><span class="line">  <span class="keyword">var</span> i;</span><br><span class="line">  <span class="keyword">if</span> (!<span class="built_in">Array</span>.isArray(list))</span><br><span class="line">    <span class="keyword">throw</span> kConcatErr;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">if</span> (list.length === <span class="number">0</span>)</span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">new</span> FastBuffer();</span><br><span class="line"></span><br><span class="line">  <span class="keyword">if</span> (length === <span class="literal">undefined</span>) &#123;</span><br><span class="line">    length = <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">for</span> (i = <span class="number">0</span>; i &lt; list.length; i++)</span><br><span class="line">      length += list[i].length;</span><br><span class="line">  &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">    length = length &gt;&gt;&gt; <span class="number">0</span>;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">var</span> buffer = Buffer.allocUnsafe(length);</span><br><span class="line">  <span class="keyword">var</span> pos = <span class="number">0</span>;</span><br><span class="line">  <span class="keyword">for</span> (i = <span class="number">0</span>; i &lt; list.length; i++) &#123;</span><br><span class="line">    <span class="keyword">var</span> buf = list[i];</span><br><span class="line">    <span class="keyword">if</span> (!isUint8Array(buf))</span><br><span class="line">      <span class="keyword">throw</span> kConcatErr;</span><br><span class="line">    _copy(buf, buffer, pos);</span><br><span class="line">    pos += buf.length;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="comment">// Note: `length` is always equal to `buffer.length` at this point</span></span><br><span class="line">  <span class="keyword">if</span> (pos &lt; length) &#123;</span><br><span class="line">    <span class="comment">// Zero-fill the remaining bytes if the specified `length` was more than</span></span><br><span class="line">    <span class="comment">// the actual total length, i.e. if we have some remaining allocated bytes</span></span><br><span class="line">    <span class="comment">// there were not initialized.</span></span><br><span class="line">    buffer.fill(<span class="number">0</span>, pos, length);</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">return</span> buffer;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<h4 id="Buffer-与性能"><a href="#Buffer-与性能" class="headerlink" title="Buffer 与性能"></a>Buffer 与性能</h4><ul>
+<li><p>网络传输用 Buffer 比直接传字符串要快很多</p>
+<p>  通过预先转换静态内容为 Buffer 对象，可以有效地减少 CPU 的重复使用，节省服务器资源。在构建 Web 应用中，可以选择将页面中的动态内容和静态内容分离，静态内容部分可以通过预先转换为 Buffer 的方式，是性能得到提升。由于文件自身是二进制数据，所以在不需要改变内容的场景下，尽量只读取 Buffer，然后直接传输，不做额外的转换，避免损耗</p>
+</li>
+<li><p>文件读取速度与 highWaterMark 有关</p>
+<p>  这个值代表了每次读取的长度，对 Buffer 内存的分配和使用有一定影响，设置过小，可能导致系统调用的次数过多，在读取一个相同的大文件时，该值越大，读取的速度越快</p>
+</li>
+</ul>
+
+        
+        </div>
+        <footer class="article-footer">
+            <div class="share-container">
+
+
+
+</div>
+
+    <a data-url="https://aaronshi32.github.io/2017/08/29/NodeJS - 理解 Buffer/" data-id="cjm7udfa4000kues6x1eofxdi" class="article-share-link"><i class="fa fa-share"></i>如需转载，请注明出处</a>
+<script>
+    (function ($) {
+        // Prevent duplicate binding
+        if (typeof(__SHARE_BUTTON_BINDED__) === 'undefined' || !__SHARE_BUTTON_BINDED__) {
+            __SHARE_BUTTON_BINDED__ = true;
+        } else {
+            return;
+        }
+        $('body').on('click', function() {
+            $('.article-share-box.on').removeClass('on');
+        }).on('click', '.article-share-link', function(e) {
+            e.stopPropagation();
+
+            var $this = $(this),
+                url = $this.attr('data-url'),
+                encodedUrl = encodeURIComponent(url),
+                id = 'article-share-box-' + $this.attr('data-id'),
+                offset = $this.offset(),
+                box;
+
+            if ($('#' + id).length) {
+                box = $('#' + id);
+
+                if (box.hasClass('on')){
+                    box.removeClass('on');
+                    return;
+                }
+            } else {
+                var html = [
+                    '<div id="' + id + '" class="article-share-box">',
+                        '<input class="article-share-input" value="' + url + '">',
+                        '<div class="article-share-links">',
+                            '<a href="https://twitter.com/intent/tweet?url=' + encodedUrl + '" class="fa fa-twitter article-share-twitter" target="_blank" title="Twitter"></a>',
+                            '<a href="https://www.facebook.com/sharer.php?u=' + encodedUrl + '" class="fa fa-facebook article-share-facebook" target="_blank" title="Facebook"></a>',
+                            '<a href="http://pinterest.com/pin/create/button/?url=' + encodedUrl + '" class="fa fa-pinterest article-share-pinterest" target="_blank" title="Pinterest"></a>',
+                            '<a href="https://plus.google.com/share?url=' + encodedUrl + '" class="fa fa-google article-share-google" target="_blank" title="Google+"></a>',
+                        '</div>',
+                    '</div>'
+                ].join('');
+
+              box = $(html);
+
+              $('body').append(box);
+            }
+
+            $('.article-share-box.on').hide();
+
+            box.css({
+                top: offset.top + 25,
+                left: offset.left
+            }).addClass('on');
+
+        }).on('click', '.article-share-box', function (e) {
+            e.stopPropagation();
+        }).on('click', '.article-share-box-input', function () {
+            $(this).select();
+        }).on('click', '.article-share-box-link', function (e) {
+            e.preventDefault();
+            e.stopPropagation();
+
+            window.open(this.href, 'article-share-box-window-' + Date.now(), 'width=500,height=450');
+        });
+    })(jQuery);
+</script>
+
+            
+    
+
+        </footer>
+    </div>
+    
+        
+<nav id="article-nav">
+    
+        <a href="/blog/2017/08/29/NodeJS - 理解 内存控制/" id="article-nav-newer" class="article-nav-link-wrap">
+            <strong class="article-nav-caption">上一篇</strong>
+            <div class="article-nav-title">
+                
+                    NodeJS - 理解 内存控制
+                
+            </div>
+        </a>
+    
+    
+        <a href="/blog/2017/07/05/读书笔记-程序员的自我修养（十一）/" id="article-nav-older" class="article-nav-link-wrap">
+            <strong class="article-nav-caption">下一篇</strong>
+            <div class="article-nav-title">读书笔记-程序员的自我修养（十一）</div>
+        </a>
+    
+</nav>
+
+
+    
+</article>
+
+
+    
+    <section id="comments">
+    
+    </section>
+
+</section>
+            
+                <aside id="sidebar">
+   
+        
+    
+        
+    <div class="widget-wrap">
+        <h3 class="widget-title">归档</h3>
+        <div class="widget">
+            <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/blog/archives/2018/08/">八月 2018</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/blog/archives/2018/07/">七月 2018</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/blog/archives/2018/06/">六月 2018</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/blog/archives/2018/05/">五月 2018</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/blog/archives/2018/04/">四月 2018</a><span class="archive-list-count">6</span></li><li class="archive-list-item"><a class="archive-list-link" href="/blog/archives/2018/03/">三月 2018</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/blog/archives/2018/02/">二月 2018</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/blog/archives/2018/01/">一月 2018</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/blog/archives/2017/12/">十二月 2017</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/blog/archives/2017/11/">十一月 2017</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/blog/archives/2017/10/">十月 2017</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/blog/archives/2017/08/">八月 2017</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/blog/archives/2017/07/">七月 2017</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/blog/archives/2017/06/">六月 2017</a><span class="archive-list-count">4</span></li><li class="archive-list-item"><a class="archive-list-link" href="/blog/archives/2017/05/">五月 2017</a><span class="archive-list-count">6</span></li><li class="archive-list-item"><a class="archive-list-link" href="/blog/archives/2017/03/">三月 2017</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/blog/archives/2017/02/">二月 2017</a><span class="archive-list-count">4</span></li><li class="archive-list-item"><a class="archive-list-link" href="/blog/archives/2017/01/">一月 2017</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/blog/archives/2016/12/">十二月 2016</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/blog/archives/2016/11/">十一月 2016</a><span class="archive-list-count">6</span></li><li class="archive-list-item"><a class="archive-list-link" href="/blog/archives/2016/10/">十月 2016</a><span class="archive-list-count">1</span></li></ul>
+        </div>
+    </div>
+
+    
+        
+    <div class="widget-wrap">
+        <h3 class="widget-title">标签</h3>
+        <div class="widget">
+            <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/blog/tags/JavaScript/">JavaScript</a><span class="tag-list-count">4</span></li><li class="tag-list-item"><a class="tag-list-link" href="/blog/tags/人工智能/">人工智能</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/blog/tags/基础知识/">基础知识</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/blog/tags/工具/">工具</a><span class="tag-list-count">6</span></li><li class="tag-list-item"><a class="tag-list-link" href="/blog/tags/日常/">日常</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/blog/tags/框架/">框架</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/blog/tags/疑难杂症/">疑难杂症</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/blog/tags/系统/">系统</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/blog/tags/读书/">读书</a><span class="tag-list-count">28</span></li><li class="tag-list-item"><a class="tag-list-link" href="/blog/tags/面试/">面试</a><span class="tag-list-count">8</span></li></ul>
+        </div>
+    </div>
+
+    
+    <div id="toTop" class="fa fa-angle-up"></div>
+</aside>
+            
+        </div>
+        <footer id="footer">
+    <div class="outer">
+        <div id="footer-info" class="inner">
+            &copy; 2018 AaronShi<br>
+            Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>. Theme by <a href="http://github.com/ppoffice">PPOffice</a>
+        </div>
+    </div>
+</footer>
+        
+
+    
+        <script src="/blog/libs/lightgallery/js/lightgallery.min.js"></script>
+        <script src="/blog/libs/lightgallery/js/lg-thumbnail.min.js"></script>
+        <script src="/blog/libs/lightgallery/js/lg-pager.min.js"></script>
+        <script src="/blog/libs/lightgallery/js/lg-autoplay.min.js"></script>
+        <script src="/blog/libs/lightgallery/js/lg-fullscreen.min.js"></script>
+        <script src="/blog/libs/lightgallery/js/lg-zoom.min.js"></script>
+        <script src="/blog/libs/lightgallery/js/lg-hash.min.js"></script>
+        <script src="/blog/libs/lightgallery/js/lg-share.min.js"></script>
+        <script src="/blog/libs/lightgallery/js/lg-video.min.js"></script>
+    
+    
+        <script src="/blog/libs/justified-gallery/jquery.justifiedGallery.min.js"></script>
+    
+
+
+
+<!-- Custom Scripts -->
+<script src="/blog/js/main.js"></script>
+
+    </div>
+</body>
+</html>

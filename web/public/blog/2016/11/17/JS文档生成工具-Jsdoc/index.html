@@ -1,0 +1,424 @@
+<!DOCTYPE html>
+<html lang=zh>
+<head>
+    <meta charset="utf-8">
+    
+    <title>JS文档生成工具-Jsdoc | 着陆的橘子</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+    <meta name="description" content="Jsdoc是一款JS文档的生成工具，提供了丰富的标签，写起文档来十分方便，具体标签用法参考 Jsdoc，这里就不多赘述。但它的用处，远远不止于生成文档，最近通过研究，发现利用Jsdoc工具，可以干更多的事情，待下面剖析。 生成原理首先来谈谈Jsdoc的生成原理，即如何从注释代码生成最后的网页。这个过程其实很简单，通过文档解析器parser对每个js文件进行分析，提取出文档信息，之后的一步很关键，J">
+<meta name="keywords" content="JavaScript,工具">
+<meta property="og:type" content="article">
+<meta property="og:title" content="JS文档生成工具-Jsdoc">
+<meta property="og:url" content="https://aaronshi32.github.io/2016/11/17/JS文档生成工具-Jsdoc/index.html">
+<meta property="og:site_name" content="着陆的橘子">
+<meta property="og:description" content="Jsdoc是一款JS文档的生成工具，提供了丰富的标签，写起文档来十分方便，具体标签用法参考 Jsdoc，这里就不多赘述。但它的用处，远远不止于生成文档，最近通过研究，发现利用Jsdoc工具，可以干更多的事情，待下面剖析。 生成原理首先来谈谈Jsdoc的生成原理，即如何从注释代码生成最后的网页。这个过程其实很简单，通过文档解析器parser对每个js文件进行分析，提取出文档信息，之后的一步很关键，J">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:image" content="https://aaronshi32.github.io/2016/11/17/JS文档生成工具-Jsdoc/jsdoc.png">
+<meta property="og:updated_time" content="2017-07-13T07:05:42.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="JS文档生成工具-Jsdoc">
+<meta name="twitter:description" content="Jsdoc是一款JS文档的生成工具，提供了丰富的标签，写起文档来十分方便，具体标签用法参考 Jsdoc，这里就不多赘述。但它的用处，远远不止于生成文档，最近通过研究，发现利用Jsdoc工具，可以干更多的事情，待下面剖析。 生成原理首先来谈谈Jsdoc的生成原理，即如何从注释代码生成最后的网页。这个过程其实很简单，通过文档解析器parser对每个js文件进行分析，提取出文档信息，之后的一步很关键，J">
+<meta name="twitter:image" content="https://aaronshi32.github.io/2016/11/17/JS文档生成工具-Jsdoc/jsdoc.png">
+    
+
+    
+
+    
+
+    <link rel="stylesheet" href="/blog/libs/font-awesome/css/font-awesome.min.css">
+    <link rel="stylesheet" href="/blog/libs/open-sans/styles.css">
+    <link rel="stylesheet" href="/blog/libs/source-code-pro/styles.css">
+
+    <link rel="stylesheet" href="/blog/css/style.css">
+
+    <script src="/blog/libs/jquery/2.1.3/jquery.min.js"></script>
+    
+    
+        <link rel="stylesheet" href="/blog/libs/lightgallery/css/lightgallery.min.css">
+    
+    
+        <link rel="stylesheet" href="/blog/libs/justified-gallery/justifiedGallery.min.css">
+    
+    
+    
+    
+
+
+</head>
+
+<body>
+    <div id="container">
+        <header id="header">
+    <div id="header-main" class="header-inner">
+        <div class="outer">
+            <a href="/blog/" id="logo">
+                <i class="logo"></i>
+                <span class="site-title">着陆的橘子</span>
+            </a>
+            <nav id="main-nav">
+                
+                    <a class="main-nav-link" href="/.">主页</a>
+                
+                    <a class="main-nav-link" href="/about/cv.pdf">关于</a>
+                
+            </nav>
+            
+                
+                <nav id="sub-nav">
+                    <div class="profile" id="profile-nav">
+                        <a id="profile-anchor" href="javascript:;">
+                            <img class="avatar" src="/css/images/avatar.png" />
+                            <i class="fa fa-caret-down"></i>
+                        </a>
+                    </div>
+                </nav>
+            
+            <div id="search-form-wrap">
+
+    <form class="search-form">
+        <input type="text" class="ins-search-input search-form-input" placeholder="文章" />
+        <button type="submit" class="search-form-submit"></button>
+    </form>
+    <div class="ins-search">
+    <div class="ins-search-mask"></div>
+    <div class="ins-search-container">
+        <div class="ins-input-wrapper">
+            <input type="text" class="ins-search-input" placeholder="想要查找什么..." />
+            <span class="ins-close ins-selectable"><i class="fa fa-times-circle"></i></span>
+        </div>
+        <div class="ins-section-wrapper">
+            <div class="ins-section-container"></div>
+        </div>
+    </div>
+</div>
+<script>
+(function (window) {
+    var INSIGHT_CONFIG = {
+        TRANSLATION: {
+            POSTS: '文章',
+            PAGES: '页面',
+            CATEGORIES: '分类',
+            TAGS: '标签',
+            UNTITLED: '(未命名)',
+        },
+        ROOT_URL: '/',
+        CONTENT_URL: '/content.json',
+    };
+    window.INSIGHT_CONFIG = INSIGHT_CONFIG;
+})(window);
+</script>
+<script src="/blog/js/insight.js"></script>
+
+</div>
+        </div>
+    </div>
+    <div id="main-nav-mobile" class="header-sub header-inner">
+        <table class="menu outer">
+            <tr>
+                
+                    <td><a class="main-nav-link" href="/.">主页</a></td>
+                
+                    <td><a class="main-nav-link" href="/about/cv.pdf">关于</a></td>
+                
+                <td>
+                    
+    <div class="search-form">
+        <input type="text" class="ins-search-input search-form-input" placeholder="搜索" />
+    </div>
+
+                </td>
+            </tr>
+        </table>
+    </div>
+</header>
+
+        <div class="outer">
+            
+                
+
+<aside id="profile">
+    <div class="inner profile-inner">
+        <div class="base-info profile-block">
+            <img id="avatar" src="/css/images/avatar.png" />
+            <h2 id="name">AaronShi32</h2>
+            <h3 id="title">Senior Software Developer</h3>
+            <span id="location"><i class="fa fa-map-marker"></i>Beijing, China</span>
+            <a id="follow" target="_blank" href="https://github.com/AaronShi32">Follow</a>
+        </div>
+        <div class="article-info profile-block">
+            <div class="article-info-block">
+                48
+                <span>文章</span>
+            </div>
+            <div class="article-info-block">
+                10
+                <span>标签</span>
+            </div>
+        </div>
+        
+        <div class="profile-block social-links">
+            <table>
+                <tr>
+                    
+                    
+                    <td>
+                        <a href="https://github.com/AaronShi32" target="_blank" title="github" >
+                            <i class="fa fa-github"></i>
+                        </a>
+                    </td>
+                    
+                    <td>
+                        <a href="https://www.linkedin.com/in/cfshi" target="_blank" title="linkedin-square" >
+                            <i class="fa fa-linkedin-square"></i>
+                        </a>
+                    </td>
+                    
+                </tr>
+            </table>
+        </div>
+        
+    </div>
+</aside>
+
+            
+            <section id="main"><article id="post-JS文档生成工具-Jsdoc" class="article article-type-post" itemscope itemprop="blogPost">
+    <div class="article-inner">
+        
+        
+            <header class="article-header">
+                
+    
+        <h1 class="article-title" itemprop="name">
+            JS文档生成工具-Jsdoc
+        </h1>
+    
+
+                
+                    <div class="article-meta">
+                        
+    <div class="article-date">
+        <i class="fa fa-calendar"></i>
+        <a href="/blog/2016/11/17/JS文档生成工具-Jsdoc/">
+            <time datetime="2016-11-17T09:53:00.000Z" itemprop="datePublished">2016-11-17</time>
+        </a>
+    </div>
+
+
+                        
+                        
+    <div class="article-tag">
+        <i class="fa fa-tag"></i>
+        <a class="tag-link" href="/blog/tags/JavaScript/">JavaScript</a>, <a class="tag-link" href="/blog/tags/工具/">工具</a>
+    </div>
+
+                    </div>
+                
+            </header>
+        
+        
+        <div class="article-entry" itemprop="articleBody">
+        
+            
+            <p>Jsdoc是一款JS文档的生成工具，提供了丰富的标签，写起文档来十分方便，具体标签用法参考 <a href="http://useJsdoc.org/" target="_blank" rel="noopener">Jsdoc</a>，这里就不多赘述。但它的用处，远远不止于生成文档，最近通过研究，发现利用Jsdoc工具，可以干更多的事情，待下面剖析。</p>
+<h4 id="生成原理"><a href="#生成原理" class="headerlink" title="生成原理"></a>生成原理</h4><p>首先来谈谈Jsdoc的生成原理，即如何从注释代码生成最后的网页。这个过程其实很简单，通过文档解析器<code>parser</code>对每个js文件进行分析，提取出文档信息，之后的一步很关键，Jsdoc将提取出来的信息存放到了<a href="http://www.taffydb.com/" target="_blank" rel="noopener">taffydb</a>中，进而根据这些信息来生成网页。</p>
+<p>为了更好的解释这个过程，来看Jsdoc的源码</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/* templates/default/publish.js */</span></span><br><span class="line">exports.publish = <span class="function"><span class="keyword">function</span>(<span class="params">taffyData, opts, tutorials</span>) </span>&#123;</span><br><span class="line">	<span class="comment">//generate Jsdoc html	</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>生成html的代码逻辑，就在<code>publish</code>这关键函数中，从接受的参数来看，<code>taffyData</code>中已经存放好解析之后的文档信息，<code>opts</code>是<a href="http://useJsdoc.org/about-configuring-Jsdoc.html" target="_blank" rel="noopener">配置文件</a>的解析，<code>tutorials</code>是教程的信息，未做过多研究。那么taffyData中存放的信息试什么样子的呢？来看如下</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line">***** Debug ******</span><br><span class="line">[ &#123; <span class="attr">comment</span>: <span class="string">'/**\n* &lt;p&gt;Start ...... @public\n* @since 1\n */'</span>,</span><br><span class="line">    meta:</span><br><span class="line">     &#123; <span class="attr">range</span>: [<span class="built_in">Object</span>],</span><br><span class="line">       filename: <span class="string">'LocationManager.js'</span>,</span><br><span class="line">       lineno: <span class="number">69</span>,</span><br><span class="line">       code: [<span class="built_in">Object</span>],</span><br><span class="line">       vars: [<span class="built_in">Object</span>] &#125;,</span><br><span class="line">    description: <span class="string">'&lt;p&gt;Start request location.&lt;/p&gt; ......more.&lt;/p&gt;\n'</span>,</span><br><span class="line">    permission: [ [<span class="built_in">Object</span>] ],</span><br><span class="line">    see: [ <span class="string">'[removeLocationU...r#removeLocationUpdates&#125;'</span> ],</span><br><span class="line">    params: [ [<span class="built_in">Object</span>] ],</span><br><span class="line">    returns: [ [<span class="built_in">Object</span>] ],</span><br><span class="line">    access: <span class="string">'public'</span>,</span><br><span class="line">    since: <span class="string">'1'</span>,</span><br><span class="line">    name: <span class="string">'requestLocationUpdates'</span>,</span><br><span class="line">    longname: <span class="string">'xxx.location.LocationManager#requestLocationUpdates'</span>,</span><br><span class="line">    kind: <span class="string">'function'</span>,</span><br><span class="line">    memberof: <span class="string">'xxx.location.LocationManager'</span>,</span><br><span class="line">    scope: <span class="string">'instance'</span>,</span><br><span class="line">    ___id: <span class="string">'T000002R003347'</span>,</span><br><span class="line">    ___s: <span class="literal">true</span> &#125; ]</span><br></pre></td></tr></table></figure>
+<p>以上信息就是taffyData中存放的文档信息，可以看到，关键的Jsdoc信息，比如<code>@since 1</code>解析成了<code>since:&#39;1&#39;</code>，<code>@public</code>解析成了<code>access:public</code>，<code>kind:&#39;function&#39;</code>，经过这般解析，taffyData中的数据已经足够可以用来生成网页，从而可以看出，在<code>publish</code>函数中，围绕着taffydb的数据，通过各种数据处理，可以做一些更多的事情，这里只是抛砖引玉，比如统计代码的各种信息、检查Jsdoc是否符合规范等等</p>
+<p>以一张图简要描述下Jsdoc的原理</p>
+<img src="/2016/11/17/JS文档生成工具-Jsdoc/jsdoc.png" title="taffyData是Jsdoc的核心关键">
+<p>至此，我们分析出了Jsdoc的关键信息：<strong>Jsdoc解析之后的信息全部存放到taffyData中，而这些信息作为接口publish的参数，提供了良好的扩展性</strong></p>
+<p>如果进一步了解信息转储，请查阅：<code>app.js # app.jsdoc.parser.parse -&gt; parser.js # parser.createParser</code> 这个方法</p>
+<h4 id="自定义扩展"><a href="#自定义扩展" class="headerlink" title="自定义扩展"></a>自定义扩展</h4><p>接下来来看看Jsdoc提供的三种自定义扩展方式，分别是：自定义<code>EventHandler</code>级别的插件，自定义标签，自定义抽象语法树访问器，下面来分别解释下这三种扩展方式的区别</p>
+<ul>
+<li><p>自定义EventHandler级别的插件</p>
+<p>  这种扩展方式是最高级别的扩展，如果学过监听器设计模式，看如下代码就一目了然了，一个<code>EventHandler</code>插件包含了以下几个阶段的监听</p>
+  <figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">exports.handlers = &#123;</span><br><span class="line">  parseBegin: <span class="function"><span class="keyword">function</span>(<span class="params">sourcefiles</span>)</span>&#123;&#125;,</span><br><span class="line">  fileBegin: <span class="function"><span class="keyword">function</span>(<span class="params">filename</span>)</span>&#123;&#125;,</span><br><span class="line">  beforeParse: <span class="function"><span class="keyword">function</span>(<span class="params">filename,content</span>)</span>&#123;&#125;,</span><br><span class="line">  JsdocCommentFound: <span class="function"><span class="keyword">function</span>(<span class="params">filename, comment, lineno</span>)</span>&#123;&#125;,</span><br><span class="line">  symbolFound: <span class="function"><span class="keyword">function</span>(<span class="params">..params</span>)</span>&#123; &#125;,</span><br><span class="line">  newDoclet: <span class="function"><span class="keyword">function</span>(<span class="params">doclet</span>) </span>&#123;&#125;,</span><br><span class="line">  fileComplete: <span class="function"><span class="keyword">function</span>(<span class="params">filename,content</span>)</span>&#123;&#125;,</span><br><span class="line">  parseComplete: <span class="function"><span class="keyword">function</span>(<span class="params">sourcefiles, doclets</span>)</span>&#123;&#125;,</span><br><span class="line">  processingComplete: <span class="function"><span class="keyword">function</span>(<span class="params">doclets</span>)</span>&#123;&#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<p>  不难理解，Jsdoc在生成过程中，抛出了以上这些阶段事件供扩展，每个事件的不同参数，代表的当前阶段产生的中间结果。比如在解析之前(parseBegin)，传入的参数代表源文件文件名列表，可以做一些正比表达式的匹配，指定生成某些文件的文档。在解析完一个文件的Jsdoc信息时(newDoclet)，doclet中就包括了上面taffydb中的信息。有了这几个阶段，相信很轻松的就可以扩展出任何想要的插件，关键在于插件的行为是由哪些阶段完成的。</p>
+</li>
+<li><p>自定义标签</p>
+<p>  这种扩展方式是中间级别的扩展，主要用于当Jsdoc官方提供的标签不能满足文档注释需要的时候，选择自定义标签来补充完善Jsdoc的能力，比如，我需要在文档中注释一个权限声明的标签，@permission，那么可以这样做</p>
+  <figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">exports.defineTags = <span class="function"><span class="keyword">function</span>(<span class="params">dictionary</span>) </span>&#123;</span><br><span class="line">  <span class="keyword">var</span> opts = &#123;</span><br><span class="line">	canHaveName: <span class="literal">true</span>,</span><br><span class="line">	mustHaveValue: <span class="literal">true</span>,</span><br><span class="line">	onTagged: <span class="function"><span class="keyword">function</span>(<span class="params">doclet, tag</span>) </span>&#123;</span><br><span class="line">	  doclet.permission = doclet.permission || [];</span><br><span class="line">	  doclet.permission.push(tag);</span><br><span class="line">	&#125;</span><br><span class="line">  &#125;</span><br><span class="line">  dictionary.defineTag(<span class="string">"permission"</span>, opts);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>  Jsdoc提供了<code>defineTags</code>接口来自定义标签，其参数dictionary可以理解为标签字典，如上述代码描述，将自定义标签和属性，添加到dictionary中，这样就能被Jsdoc在解析中识别了，onTagged方法定义了当解析到该标签时，Jsdoc应该做出的操作，这里还是<strong>doclet</strong>，还记得吗？就是那个taffydb的数据，翻到上面那个taffydb数据信息看看，permission就在其中。自定义标签相比上面的EventHandler级别的插件，实现起来简单、方便。</p>
+</li>
+<li><p>自定义抽象语法树访问器</p>
+<p>  这种扩展方式时最低级别的扩展，官方文档中用了(lowest)一词。同样，来看代码</p>
+  <figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">exports.astNodeVisitor = &#123;</span><br><span class="line">     visitNode: <span class="function"><span class="keyword">function</span>(<span class="params">node, e, parser, currentSourceName</span>) </span>&#123;</span><br><span class="line">       <span class="comment">// do all sorts of crazy things here</span></span><br><span class="line">     &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<p>  由于直接接触的对象是抽象语法数，那么可做的事情就更多了，就好比越是接近系统底层，可扩展的能力越高，越是上层的东西，可扩展能力就越小，Jsdoc提供了<code>astNodeVisitor</code>接口来扩展访问到AST每个节点的行为，感兴趣的同学可以好好实战一番，这里就不过多赘述了</p>
+</li>
+</ul>
+<h4 id="更多"><a href="#更多" class="headerlink" title="更多"></a>更多</h4><p>Jsdoc的主要原理和扩展方式在上面分析完了，更多完整功能用法，请参考<a href="http://useJsdoc.org/" target="_blank" rel="noopener">Jsdoc</a></p>
+
+        
+        </div>
+        <footer class="article-footer">
+            <div class="share-container">
+
+
+
+</div>
+
+    <a data-url="https://aaronshi32.github.io/2016/11/17/JS文档生成工具-Jsdoc/" data-id="cjm7udf9p0003ues6u3ydf3wj" class="article-share-link"><i class="fa fa-share"></i>如需转载，请注明出处</a>
+<script>
+    (function ($) {
+        // Prevent duplicate binding
+        if (typeof(__SHARE_BUTTON_BINDED__) === 'undefined' || !__SHARE_BUTTON_BINDED__) {
+            __SHARE_BUTTON_BINDED__ = true;
+        } else {
+            return;
+        }
+        $('body').on('click', function() {
+            $('.article-share-box.on').removeClass('on');
+        }).on('click', '.article-share-link', function(e) {
+            e.stopPropagation();
+
+            var $this = $(this),
+                url = $this.attr('data-url'),
+                encodedUrl = encodeURIComponent(url),
+                id = 'article-share-box-' + $this.attr('data-id'),
+                offset = $this.offset(),
+                box;
+
+            if ($('#' + id).length) {
+                box = $('#' + id);
+
+                if (box.hasClass('on')){
+                    box.removeClass('on');
+                    return;
+                }
+            } else {
+                var html = [
+                    '<div id="' + id + '" class="article-share-box">',
+                        '<input class="article-share-input" value="' + url + '">',
+                        '<div class="article-share-links">',
+                            '<a href="https://twitter.com/intent/tweet?url=' + encodedUrl + '" class="fa fa-twitter article-share-twitter" target="_blank" title="Twitter"></a>',
+                            '<a href="https://www.facebook.com/sharer.php?u=' + encodedUrl + '" class="fa fa-facebook article-share-facebook" target="_blank" title="Facebook"></a>',
+                            '<a href="http://pinterest.com/pin/create/button/?url=' + encodedUrl + '" class="fa fa-pinterest article-share-pinterest" target="_blank" title="Pinterest"></a>',
+                            '<a href="https://plus.google.com/share?url=' + encodedUrl + '" class="fa fa-google article-share-google" target="_blank" title="Google+"></a>',
+                        '</div>',
+                    '</div>'
+                ].join('');
+
+              box = $(html);
+
+              $('body').append(box);
+            }
+
+            $('.article-share-box.on').hide();
+
+            box.css({
+                top: offset.top + 25,
+                left: offset.left
+            }).addClass('on');
+
+        }).on('click', '.article-share-box', function (e) {
+            e.stopPropagation();
+        }).on('click', '.article-share-box-input', function () {
+            $(this).select();
+        }).on('click', '.article-share-box-link', function (e) {
+            e.preventDefault();
+            e.stopPropagation();
+
+            window.open(this.href, 'article-share-box-window-' + Date.now(), 'width=500,height=450');
+        });
+    })(jQuery);
+</script>
+
+            
+    
+
+        </footer>
+    </div>
+    
+        
+<nav id="article-nav">
+    
+        <a href="/blog/2016/11/17/读书笔记-Effective JavaScript/" id="article-nav-newer" class="article-nav-link-wrap">
+            <strong class="article-nav-caption">上一篇</strong>
+            <div class="article-nav-title">
+                
+                    读书笔记-Effective JavaScript
+                
+            </div>
+        </a>
+    
+    
+        <a href="/blog/2016/11/17/读书笔记-大话设计模式/" id="article-nav-older" class="article-nav-link-wrap">
+            <strong class="article-nav-caption">下一篇</strong>
+            <div class="article-nav-title">读书笔记-大话设计模式</div>
+        </a>
+    
+</nav>
+
+
+    
+</article>
+
+
+    
+    <section id="comments">
+    
+    </section>
+
+</section>
+            
+                <aside id="sidebar">
+   
+        
+    
+        
+    <div class="widget-wrap">
+        <h3 class="widget-title">归档</h3>
+        <div class="widget">
+            <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/blog/archives/2018/08/">八月 2018</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/blog/archives/2018/07/">七月 2018</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/blog/archives/2018/06/">六月 2018</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/blog/archives/2018/05/">五月 2018</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/blog/archives/2018/04/">四月 2018</a><span class="archive-list-count">6</span></li><li class="archive-list-item"><a class="archive-list-link" href="/blog/archives/2018/03/">三月 2018</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/blog/archives/2018/02/">二月 2018</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/blog/archives/2018/01/">一月 2018</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/blog/archives/2017/12/">十二月 2017</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/blog/archives/2017/11/">十一月 2017</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/blog/archives/2017/10/">十月 2017</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/blog/archives/2017/08/">八月 2017</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/blog/archives/2017/07/">七月 2017</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/blog/archives/2017/06/">六月 2017</a><span class="archive-list-count">4</span></li><li class="archive-list-item"><a class="archive-list-link" href="/blog/archives/2017/05/">五月 2017</a><span class="archive-list-count">6</span></li><li class="archive-list-item"><a class="archive-list-link" href="/blog/archives/2017/03/">三月 2017</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/blog/archives/2017/02/">二月 2017</a><span class="archive-list-count">4</span></li><li class="archive-list-item"><a class="archive-list-link" href="/blog/archives/2017/01/">一月 2017</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/blog/archives/2016/12/">十二月 2016</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/blog/archives/2016/11/">十一月 2016</a><span class="archive-list-count">6</span></li><li class="archive-list-item"><a class="archive-list-link" href="/blog/archives/2016/10/">十月 2016</a><span class="archive-list-count">1</span></li></ul>
+        </div>
+    </div>
+
+    
+        
+    <div class="widget-wrap">
+        <h3 class="widget-title">标签</h3>
+        <div class="widget">
+            <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/blog/tags/JavaScript/">JavaScript</a><span class="tag-list-count">4</span></li><li class="tag-list-item"><a class="tag-list-link" href="/blog/tags/人工智能/">人工智能</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/blog/tags/基础知识/">基础知识</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/blog/tags/工具/">工具</a><span class="tag-list-count">6</span></li><li class="tag-list-item"><a class="tag-list-link" href="/blog/tags/日常/">日常</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/blog/tags/框架/">框架</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/blog/tags/疑难杂症/">疑难杂症</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/blog/tags/系统/">系统</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/blog/tags/读书/">读书</a><span class="tag-list-count">28</span></li><li class="tag-list-item"><a class="tag-list-link" href="/blog/tags/面试/">面试</a><span class="tag-list-count">8</span></li></ul>
+        </div>
+    </div>
+
+    
+    <div id="toTop" class="fa fa-angle-up"></div>
+</aside>
+            
+        </div>
+        <footer id="footer">
+    <div class="outer">
+        <div id="footer-info" class="inner">
+            &copy; 2018 AaronShi<br>
+            Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>. Theme by <a href="http://github.com/ppoffice">PPOffice</a>
+        </div>
+    </div>
+</footer>
+        
+
+    
+        <script src="/blog/libs/lightgallery/js/lightgallery.min.js"></script>
+        <script src="/blog/libs/lightgallery/js/lg-thumbnail.min.js"></script>
+        <script src="/blog/libs/lightgallery/js/lg-pager.min.js"></script>
+        <script src="/blog/libs/lightgallery/js/lg-autoplay.min.js"></script>
+        <script src="/blog/libs/lightgallery/js/lg-fullscreen.min.js"></script>
+        <script src="/blog/libs/lightgallery/js/lg-zoom.min.js"></script>
+        <script src="/blog/libs/lightgallery/js/lg-hash.min.js"></script>
+        <script src="/blog/libs/lightgallery/js/lg-share.min.js"></script>
+        <script src="/blog/libs/lightgallery/js/lg-video.min.js"></script>
+    
+    
+        <script src="/blog/libs/justified-gallery/jquery.justifiedGallery.min.js"></script>
+    
+
+
+
+<!-- Custom Scripts -->
+<script src="/blog/js/main.js"></script>
+
+    </div>
+</body>
+</html>

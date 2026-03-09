@@ -1,0 +1,499 @@
+<!DOCTYPE html>
+<html lang=zh>
+<head>
+    <meta charset="utf-8">
+    
+    <title>读书笔记-程序员的自我修养（七） | 着陆的橘子</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+    <meta name="description" content="动态链接（Dynamic Linking）：一个单一个可执行文件模块被拆分成若干模块，在程序运行时进行链接的一种方式 欲扬先抑：静态链接饱受 内存磁盘空间浪费（同一个目标文件存在多份供使用），更新发布需要重新链接 等问题，而动态链接解决了上面的问题，提供了 可扩展性（动态选择加载），但饱受 兼容性 （如不兼容，程序将崩溃无法运行），性能损耗（装载时重新链接）困扰  基本思想：把程序按照模块 拆分">
+<meta name="keywords" content="读书">
+<meta property="og:type" content="article">
+<meta property="og:title" content="读书笔记-程序员的自我修养（七）">
+<meta property="og:url" content="https://aaronshi32.github.io/2017/06/06/读书笔记-程序员的自我修养（七）/index.html">
+<meta property="og:site_name" content="着陆的橘子">
+<meta property="og:description" content="动态链接（Dynamic Linking）：一个单一个可执行文件模块被拆分成若干模块，在程序运行时进行链接的一种方式 欲扬先抑：静态链接饱受 内存磁盘空间浪费（同一个目标文件存在多份供使用），更新发布需要重新链接 等问题，而动态链接解决了上面的问题，提供了 可扩展性（动态选择加载），但饱受 兼容性 （如不兼容，程序将崩溃无法运行），性能损耗（装载时重新链接）困扰  基本思想：把程序按照模块 拆分">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:updated_time" content="2017-06-06T03:07:12.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="读书笔记-程序员的自我修养（七）">
+<meta name="twitter:description" content="动态链接（Dynamic Linking）：一个单一个可执行文件模块被拆分成若干模块，在程序运行时进行链接的一种方式 欲扬先抑：静态链接饱受 内存磁盘空间浪费（同一个目标文件存在多份供使用），更新发布需要重新链接 等问题，而动态链接解决了上面的问题，提供了 可扩展性（动态选择加载），但饱受 兼容性 （如不兼容，程序将崩溃无法运行），性能损耗（装载时重新链接）困扰  基本思想：把程序按照模块 拆分">
+    
+
+    
+
+    
+
+    <link rel="stylesheet" href="/blog/libs/font-awesome/css/font-awesome.min.css">
+    <link rel="stylesheet" href="/blog/libs/open-sans/styles.css">
+    <link rel="stylesheet" href="/blog/libs/source-code-pro/styles.css">
+
+    <link rel="stylesheet" href="/blog/css/style.css">
+
+    <script src="/blog/libs/jquery/2.1.3/jquery.min.js"></script>
+    
+    
+        <link rel="stylesheet" href="/blog/libs/lightgallery/css/lightgallery.min.css">
+    
+    
+        <link rel="stylesheet" href="/blog/libs/justified-gallery/justifiedGallery.min.css">
+    
+    
+    
+    
+
+
+</head>
+
+<body>
+    <div id="container">
+        <header id="header">
+    <div id="header-main" class="header-inner">
+        <div class="outer">
+            <a href="/blog/" id="logo">
+                <i class="logo"></i>
+                <span class="site-title">着陆的橘子</span>
+            </a>
+            <nav id="main-nav">
+                
+                    <a class="main-nav-link" href="/.">主页</a>
+                
+                    <a class="main-nav-link" href="/about/cv.pdf">关于</a>
+                
+            </nav>
+            
+                
+                <nav id="sub-nav">
+                    <div class="profile" id="profile-nav">
+                        <a id="profile-anchor" href="javascript:;">
+                            <img class="avatar" src="/css/images/avatar.png" />
+                            <i class="fa fa-caret-down"></i>
+                        </a>
+                    </div>
+                </nav>
+            
+            <div id="search-form-wrap">
+
+    <form class="search-form">
+        <input type="text" class="ins-search-input search-form-input" placeholder="文章" />
+        <button type="submit" class="search-form-submit"></button>
+    </form>
+    <div class="ins-search">
+    <div class="ins-search-mask"></div>
+    <div class="ins-search-container">
+        <div class="ins-input-wrapper">
+            <input type="text" class="ins-search-input" placeholder="想要查找什么..." />
+            <span class="ins-close ins-selectable"><i class="fa fa-times-circle"></i></span>
+        </div>
+        <div class="ins-section-wrapper">
+            <div class="ins-section-container"></div>
+        </div>
+    </div>
+</div>
+<script>
+(function (window) {
+    var INSIGHT_CONFIG = {
+        TRANSLATION: {
+            POSTS: '文章',
+            PAGES: '页面',
+            CATEGORIES: '分类',
+            TAGS: '标签',
+            UNTITLED: '(未命名)',
+        },
+        ROOT_URL: '/',
+        CONTENT_URL: '/content.json',
+    };
+    window.INSIGHT_CONFIG = INSIGHT_CONFIG;
+})(window);
+</script>
+<script src="/blog/js/insight.js"></script>
+
+</div>
+        </div>
+    </div>
+    <div id="main-nav-mobile" class="header-sub header-inner">
+        <table class="menu outer">
+            <tr>
+                
+                    <td><a class="main-nav-link" href="/.">主页</a></td>
+                
+                    <td><a class="main-nav-link" href="/about/cv.pdf">关于</a></td>
+                
+                <td>
+                    
+    <div class="search-form">
+        <input type="text" class="ins-search-input search-form-input" placeholder="搜索" />
+    </div>
+
+                </td>
+            </tr>
+        </table>
+    </div>
+</header>
+
+        <div class="outer">
+            
+                
+
+<aside id="profile">
+    <div class="inner profile-inner">
+        <div class="base-info profile-block">
+            <img id="avatar" src="/css/images/avatar.png" />
+            <h2 id="name">AaronShi32</h2>
+            <h3 id="title">Senior Software Developer</h3>
+            <span id="location"><i class="fa fa-map-marker"></i>Beijing, China</span>
+            <a id="follow" target="_blank" href="https://github.com/AaronShi32">Follow</a>
+        </div>
+        <div class="article-info profile-block">
+            <div class="article-info-block">
+                48
+                <span>文章</span>
+            </div>
+            <div class="article-info-block">
+                10
+                <span>标签</span>
+            </div>
+        </div>
+        
+        <div class="profile-block social-links">
+            <table>
+                <tr>
+                    
+                    
+                    <td>
+                        <a href="https://github.com/AaronShi32" target="_blank" title="github" >
+                            <i class="fa fa-github"></i>
+                        </a>
+                    </td>
+                    
+                    <td>
+                        <a href="https://www.linkedin.com/in/cfshi" target="_blank" title="linkedin-square" >
+                            <i class="fa fa-linkedin-square"></i>
+                        </a>
+                    </td>
+                    
+                </tr>
+            </table>
+        </div>
+        
+    </div>
+</aside>
+
+            
+            <section id="main"><article id="post-读书笔记-程序员的自我修养（七）" class="article article-type-post" itemscope itemprop="blogPost">
+    <div class="article-inner">
+        
+        
+            <header class="article-header">
+                
+    
+        <h1 class="article-title" itemprop="name">
+            读书笔记-程序员的自我修养（七）
+        </h1>
+    
+
+                
+                    <div class="article-meta">
+                        
+    <div class="article-date">
+        <i class="fa fa-calendar"></i>
+        <a href="/blog/2017/06/06/读书笔记-程序员的自我修养（七）/">
+            <time datetime="2017-06-06T03:03:25.000Z" itemprop="datePublished">2017-06-06</time>
+        </a>
+    </div>
+
+
+                        
+                        
+    <div class="article-tag">
+        <i class="fa fa-tag"></i>
+        <a class="tag-link" href="/blog/tags/读书/">读书</a>
+    </div>
+
+                    </div>
+                
+            </header>
+        
+        
+        <div class="article-entry" itemprop="articleBody">
+        
+            
+            <h2 id="动态链接（Dynamic-Linking）：一个单一个可执行文件模块被拆分成若干模块，在程序运行时进行链接的一种方式"><a href="#动态链接（Dynamic-Linking）：一个单一个可执行文件模块被拆分成若干模块，在程序运行时进行链接的一种方式" class="headerlink" title="动态链接（Dynamic Linking）：一个单一个可执行文件模块被拆分成若干模块，在程序运行时进行链接的一种方式"></a>动态链接（Dynamic Linking）：一个单一个可执行文件模块被拆分成若干模块，在程序运行时进行链接的一种方式</h2><ul>
+<li><p><strong>欲扬先抑</strong>：静态链接饱受 <strong>内存磁盘空间浪费</strong>（同一个目标文件存在多份供使用），<strong>更新发布需要重新链接</strong> 等问题，而动态链接解决了上面的问题，提供了 <strong>可扩展性</strong>（动态选择加载），但饱受 <strong>兼容性</strong> （如不兼容，程序将崩溃无法运行），<strong>性能损耗</strong>（装载时重新链接）困扰</p>
+</li>
+<li><p><strong>基本思想</strong>：把程序按照模块 <strong>拆分</strong> 成各个相对 <strong>独立</strong> 部分，在程序 <strong>运行时</strong> 才将它们链接在一起形成一个 <strong>完整</strong> 的程序，而不是像静态链接一样把所有的程序模块都链接成一个单独的可执行文件</p>
+</li>
+<li><p><strong>普及</strong>： Linux 下，ELF 动态链接文件叫 <strong>动态共享对象（DSO，Dynamic Shared Objects）</strong>，以 <strong>.so</strong> 结尾；Windows 下，动态链接文件叫 <strong>动态链接库（Dynamical Linking Library）</strong>，以 <strong>.dll</strong> 结尾</p>
+</li>
+<li><p><strong>普及</strong>：<strong>动态链接器</strong> 才完成以上操作，策略：<strong>延迟绑定（Lazy Binding）</strong></p>
+</li>
+<li><p><strong>普及</strong>：<strong>PIC（Position-independent Code）地址无关代码</strong> 技术，<strong>GOT（Global Offset Table）全局偏移量表</strong></p>
+</li>
+<li><p>动态链接的地址空间分配 <strong>奥秘</strong></p>
+<ul>
+<li><p>共享对象的 <strong>最终装载地址</strong> 在编译时是 <strong>不确定</strong> 的，而是在 <strong>装载</strong> 时，装载器根据当前地址空间的空闲情况，动态分配一块 <strong>足够大小</strong> 的虚拟地址空间给相应的共享对象</p>
+</li>
+<li><p><strong>普及</strong>：静态链接时提到的重定位叫做 <strong>链接时重定位（Link Time Relocation）</strong>，而动态链接提到的重定位叫做 <strong>装载时重定位（Load Time Relocation）</strong>，也成 <strong>基址重置（Rebasing）</strong></p>
+</li>
+<li><p>共享对象的虚拟地址空间分配技术离不开：<strong>地址无关代码（PIC机制）</strong>，<strong>共享模块的全局变量（线程私有存储 Thread Local Storage）</strong>，<strong>数据段地址无关性</strong>，也正是这些无关性技术，才保证了共享对象被多个程序引用时，能够发挥各自的作用，确保程序不出现崩溃</p>
+</li>
+</ul>
+</li>
+<li><p><strong>延迟绑定</strong>（Lazy Binding）的 <strong>艺术</strong></p>
+<ul>
+<li><p><strong>性能的事实</strong>：动态链接是以 <strong>牺牲性能</strong> 为代价的，具体表现在：<strong>一方面</strong> 对于全局和静态数据的访问、模块间的调用都要进行复杂的 <strong>GOT定位</strong>，然后 <strong>间接寻址</strong>，<strong>另一方面</strong>动态链接的工作是在 <strong>运行时</strong> 完成的，不是事先链接好的</p>
+</li>
+<li><p><strong>优化的手段</strong>：延迟绑定，理解为当函数第一次被用到时才进行绑定（符号查找、重定位等），使用 <strong>PLT （Procedure Linkage Table）</strong> 来实现，通常以 <strong>.plt</strong> 作为段名，保存在 ELF 文件中</p>
+</li>
+<li><p><strong>实现原理</strong>：<strong>通过 PLT 中的待跳转指令，将各个函数的待跳转偏移量链接到地址栏，等运行时使用的时候，直接读取偏移量进行跳转，这里不是直接读取GOT链接到真正的目标函数地址，而是读取偏移量，进行jump，再到目标函数</strong></p>
+</li>
+<li><p><code>原话：而是将上面代码中第二条指令&quot;push n&quot;的地址填入到 bar@GOT 中，这个步骤不需要查找任何符号</code></p>
+</li>
+</ul>
+</li>
+<li><p>动态链接 <strong>相关结构</strong></p>
+<ul>
+<li><p><strong>.interp</strong> 段：保存可执行文件需要的 <strong>动态链接器</strong> 的路径，内容就是个字符串</p>
+</li>
+<li><p><strong>.dymanic</strong> 段：保存了动态链接器所需要的 <strong>基本信息</strong>：依赖于哪些共享对象、动态链接符号表的位置、动态链接重定位表的位置、共享对象初始化代码的地址等，位于经典的头文件 <strong>elf.h （Elf32_Dyn）</strong> 中</p>
+</li>
+<li><p><strong>动态符号表（Dynamic Symbol Table）[.dynsym 段]</strong>：只保留动态链接这些模块之间的符号导入导出关系</p>
+</li>
+<li><p><strong>动态链接重定位表</strong>：<strong>.rel.dyn</strong> 是对数据引用的重定位修正，它所修正的位置位于 <strong>.got 及 数据段</strong>，<strong>.rel.plt</strong> 是对函数引用的修正，它所修正的位置位于 <strong>.rel.plt</strong> </p>
+</li>
+</ul>
+</li>
+<li><p>动态链接时进程 <strong>堆栈初始化信息</strong></p>
+<ul>
+<li><p>堆栈里保存了关于进程 <strong>执行环境：程序执行入口</strong> 和 <strong>命令行参数</strong> 等信息，还保存了动态链接器所需要的一些 <strong>辅助信息数组（Auxiliary Vector）</strong></p>
+</li>
+<li><p>int main(int argc, char<em> argv[])  ，<strong>argc</strong> 表示参数的个数，<em>*argv数组</em></em> 是参数</p>
+</li>
+</ul>
+</li>
+<li><p>动态链接器的 <strong>步骤</strong> 和 <strong>实现</strong></p>
+<ul>
+<li><p>步骤：</p>
+<ul>
+<li><p><strong>启动动态链接器本身</strong></p>
+<p>  动态链接器本身也是一个共享对象，因此它的编写除了不能依赖于其他任何共享对象，而且本身所需要的全局和静态变量的重定位工作也由它本身来完成，因此有一段精致的启动代码称之为 <strong>自举（Bootstrap）</strong></p>
+</li>
+<li><p><strong>装载所有需要的共享对象</strong></p>
+<p>  动态链接器会根据 .dynamic 段中所依赖的共享对象，使用 <strong>广度优先的图遍历</strong> 算法，来按顺序状态共享对象；<strong>全局符号表（Global Symbol Table）</strong> 的介入，为了解决相同符号名的链接冲突，如已存在，则后加入的符号被忽略</p>
+</li>
+<li><p><strong>重定位和初始化</strong></p>
+<p>  动态链接器根据进程的全局符号表，对需要重定位的位置进行修正，如果某个共享对象有 <strong>.init 段</strong>，那么动态链接器会执行，实现共享对象 <strong>特有的</strong> 初始化过程（常见的，C++全局/静态对象的构造就在此初始化）</p>
+</li>
+</ul>
+</li>
+<li><p>实现：</p>
+<ul>
+<li><p><strong>普及</strong>：<strong>内核在装载完 ELF 可执行文件以后，就返回到用户空间，将控制权交给程序的入口。对于静态链接，入口地址是 e_entry 制定的地址，对于动态链接，入口地址是将动态链接器映射至进程地址空间，然后把控制权交给动态链接器</strong></p>
+</li>
+<li><p><strong>普及</strong>：Linux 动态链接器：/lib/ld-linux.so.2 -&gt; <strong>/lib/ld-x.y.z.so</strong></p>
+</li>
+<li><p>动态链接器在实现中的 <strong>几个问题</strong></p>
+<ol>
+<li><p>动态链接器本身是动态链接还是静态链接？ 答：<strong>静态链接</strong>，不依赖于任何共享对象</p>
+</li>
+<li><p>动态链接器本身必须是 PIC 吗？答：<strong>不一定</strong>，如果是 PIC 会简单些</p>
+</li>
+<li><p>动态链接器可以被当作可执行文件运行，装载地址是多少？答：0x00000000 无效的，<strong>内核</strong> 会装载它时 <strong>分配</strong> 一个 <strong>有效</strong> 的</p>
+</li>
+</ol>
+</li>
+<li><p><strong>灵活技术</strong>：显示运行时链接（Explicit Run-time Linking）</p>
+<ul>
+<li><p>顾名思义：<strong>让程序自己在运行时控制加载制定的模块，并且可以在不需要该模块时将其卸载</strong>，操作对象是 DLL</p>
+</li>
+<li><p>动态链接库提供了 4 个 <strong>API</strong> 来实现，它们分别是：<strong>dlopen()，dlsym()，dlerror()，dlclose()</strong></p>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p><strong>总结一波</strong>：</p>
+<ul>
+<li><p><strong>动态链接可以更加有效地利用内存和磁盘资源，可以更加方便的维护升级程序，可以让程序的重用变得更加有效和可行</strong></p>
+</li>
+<li><p><strong>装载时重定位和地址无关代码是解决绝对地址引用的两个方法，装载时重定位的缺点是无法共享代码段，但是它的运行速度较快；而地址无关代码的缺点是运行速度较慢，但它可以实现代码段在各个进程之间的共享，还介绍了 ELF 的延迟绑定 PLT 技术</strong></p>
+</li>
+<li><p><strong>.interp、.dynamic、动态符号表、重定位表等接口，它们是实现 ELF 动态链接的关键结构。动态链接器实现自举，装载共享对象，实现重定位和初始化的过程，实现动态链接，最后关键技术：显示运行时链接</strong></p>
+</li>
+</ul>
+</li>
+</ul>
+
+        
+        </div>
+        <footer class="article-footer">
+            <div class="share-container">
+
+
+
+</div>
+
+    <a data-url="https://aaronshi32.github.io/2017/06/06/读书笔记-程序员的自我修养（七）/" data-id="cjm7udfat0026ues6uuakeu4u" class="article-share-link"><i class="fa fa-share"></i>如需转载，请注明出处</a>
+<script>
+    (function ($) {
+        // Prevent duplicate binding
+        if (typeof(__SHARE_BUTTON_BINDED__) === 'undefined' || !__SHARE_BUTTON_BINDED__) {
+            __SHARE_BUTTON_BINDED__ = true;
+        } else {
+            return;
+        }
+        $('body').on('click', function() {
+            $('.article-share-box.on').removeClass('on');
+        }).on('click', '.article-share-link', function(e) {
+            e.stopPropagation();
+
+            var $this = $(this),
+                url = $this.attr('data-url'),
+                encodedUrl = encodeURIComponent(url),
+                id = 'article-share-box-' + $this.attr('data-id'),
+                offset = $this.offset(),
+                box;
+
+            if ($('#' + id).length) {
+                box = $('#' + id);
+
+                if (box.hasClass('on')){
+                    box.removeClass('on');
+                    return;
+                }
+            } else {
+                var html = [
+                    '<div id="' + id + '" class="article-share-box">',
+                        '<input class="article-share-input" value="' + url + '">',
+                        '<div class="article-share-links">',
+                            '<a href="https://twitter.com/intent/tweet?url=' + encodedUrl + '" class="fa fa-twitter article-share-twitter" target="_blank" title="Twitter"></a>',
+                            '<a href="https://www.facebook.com/sharer.php?u=' + encodedUrl + '" class="fa fa-facebook article-share-facebook" target="_blank" title="Facebook"></a>',
+                            '<a href="http://pinterest.com/pin/create/button/?url=' + encodedUrl + '" class="fa fa-pinterest article-share-pinterest" target="_blank" title="Pinterest"></a>',
+                            '<a href="https://plus.google.com/share?url=' + encodedUrl + '" class="fa fa-google article-share-google" target="_blank" title="Google+"></a>',
+                        '</div>',
+                    '</div>'
+                ].join('');
+
+              box = $(html);
+
+              $('body').append(box);
+            }
+
+            $('.article-share-box.on').hide();
+
+            box.css({
+                top: offset.top + 25,
+                left: offset.left
+            }).addClass('on');
+
+        }).on('click', '.article-share-box', function (e) {
+            e.stopPropagation();
+        }).on('click', '.article-share-box-input', function () {
+            $(this).select();
+        }).on('click', '.article-share-box-link', function (e) {
+            e.preventDefault();
+            e.stopPropagation();
+
+            window.open(this.href, 'article-share-box-window-' + Date.now(), 'width=500,height=450');
+        });
+    })(jQuery);
+</script>
+
+            
+    
+
+        </footer>
+    </div>
+    
+        
+<nav id="article-nav">
+    
+        <a href="/blog/2017/06/14/读书笔记-程序员的自我修养（八）/" id="article-nav-newer" class="article-nav-link-wrap">
+            <strong class="article-nav-caption">上一篇</strong>
+            <div class="article-nav-title">
+                
+                    读书笔记-程序员的自我修养（八）
+                
+            </div>
+        </a>
+    
+    
+        <a href="/blog/2017/05/24/读书笔记-程序员的自我修养（六）/" id="article-nav-older" class="article-nav-link-wrap">
+            <strong class="article-nav-caption">下一篇</strong>
+            <div class="article-nav-title">读书笔记-程序员的自我修养（六）</div>
+        </a>
+    
+</nav>
+
+
+    
+</article>
+
+
+    
+    <section id="comments">
+    
+    </section>
+
+</section>
+            
+                <aside id="sidebar">
+   
+        
+    
+        
+    <div class="widget-wrap">
+        <h3 class="widget-title">归档</h3>
+        <div class="widget">
+            <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/blog/archives/2018/08/">八月 2018</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/blog/archives/2018/07/">七月 2018</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/blog/archives/2018/06/">六月 2018</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/blog/archives/2018/05/">五月 2018</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/blog/archives/2018/04/">四月 2018</a><span class="archive-list-count">6</span></li><li class="archive-list-item"><a class="archive-list-link" href="/blog/archives/2018/03/">三月 2018</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/blog/archives/2018/02/">二月 2018</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/blog/archives/2018/01/">一月 2018</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/blog/archives/2017/12/">十二月 2017</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/blog/archives/2017/11/">十一月 2017</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/blog/archives/2017/10/">十月 2017</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/blog/archives/2017/08/">八月 2017</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/blog/archives/2017/07/">七月 2017</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/blog/archives/2017/06/">六月 2017</a><span class="archive-list-count">4</span></li><li class="archive-list-item"><a class="archive-list-link" href="/blog/archives/2017/05/">五月 2017</a><span class="archive-list-count">6</span></li><li class="archive-list-item"><a class="archive-list-link" href="/blog/archives/2017/03/">三月 2017</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/blog/archives/2017/02/">二月 2017</a><span class="archive-list-count">4</span></li><li class="archive-list-item"><a class="archive-list-link" href="/blog/archives/2017/01/">一月 2017</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/blog/archives/2016/12/">十二月 2016</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/blog/archives/2016/11/">十一月 2016</a><span class="archive-list-count">6</span></li><li class="archive-list-item"><a class="archive-list-link" href="/blog/archives/2016/10/">十月 2016</a><span class="archive-list-count">1</span></li></ul>
+        </div>
+    </div>
+
+    
+        
+    <div class="widget-wrap">
+        <h3 class="widget-title">标签</h3>
+        <div class="widget">
+            <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/blog/tags/JavaScript/">JavaScript</a><span class="tag-list-count">4</span></li><li class="tag-list-item"><a class="tag-list-link" href="/blog/tags/人工智能/">人工智能</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/blog/tags/基础知识/">基础知识</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/blog/tags/工具/">工具</a><span class="tag-list-count">6</span></li><li class="tag-list-item"><a class="tag-list-link" href="/blog/tags/日常/">日常</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/blog/tags/框架/">框架</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/blog/tags/疑难杂症/">疑难杂症</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/blog/tags/系统/">系统</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/blog/tags/读书/">读书</a><span class="tag-list-count">28</span></li><li class="tag-list-item"><a class="tag-list-link" href="/blog/tags/面试/">面试</a><span class="tag-list-count">8</span></li></ul>
+        </div>
+    </div>
+
+    
+    <div id="toTop" class="fa fa-angle-up"></div>
+</aside>
+            
+        </div>
+        <footer id="footer">
+    <div class="outer">
+        <div id="footer-info" class="inner">
+            &copy; 2018 AaronShi<br>
+            Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>. Theme by <a href="http://github.com/ppoffice">PPOffice</a>
+        </div>
+    </div>
+</footer>
+        
+
+    
+        <script src="/blog/libs/lightgallery/js/lightgallery.min.js"></script>
+        <script src="/blog/libs/lightgallery/js/lg-thumbnail.min.js"></script>
+        <script src="/blog/libs/lightgallery/js/lg-pager.min.js"></script>
+        <script src="/blog/libs/lightgallery/js/lg-autoplay.min.js"></script>
+        <script src="/blog/libs/lightgallery/js/lg-fullscreen.min.js"></script>
+        <script src="/blog/libs/lightgallery/js/lg-zoom.min.js"></script>
+        <script src="/blog/libs/lightgallery/js/lg-hash.min.js"></script>
+        <script src="/blog/libs/lightgallery/js/lg-share.min.js"></script>
+        <script src="/blog/libs/lightgallery/js/lg-video.min.js"></script>
+    
+    
+        <script src="/blog/libs/justified-gallery/jquery.justifiedGallery.min.js"></script>
+    
+
+
+
+<!-- Custom Scripts -->
+<script src="/blog/js/main.js"></script>
+
+    </div>
+</body>
+</html>

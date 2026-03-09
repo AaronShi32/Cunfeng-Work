@@ -1,0 +1,918 @@
+<!DOCTYPE html>
+<html lang=zh>
+<head>
+    <meta charset="utf-8">
+    
+    <title>读书笔记-Effective JavaScript | 着陆的橘子</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+    <meta name="description" content="让自己习惯JavaScript 变量作用域 使用函数 对象和原型 数组和字典 库和API设计 并发  让自己习惯 JavaScript 了解你使用的JavaScript版本  Web浏览器，并不支持让程序员指定JS的版本来执行代码  严格模式（”use strict”），允许你选择在受限制的JS版本中禁用一些问题较多或者出错的特性  不要试图将严格模式和非严格模式的文件连接在一起，建议在严格模式">
+<meta name="keywords" content="读书">
+<meta property="og:type" content="article">
+<meta property="og:title" content="读书笔记-Effective JavaScript">
+<meta property="og:url" content="https://aaronshi32.github.io/2016/11/17/读书笔记-Effective JavaScript/index.html">
+<meta property="og:site_name" content="着陆的橘子">
+<meta property="og:description" content="让自己习惯JavaScript 变量作用域 使用函数 对象和原型 数组和字典 库和API设计 并发  让自己习惯 JavaScript 了解你使用的JavaScript版本  Web浏览器，并不支持让程序员指定JS的版本来执行代码  严格模式（”use strict”），允许你选择在受限制的JS版本中禁用一些问题较多或者出错的特性  不要试图将严格模式和非严格模式的文件连接在一起，建议在严格模式">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:updated_time" content="2016-12-01T02:35:48.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="读书笔记-Effective JavaScript">
+<meta name="twitter:description" content="让自己习惯JavaScript 变量作用域 使用函数 对象和原型 数组和字典 库和API设计 并发  让自己习惯 JavaScript 了解你使用的JavaScript版本  Web浏览器，并不支持让程序员指定JS的版本来执行代码  严格模式（”use strict”），允许你选择在受限制的JS版本中禁用一些问题较多或者出错的特性  不要试图将严格模式和非严格模式的文件连接在一起，建议在严格模式">
+    
+
+    
+
+    
+
+    <link rel="stylesheet" href="/blog/libs/font-awesome/css/font-awesome.min.css">
+    <link rel="stylesheet" href="/blog/libs/open-sans/styles.css">
+    <link rel="stylesheet" href="/blog/libs/source-code-pro/styles.css">
+
+    <link rel="stylesheet" href="/blog/css/style.css">
+
+    <script src="/blog/libs/jquery/2.1.3/jquery.min.js"></script>
+    
+    
+        <link rel="stylesheet" href="/blog/libs/lightgallery/css/lightgallery.min.css">
+    
+    
+        <link rel="stylesheet" href="/blog/libs/justified-gallery/justifiedGallery.min.css">
+    
+    
+    
+    
+
+
+</head>
+
+<body>
+    <div id="container">
+        <header id="header">
+    <div id="header-main" class="header-inner">
+        <div class="outer">
+            <a href="/blog/" id="logo">
+                <i class="logo"></i>
+                <span class="site-title">着陆的橘子</span>
+            </a>
+            <nav id="main-nav">
+                
+                    <a class="main-nav-link" href="/.">主页</a>
+                
+                    <a class="main-nav-link" href="/about/cv.pdf">关于</a>
+                
+            </nav>
+            
+                
+                <nav id="sub-nav">
+                    <div class="profile" id="profile-nav">
+                        <a id="profile-anchor" href="javascript:;">
+                            <img class="avatar" src="/css/images/avatar.png" />
+                            <i class="fa fa-caret-down"></i>
+                        </a>
+                    </div>
+                </nav>
+            
+            <div id="search-form-wrap">
+
+    <form class="search-form">
+        <input type="text" class="ins-search-input search-form-input" placeholder="文章" />
+        <button type="submit" class="search-form-submit"></button>
+    </form>
+    <div class="ins-search">
+    <div class="ins-search-mask"></div>
+    <div class="ins-search-container">
+        <div class="ins-input-wrapper">
+            <input type="text" class="ins-search-input" placeholder="想要查找什么..." />
+            <span class="ins-close ins-selectable"><i class="fa fa-times-circle"></i></span>
+        </div>
+        <div class="ins-section-wrapper">
+            <div class="ins-section-container"></div>
+        </div>
+    </div>
+</div>
+<script>
+(function (window) {
+    var INSIGHT_CONFIG = {
+        TRANSLATION: {
+            POSTS: '文章',
+            PAGES: '页面',
+            CATEGORIES: '分类',
+            TAGS: '标签',
+            UNTITLED: '(未命名)',
+        },
+        ROOT_URL: '/',
+        CONTENT_URL: '/content.json',
+    };
+    window.INSIGHT_CONFIG = INSIGHT_CONFIG;
+})(window);
+</script>
+<script src="/blog/js/insight.js"></script>
+
+</div>
+        </div>
+    </div>
+    <div id="main-nav-mobile" class="header-sub header-inner">
+        <table class="menu outer">
+            <tr>
+                
+                    <td><a class="main-nav-link" href="/.">主页</a></td>
+                
+                    <td><a class="main-nav-link" href="/about/cv.pdf">关于</a></td>
+                
+                <td>
+                    
+    <div class="search-form">
+        <input type="text" class="ins-search-input search-form-input" placeholder="搜索" />
+    </div>
+
+                </td>
+            </tr>
+        </table>
+    </div>
+</header>
+
+        <div class="outer">
+            
+                
+
+<aside id="profile">
+    <div class="inner profile-inner">
+        <div class="base-info profile-block">
+            <img id="avatar" src="/css/images/avatar.png" />
+            <h2 id="name">AaronShi32</h2>
+            <h3 id="title">Senior Software Developer</h3>
+            <span id="location"><i class="fa fa-map-marker"></i>Beijing, China</span>
+            <a id="follow" target="_blank" href="https://github.com/AaronShi32">Follow</a>
+        </div>
+        <div class="article-info profile-block">
+            <div class="article-info-block">
+                48
+                <span>文章</span>
+            </div>
+            <div class="article-info-block">
+                10
+                <span>标签</span>
+            </div>
+        </div>
+        
+        <div class="profile-block social-links">
+            <table>
+                <tr>
+                    
+                    
+                    <td>
+                        <a href="https://github.com/AaronShi32" target="_blank" title="github" >
+                            <i class="fa fa-github"></i>
+                        </a>
+                    </td>
+                    
+                    <td>
+                        <a href="https://www.linkedin.com/in/cfshi" target="_blank" title="linkedin-square" >
+                            <i class="fa fa-linkedin-square"></i>
+                        </a>
+                    </td>
+                    
+                </tr>
+            </table>
+        </div>
+        
+    </div>
+</aside>
+
+            
+            <section id="main"><article id="post-读书笔记-Effective JavaScript" class="article article-type-post" itemscope itemprop="blogPost">
+    <div class="article-inner">
+        
+        
+            <header class="article-header">
+                
+    
+        <h1 class="article-title" itemprop="name">
+            读书笔记-Effective JavaScript
+        </h1>
+    
+
+                
+                    <div class="article-meta">
+                        
+    <div class="article-date">
+        <i class="fa fa-calendar"></i>
+        <a href="/blog/2016/11/17/读书笔记-Effective JavaScript/">
+            <time datetime="2016-11-17T09:53:00.000Z" itemprop="datePublished">2016-11-17</time>
+        </a>
+    </div>
+
+
+                        
+                        
+    <div class="article-tag">
+        <i class="fa fa-tag"></i>
+        <a class="tag-link" href="/blog/tags/读书/">读书</a>
+    </div>
+
+                    </div>
+                
+            </header>
+        
+        
+        <div class="article-entry" itemprop="articleBody">
+        
+            
+            <ul>
+<li><a href="##让自己习惯JavaScript">让自己习惯JavaScript</a></li>
+<li><a href="##变量作用域">变量作用域</a></li>
+<li><a href="##使用函数">使用函数</a></li>
+<li><a href="##对象和原型">对象和原型</a></li>
+<li><a href="##数组和字典">数组和字典</a></li>
+<li><a href="##库和API设计">库和API设计</a></li>
+<li><a href="##并发">并发</a></li>
+</ul>
+<h3 id="让自己习惯-JavaScript"><a href="#让自己习惯-JavaScript" class="headerlink" title="让自己习惯 JavaScript"></a>让自己习惯 JavaScript</h3><ul>
+<li><p>了解你使用的JavaScript版本</p>
+<ul>
+<li><p>Web浏览器，并不支持让程序员指定JS的版本来执行代码</p>
+</li>
+<li><p>严格模式（”use strict”），允许你选择在受限制的JS版本中禁用一些问题较多或者出错的特性</p>
+</li>
+<li><p>不要试图将严格模式和非严格模式的文件连接在一起，建议在严格模式下编写代码（ES5 中增加的，兼容ES3）</p>
+</li>
+<li><p>将其自身包裹在立即调用的函数（IIFE）表达式中的方式连接多个文件，是比较安全的</p>
+</li>
+</ul>
+</li>
+<li><p>理解JavaScript的浮点数</p>
+<ul>
+<li><p>大多数编程语言都有几种数值型数据类型，但JS只有一种，就是 number，也就是常理解的 double(双精度浮点数)</p>
+</li>
+<li><p>JS中所有 位运算符 的工作方式是：将操作数转换为整数，然后使用整数位模式进行运算，最后将结果转换为标准的JS浮点数（3步），即将数字视为32位的有符号整数</p>
+</li>
+<li><p>浮点数的操作是出了名的不准确</p>
+<pre><code>0.1 + 0.2 // 0.300000000000004
+0.1 + 0.2 + 0.3 ≠ 0.1 +（0.2 + 0.3）
+</code></pre></li>
+<li><p>当心浮点运算中的精度陷阱，一般都是转化为最小单位（尽可能转换成整数）去计算，因为整数在表示时不需要舍入</p>
+</li>
+</ul>
+</li>
+<li><p>当心隐式的强制转换</p>
+<ul>
+<li><p>类型错误可能被隐式的强制转换所隐藏</p>
+</li>
+<li><p>重载运算符 + 是进行加法运算还是字符串连接操作取决于其参数类型</p>
+</li>
+<li><p>对象通过valueOf方法强制转换为数字，通过toString方法强制转换为字符串</p>
+</li>
+<li><p>具有valueOf方法的对象应该实现toString方法，返回一个valueOf方法产生的数字字符串表示</p>
+</li>
+<li><p>JS中有且只有7种假值：false、0、-0、””、NaN、null 和 undefined</p>
+</li>
+<li><p>测试一个值是否为未定义的值，应该使用 typeOf或者与undefined进行比较而不是真值运算</p>
+</li>
+</ul>
+</li>
+<li><p>原始类型优于封装对象</p>
+<ul>
+<li><p>5个原始类型：<strong>布尔值、数字、字符串、null 和 undefined</strong></p>
+</li>
+<li><p>隐式封装：当对原始值提取属性和进行方法调用时，他表现得就像已经使用了对应的对象类型封装了该值一样。例如：String的原型对象有一个toUpperCase的方法，你可以对这个原始字符串值调用这个方法</p>
+</li>
+<li><p>当做相等比较时，原始类型的封装对象 ≠ 原始类型值</p>
+</li>
+<li><p>获取和设置原始类型值的属性会隐式地创建封装对象，字符串对象的引用在用完之后立即被销毁，所以不能给字符串添加属性</p>
+<pre><code>&quot;hello&quot;.property = 1;
+&quot;hello&quot;.property; // undefined
+</code></pre></li>
+</ul>
+</li>
+<li><p>避免对混合类型使用 == 运算符</p>
+<ul>
+<li><p>当参数类型不同时，==运算符应用了一套难以理解的隐式强制转换规则</p>
+</li>
+<li><p>当使用 === 运算符时，不需要涉及任何的隐式强制转换就明白你的比较运算符</p>
+</li>
+<li><p>当比较不同类型的值时，使用你自己的显示强制转换使程序的行为更清晰</p>
+<pre><code>null == undefined // true
+string/number/boolean == Date // Date.toString() --&gt; Date.valueOf()
+string/number/boolean == 非 Date // 非 Date.valueOf() --&gt; 非 Date.toString()
+</code></pre></li>
+</ul>
+</li>
+<li><p>了解分号插入的局限：分号插入原则</p>
+<ul>
+<li><p>仅在 } 标记之前、一个或多个换行之后和程序输入的结尾</p>
+</li>
+<li><p>仅在紧接着的标记不能被解析的时候推导分号</p>
+</li>
+<li><p>在以（、[、+、- 或 / 字符开头的语句钱决不能省略分号</p>
+</li>
+<li><p>当脚本连接的时候，在脚本之间显式插入分号</p>
+</li>
+<li><p>在 return、throw、break、contine、++ 或 – 的参数之前决不能换行</p>
+</li>
+<li><p>分号不能作为for循环的头部或空语句的分隔符</p>
+</li>
+</ul>
+</li>
+<li><p>视字符串为16位的代码单元序列</p>
+<ul>
+<li>JS字符串有16位的代码单元组成，而不是由Unicode代码点组成</li>
+</ul>
+</li>
+</ul>
+<h3 id="变量作用域"><a href="#变量作用域" class="headerlink" title="变量作用域"></a>变量作用域</h3><ul>
+<li><p>尽量少用全局对象    </p>
+<ul>
+<li><p>多使用局部变量</p>
+</li>
+<li><p>避免对全局对象添加属性</p>
+</li>
+<li><p>使用全局对象来做平台特性检测</p>
+</li>
+</ul>
+</li>
+<li><p>始终声明局部变量</p>
+<ul>
+<li><p>使用 var(函数作用域) 和 let(for循环局部作用域) 来声明新的局部变量</p>
+</li>
+<li><p>考虑使用lint工具帮助检查未绑定的变量</p>
+</li>
+</ul>
+</li>
+<li><p>不要使用with</p>
+</li>
+<li><p>熟练掌握闭包</p>
+<ul>
+<li><p>JavaScript允许你引用在当前函数以外定义的变量（内部函数可以访问外部成员变量，引了，该函数就成为闭包）</p>
+</li>
+<li><p>闭包比创建它们的函数有更长的生命周期</p>
+</li>
+<li><p>闭包在内部存储其外部变量的而引用，并能读写这些变量</p>
+<pre><code>function sandwichMaker(){
+    var magicIngredient = &quot;peanut butter&quot;;
+    function make(filling){
+        return magicIngredient + &quot; and &quot; + filling
+    }
+    return make;
+}
+var f = sandwichMaker();
+f(&apos;jelly&apos;) // peanut butter and jelly
+f(&apos;bananas&apos;) // peanut butter and bananas
+
+//那些在其所涵盖的作用域内跟踪变量的函数，称为闭包，make函数就是一个闭包
+</code></pre></li>
+</ul>
+</li>
+<li><p>理解变量生命提升</p>
+<ul>
+<li><p>JavaScript隐式地提升（hoists）声明部分到封闭函数的顶部，而将赋值留在原地，换句话说，变量的作用域是整个函数，但仅在var语句出现的位置进行赋值</p>
+</li>
+<li><p>重声明变量被视为单个变量</p>
+</li>
+<li><p>请手动提升局部变量的声明，从而避免混淆</p>
+</li>
+</ul>
+</li>
+<li><p>使用立即调用的函数表达式（IIFE）创建局部作用域</p>
+<ul>
+<li><p>闭包存储的是其外部变量的引用，而不是值</p>
+<pre><code>function wrapElements(a){
+    var result = [], i, n;
+    for(i = 0, n = a.length ; i &lt; n ; i++){
+        result[i] = function(){ return a[i]; };
+    }
+    return result;
+}
+
+由于function中引用了变量i，所以该函数为每个result[i]都创建了一个闭包，且保存着对i的引用
+所以i = a.length;即result[1...a.length-1]都等于a[a.length],即 undefined
+</code></pre></li>
+<li><p>立即调用的函数表达式</p>
+<pre><code>function wrapElements(a){
+    var result = [];
+    for(var i = 0, n = a.length ; i &lt; n ; i++){
+        (function(j){
+            result[i] = function(){ return a[i]; };
+        })(i);
+    }
+    return result;
+}
+</code></pre></li>
+</ul>
+</li>
+<li><p>当心命名函数表达式笨拙的作用域</p>
+<ul>
+<li>var f = function(){}</li>
+</ul>
+</li>
+<li><p>当心局部块函数声明笨拙的作用域</p>
+<ul>
+<li><p>始终将函数声明至于程序或被包含的函数的最外层，以避免不可移植的行为</p>
+</li>
+<li><p>局部块函数声明: 使用var声明和有条件的赋值语句代替有条件的函数声明</p>
+</li>
+</ul>
+</li>
+<li><p>避免使用eval创建局部变量</p>
+<ul>
+<li><p>不要赋予外部调用者能改变函数内部作用域的能力，即 函数内部过分依赖于 动态绑定（eval(“var x = 1”)）</p>
+</li>
+<li><p>如果 eval 函数代码可能创建全局变量，将此调用封装到嵌套的函数中以防止作用域污染</p>
+<pre><code>var y = &quot;global&quot;;
+function test(src){
+    (function(){ eval(src); })();
+    return y;
+}
+
+test(&quot;var y = &apos;local&apos;;&quot;) // global
+test(&quot;var z = &apos;local&apos;;&quot;) // global
+</code></pre></li>
+</ul>
+</li>
+<li><p>间接调用eval函数优于直接调用(Node里面没有臭名昭著的eval)</p>
+<ul>
+<li>尽可能间接调用eval函数，而不要直接调用eval函数：（0，eval）(src)    </li>
+</ul>
+</li>
+</ul>
+<h3 id="使用函数"><a href="#使用函数" class="headerlink" title="使用函数"></a>使用函数</h3><ul>
+<li><p>理解函数调用、方法调用及构造函数调用之间的不同</p>
+<ul>
+<li><p>在方法调用中是由调用表达式自身来确定this变量的绑定。绑定到this变量的对象被称为调用接收者(receiver)</p>
+</li>
+<li><p>方法调用将被查找方法属性的对象作为调用接收者</p>
+</li>
+<li><p>函数调用将全局对象作为其接受者，一般很少使用函数调用语法来调用方法</p>
+</li>
+<li><p>构造函数需要通过new运算符调用，并产生一个新的对象作为其接收者</p>
+</li>
+</ul>
+</li>
+<li><p>熟练掌握高阶函数</p>
+<ul>
+<li><p>高阶函数就是那些将函数作为 <strong>参数</strong> 或者 <strong>返回值</strong> 的函数</p>
+</li>
+<li><p>当发现自己在重复地写一些相同的模式时，学会借助于一个高阶函数（提炼逻辑，让callback作为参数传递）可以使代码更简洁、更高效、更可读，学会发现可以被高阶函数所取代的常见的编码模式</p>
+</li>
+<li><p>掌握现有库中的高阶函数，比如数组的map</p>
+</li>
+</ul>
+</li>
+<li><p>使用call方法自定义接受者来调用方法</p>
+<ul>
+<li><p>f.call（obj,arg1,arg2,arg3）与 f（arg1,arg2,arg3）不同的是第一个参数提供了一个显式的接收者对象</p>
+</li>
+<li><p>使用 call 方法自定义接收者来调用函数</p>
+</li>
+<li><p>使用 call 方法可以调用在给定的对象中不存在的方法</p>
+</li>
+<li><p>使用 call 方法定义高阶函数允许使用者给回调函数指定接收者</p>
+</li>
+</ul>
+</li>
+<li><p>使用apply方法通过不同数量的参数调用函数</p>
+<ul>
+<li><p>使用 apply 方法制定一个可计算的参数数组来调用可变参数的函数，apply方法需要一个参数数组，然后将数组的每一个元素作为调用的单独参数调用该函数</p>
+</li>
+<li><p>使用 apply 方法的第一个参数给可变参数的方法提供一个接收者</p>
+</li>
+</ul>
+</li>
+<li><p>使用arguments创建可变参数的函数</p>
+<ul>
+<li><p>JavaScript给每个函数都隐式得提供了一个名为arguments的局部变量。arguments对象给实参提供了一个类似的数组接口，它为每个实参提供了一个索引属性，还包含一个length属性用来指示参数的个数，从而可以通过遍历arguments对象的每个元素来实现可变元数的函数</p>
+</li>
+<li><p>如果提供了一个便利的可变参数的函数，也最好提供一个需要显示指定数组的固定元数版本</p>
+<pre><code>function average(){
+    return averageOfArray(arguments);
+}
+</code></pre></li>
+</ul>
+</li>
+<li><p>永远不要修改 arguments 对象</p>
+<ul>
+<li>使用 [].slice.call(arguments) 将 arguments 对象复制到一个真正的数组中再进行修改</li>
+</ul>
+</li>
+<li><p>使用变量保存 arguments 的引用</p>
+<ul>
+<li>先用变量绑定到 arguments，明确作用域之后，再在嵌套函数中引用它</li>
+</ul>
+</li>
+<li><p>使用 bind 方法提取具有确定接受者的方法</p>
+<ul>
+<li><p>提取一个方法不会将方法的接收者绑定到该方法的对象上</p>
+</li>
+<li><p>当给高阶函数传递对象方法时，使用匿名函数在适当的接收者上调用该方法</p>
+</li>
+<li><p>使用 bind 方法创建绑定到适当接收者的函数</p>
+</li>
+</ul>
+</li>
+<li><p>使用 bind 方法实现函数柯里化(不懂)</p>
+<ul>
+<li><p>将函数与其参数的一个子集绑定的技术成为函数柯里化</p>
+</li>
+<li><p>function.bind(null, arg1, arg2)</p>
+</li>
+</ul>
+</li>
+<li><p>使用闭包而不是字符串来封装代码</p>
+<ul>
+<li><p>当将字符串传递给eval函数以执行时，不要在字符串中包含局部变量的引用，容易在函数中引起冲突</p>
+</li>
+<li><p>优先接收函数，而不是eval执行的字符串，即</p>
+<pre><code>function repeat(n, action){
+    for(var i = 0 ; i &lt; n ; i++){
+        action();
+    }
+}
+</code></pre></li>
+</ul>
+</li>
+<li><p>不要信赖函数的toString方法</p>
+<ul>
+<li><p>在不同的引擎下调用toString方法的结果可能不同，所以绝不要信赖函数源代码的详细细节</p>
+</li>
+<li><p>toString方法的执行结果并不会暴露存储在闭包中的局部变量值</p>
+</li>
+<li><p>通常情况下，应该避免使用函数对象的toString方法</p>
+</li>
+</ul>
+</li>
+<li><p>避免使用非标准的栈检查属性</p>
+<ul>
+<li><p>调用栈实质当前正在执行的活动函数链</p>
+</li>
+<li><p>不要使用非标准的 arguments.caller 和 arguments.callee 属性</p>
+</li>
+</ul>
+</li>
+</ul>
+<h3 id="对象和原型"><a href="#对象和原型" class="headerlink" title="对象和原型"></a>对象和原型</h3><ul>
+<li><p>理解 prototype、getPrototypeOf 和 <strong>proto</strong> 之间的不同(有一个重点图)</p>
+<ul>
+<li><p>C.prototype 属性是 new C() 创建的对象的原型</p>
+</li>
+<li><p>Object.getPrototypeOf(obj)是ES5中检索对象原型的标准函数</p>
+<pre><code>Object.getPrototypeOf(u) === User.prototype
+</code></pre></li>
+<li><p>obj.<em>proto</em> 是检索对象原型的非标准方法（不支持ES5的情况下采用）</p>
+</li>
+<li><p>类：是由一个构造函数 和 一个关联的原型 组成的一种设计模式</p>
+<pre><code>function User(name, passwordHash){
+    this.name = name;
+    this.passwordHash = passwordHash;
+}
+
+User.prototype.toString = function(){
+    return &quot;sdsds&quot;;
+}
+
+var instance = new User(&quot;abc&quot;,&quot;abc&quot;);
+
+Function.prototype(.call/.bind/.apply) --&gt; User(.prototype) --&gt; User.prototype(.toString) --&gt; instance(.name/.passwordHash)
+</code></pre></li>
+</ul>
+</li>
+<li><p>使用 Object.getPrototypeOf 函数而不要使用 <strong>proto</strong> 属性</p>
+<ul>
+<li><p>获取对象原型的标准API是 Object.getPrototypeOf（）</p>
+</li>
+<li><p>在支持<em>proto</em>属性的非ES5环境中实现 getPrototypeOf</p>
+<pre><code>if(type Object.getPrototypeOf === &quot;undefined&quot;){
+    Object.getPrototypeOf = function(obj){
+        var t = typeof obj;
+        if(!t || ( t !== &quot;onject&quot; &amp;&amp; t !== &quot;function&quot;)){
+            throw new TypeError（&quot;not an object&quot;）；
+        }
+        return obj._proto_;
+    }
+}
+</code></pre></li>
+</ul>
+</li>
+<li><p>始终不要修改 <strong>proto</strong> 属性</p>
+<ul>
+<li>使用Object.create函数给新对象设置自定义的原型</li>
+</ul>
+</li>
+<li><p>使构造函数与 new 操作符无关</p>
+<ul>
+<li><p>防范误用构造函数可能不值得费心去做，但在跨大型代码库中共享构造函数或者构造函数来自一个共享库的时候，就需要多加防范了</p>
+</li>
+<li><p>当一个函数期望使用new操作符调用时，清晰地文档化该函数</p>
+</li>
+<li><p>通过使用 new 操作符或Object.create 方法在构造函数定义中调用自身使得该构造函数与调用语法无关</p>
+</li>
+</ul>
+</li>
+<li><p>在原型中存储方法</p>
+<ul>
+<li><p>原型是共享方法的渠道之一，将方法存储于原型中由于存储在示例对象中</p>
+</li>
+<li><p>将方法存储在示例对象中将创建该函数的多个副本，因为每个实例对象都有一份副本</p>
+</li>
+</ul>
+</li>
+<li><p>使用闭包存储私有数据</p>
+<ul>
+<li><p>闭包变量是私有的，只能通过局部的引用获取</p>
+</li>
+<li><p>将局部变量作为私有数据从而通过方法实现信息隐藏</p>
+</li>
+</ul>
+</li>
+<li><p>只将实例状态存储在实例对象中</p>
+<ul>
+<li><p>共享可变数据可能会出现问题，因为原型是被其所有的实例共享的</p>
+</li>
+<li><p>将可变的实力状态存储在实例对象中</p>
+</li>
+</ul>
+</li>
+<li><p>认识到 this 变量的隐式绑定问题</p>
+<ul>
+<li><p>this 变量的作用域总是由其最近的封闭函数所确定的</p>
+</li>
+<li><p>使用一个局部变量（通常命名为 self、me 和 that）使得this绑定对于内部函数是可用的</p>
+</li>
+</ul>
+</li>
+</ul>
+<h3 id="数组和字典"><a href="#数组和字典" class="headerlink" title="数组和字典"></a>数组和字典</h3><ul>
+<li><p>原型污染</p>
+<ul>
+<li><p>定义：Object 是 js 对象的根，如果在 Object.prototype 上增加任何方法，那么随之使用 for…in 遍历对象属性的时候，此时增加的方法也会计算进去从而造成的原型污染，此外，一些特殊命名的变量名也会对对象造成污染。</p>
+</li>
+<li><p>原因：for…in 循环除了枚举出对象”自身”的属性外，还会枚举出继承过来的属性</p>
+</li>
+<li><p>预防：</p>
+<ul>
+<li><p>使用 Object.create(null) 来创建一个没有原型的对象，因此原型污染就无法影响这样的对象行为</p>
+</li>
+<li><p>使用 hasOwnProperty 方法（只过来对象自身属性）以避免原型污染： var hasOwn= Object.prototype.hasOwnProperty; hasOwn.call(dic，”alice”)</p>
+</li>
+<li><p>别在 Object.prototype 中增加属性，若不小心增加了属性，也要用 Object.defineProperty方法把属性 enumerable置成false</p>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p>循环和迭代</p>
+<ul>
+<li><p>使用数组而不要使用字典来存储有序集合</p>
+</li>
+<li><p>for…in 循环会挑选一定的顺序来枚举对象的属性，如果是有序的，还是用for循环遍历</p>
+</li>
+<li><p>避免在 for…in 期间修改对象，如果需要修改，应该使用while或for循环</p>
+</li>
+<li><p>数组的循环优先使用for循环而不是for…in循环</p>
+</li>
+<li><p>使用迭代方法由于循环：forEach，map，every，some</p>
+</li>
+<li><p>处理数组内容的改变：map，筛选数组的内容：filter</p>
+</li>
+<li><p>循环只有一点优于迭代函数，那就是控制流操作，如 break 和 continue</p>
+</li>
+</ul>
+</li>
+<li><p>创建 数组、对象，直接使用 var x = []，{} 即可，因为使用 Array 和 Object 不能保证是不是被污染了</p>
+</li>
+</ul>
+<h3 id="库和API设计"><a href="#库和API设计" class="headerlink" title="库和API设计"></a>库和API设计</h3><p>-【参数】 保持一致的约定</p>
+<pre><code>- 约定参数的顺序
+
+    - 宽度第一，然后高度： new Widget(320, 640) // width:320, height:240
+
+    - CSS顺时针约定：top，right，bottom，left
+</code></pre><p>-【参数】 在变量命名和函数签名中使用一致的约定</p>
+<p>-【多元化】 不要偏离用户在其他开发平台中很可能遇到的约定</p>
+<p>-【检查】真值测试是实现参数默认值的一种简明的方式（this.hostname = hostname || “localhost”），但<strong>不适用</strong>于允许0、NaN或空字符串为有效参数的情况，比如this.hostname就是等于undefined</p>
+<p>-【检查】应该提供参数默认值应当采用测试undefined的方式，而不是检查arguments.length，即 this.width = width === undefined ? 320 : width</p>
+<p>-【参数】使用接收关键字参数的选项对象，options object，既接收Alert({xxx:yyy})的方式，避免参数过多，API失去可扩展性</p>
+<p>-【设计】避免不必要的状态，API有时候被归为两类：有状态的(Date对象)和无状态的（幂等性，输入对应固定输出），无状态的API比有状态的API，从易用性，学习容易性而言，更优。无状态的API简洁，易于扩展</p>
+<p>-【设计】API绝对不应该重载与其他类型有重叠的类型，一个方法不应该既接收type 1又接收type 2，当重载一个结构类型与其他类型时，先测试其他类型</p>
+<pre><code>- 判断是不是数组：Array.isArray 和 toString.call(x) === &quot;[Object Array]&quot;
+- 将对象转换成数组：[].slice.call(arguments)
+</code></pre><p>-【设计】避免过度的强制转换，应该显示的转换，用代码写出来，而不是交给编译器</p>
+<p>-【设计】支持方法链</p>
+<pre><code>- 使用方法连来连接无状态的操作
+- 通过在无状态的方法中返回新对象来支持方法链
+- 通过在有状态的方法中返回this来支持方法连
+</code></pre><h3 id="并发"><a href="#并发" class="headerlink" title="并发"></a>并发</h3><ul>
+<li><p>异步的强大能力：JS的运行到完成机制(run-to-complete)，在系统里维护了一个按时间发生顺序的内部<strong>事件队列</strong>，一次调用一个已注册的回调函数，通过轮询这个队列来完成异步的操作，有序的调用回调函数。</p>
+</li>
+<li><p>Workers API提供了线程的能力，在一个完全隔离的状态下执行，没有获取全局作用域或应用程序主线程Web页面内容的能力</p>
+</li>
+<li><p>应该避免将可被并行执行的操作顺序化，嵌套的回调函数应该用Promise</p>
+</li>
+<li><p>对于异步的代码，多步的处理通常被分隔到时间队列的单独伦次中，因此不可能将它们全部包装在一个try语句块中。事实上，异步的API甚至根本不可能抛出异常，因为，当一个异步的错误发生时，没有一个明显的执行上下文来抛出异常！因此，异步API更加倾向于将错误表示为回调函数的特定参数，即err，<strong>在Nodejs平台中，err是回调函数的第一个参数</strong></p>
+</li>
+<li><p>目前典型的JS环境中一个递归函数同步调用自身过多次会导致失败，原因是：<strong>存储过多的栈帧需要的空间量会消耗JS环境分配的空间</strong></p>
+<ul>
+<li><p>循环不能是异步的</p>
+</li>
+<li><p>使用<strong>递归函数</strong>在事件循环的单独轮次中执行迭代</p>
+<pre><code>function downloadOneAsync(urls, onsuccess, onfailure){
+    var n = urls.length;
+    function tryNextURL(i){
+        if(i&gt;=n){
+            onfailure(&quot;xxxxxxx&quot;);
+            return;    
+        }
+        downloadAsync(url[i], onsuccess,function(){
+            tryNextURL(i+1);
+        });
+    }
+    tryNextURL(0);
+} 
+</code></pre></li>
+</ul>
+</li>
+<li><p>避免在主事件队列中执行代价高昂的算法，在支持Worker API的平台，该API可以用来在一个独立的事件队列中运行场计算程序，在Work API不可用或代价昂贵的环境中，考虑将计算程序分解到事件循环的多个轮次中</p>
+</li>
+<li><p>使用计数器来执行并行操作可以避免竞争，Js应用程序中的事件发生时不确定的，即顺序是不可预测的</p>
+</li>
+<li><p>同步地调用异步的回调函数扰乱了预期的操作序列，并可能导致意想不到的交错代码，也可能导致栈溢出或者错误的异常处理</p>
+</li>
+</ul>
+<h5 id="Promise"><a href="#Promise" class="headerlink" title="Promise"></a>Promise</h5><ul>
+<li><p>promise代表最终值，即并行操作完成时最终产生的结果</p>
+</li>
+<li><p>使用promise组合不同的并行操作，避免数据竞争</p>
+</li>
+<li><p>在要求有意的竞争条件时，使用select</p>
+</li>
+</ul>
+
+        
+        </div>
+        <footer class="article-footer">
+            <div class="share-container">
+
+
+
+</div>
+
+    <a data-url="https://aaronshi32.github.io/2016/11/17/读书笔记-Effective JavaScript/" data-id="cjm7udfai001fues62cmy1roy" class="article-share-link"><i class="fa fa-share"></i>如需转载，请注明出处</a>
+<script>
+    (function ($) {
+        // Prevent duplicate binding
+        if (typeof(__SHARE_BUTTON_BINDED__) === 'undefined' || !__SHARE_BUTTON_BINDED__) {
+            __SHARE_BUTTON_BINDED__ = true;
+        } else {
+            return;
+        }
+        $('body').on('click', function() {
+            $('.article-share-box.on').removeClass('on');
+        }).on('click', '.article-share-link', function(e) {
+            e.stopPropagation();
+
+            var $this = $(this),
+                url = $this.attr('data-url'),
+                encodedUrl = encodeURIComponent(url),
+                id = 'article-share-box-' + $this.attr('data-id'),
+                offset = $this.offset(),
+                box;
+
+            if ($('#' + id).length) {
+                box = $('#' + id);
+
+                if (box.hasClass('on')){
+                    box.removeClass('on');
+                    return;
+                }
+            } else {
+                var html = [
+                    '<div id="' + id + '" class="article-share-box">',
+                        '<input class="article-share-input" value="' + url + '">',
+                        '<div class="article-share-links">',
+                            '<a href="https://twitter.com/intent/tweet?url=' + encodedUrl + '" class="fa fa-twitter article-share-twitter" target="_blank" title="Twitter"></a>',
+                            '<a href="https://www.facebook.com/sharer.php?u=' + encodedUrl + '" class="fa fa-facebook article-share-facebook" target="_blank" title="Facebook"></a>',
+                            '<a href="http://pinterest.com/pin/create/button/?url=' + encodedUrl + '" class="fa fa-pinterest article-share-pinterest" target="_blank" title="Pinterest"></a>',
+                            '<a href="https://plus.google.com/share?url=' + encodedUrl + '" class="fa fa-google article-share-google" target="_blank" title="Google+"></a>',
+                        '</div>',
+                    '</div>'
+                ].join('');
+
+              box = $(html);
+
+              $('body').append(box);
+            }
+
+            $('.article-share-box.on').hide();
+
+            box.css({
+                top: offset.top + 25,
+                left: offset.left
+            }).addClass('on');
+
+        }).on('click', '.article-share-box', function (e) {
+            e.stopPropagation();
+        }).on('click', '.article-share-box-input', function () {
+            $(this).select();
+        }).on('click', '.article-share-box-link', function (e) {
+            e.preventDefault();
+            e.stopPropagation();
+
+            window.open(this.href, 'article-share-box-window-' + Date.now(), 'width=500,height=450');
+        });
+    })(jQuery);
+</script>
+
+            
+    
+
+        </footer>
+    </div>
+    
+        
+<nav id="article-nav">
+    
+        <a href="/blog/2016/11/30/前端资源打包工具-WebPack/" id="article-nav-newer" class="article-nav-link-wrap">
+            <strong class="article-nav-caption">上一篇</strong>
+            <div class="article-nav-title">
+                
+                    前端资源打包工具-WebPack
+                
+            </div>
+        </a>
+    
+    
+        <a href="/blog/2016/11/17/JS文档生成工具-Jsdoc/" id="article-nav-older" class="article-nav-link-wrap">
+            <strong class="article-nav-caption">下一篇</strong>
+            <div class="article-nav-title">JS文档生成工具-Jsdoc</div>
+        </a>
+    
+</nav>
+
+
+    
+</article>
+
+
+    
+    <section id="comments">
+    
+    </section>
+
+</section>
+            
+                <aside id="sidebar">
+   
+        
+    
+        
+    <div class="widget-wrap">
+        <h3 class="widget-title">归档</h3>
+        <div class="widget">
+            <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/blog/archives/2018/08/">八月 2018</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/blog/archives/2018/07/">七月 2018</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/blog/archives/2018/06/">六月 2018</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/blog/archives/2018/05/">五月 2018</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/blog/archives/2018/04/">四月 2018</a><span class="archive-list-count">6</span></li><li class="archive-list-item"><a class="archive-list-link" href="/blog/archives/2018/03/">三月 2018</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/blog/archives/2018/02/">二月 2018</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/blog/archives/2018/01/">一月 2018</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/blog/archives/2017/12/">十二月 2017</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/blog/archives/2017/11/">十一月 2017</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/blog/archives/2017/10/">十月 2017</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/blog/archives/2017/08/">八月 2017</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/blog/archives/2017/07/">七月 2017</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/blog/archives/2017/06/">六月 2017</a><span class="archive-list-count">4</span></li><li class="archive-list-item"><a class="archive-list-link" href="/blog/archives/2017/05/">五月 2017</a><span class="archive-list-count">6</span></li><li class="archive-list-item"><a class="archive-list-link" href="/blog/archives/2017/03/">三月 2017</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/blog/archives/2017/02/">二月 2017</a><span class="archive-list-count">4</span></li><li class="archive-list-item"><a class="archive-list-link" href="/blog/archives/2017/01/">一月 2017</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/blog/archives/2016/12/">十二月 2016</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/blog/archives/2016/11/">十一月 2016</a><span class="archive-list-count">6</span></li><li class="archive-list-item"><a class="archive-list-link" href="/blog/archives/2016/10/">十月 2016</a><span class="archive-list-count">1</span></li></ul>
+        </div>
+    </div>
+
+    
+        
+    <div class="widget-wrap">
+        <h3 class="widget-title">标签</h3>
+        <div class="widget">
+            <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/blog/tags/JavaScript/">JavaScript</a><span class="tag-list-count">4</span></li><li class="tag-list-item"><a class="tag-list-link" href="/blog/tags/人工智能/">人工智能</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/blog/tags/基础知识/">基础知识</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/blog/tags/工具/">工具</a><span class="tag-list-count">6</span></li><li class="tag-list-item"><a class="tag-list-link" href="/blog/tags/日常/">日常</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/blog/tags/框架/">框架</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/blog/tags/疑难杂症/">疑难杂症</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/blog/tags/系统/">系统</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/blog/tags/读书/">读书</a><span class="tag-list-count">28</span></li><li class="tag-list-item"><a class="tag-list-link" href="/blog/tags/面试/">面试</a><span class="tag-list-count">8</span></li></ul>
+        </div>
+    </div>
+
+    
+    <div id="toTop" class="fa fa-angle-up"></div>
+</aside>
+            
+        </div>
+        <footer id="footer">
+    <div class="outer">
+        <div id="footer-info" class="inner">
+            &copy; 2018 AaronShi<br>
+            Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>. Theme by <a href="http://github.com/ppoffice">PPOffice</a>
+        </div>
+    </div>
+</footer>
+        
+
+    
+        <script src="/blog/libs/lightgallery/js/lightgallery.min.js"></script>
+        <script src="/blog/libs/lightgallery/js/lg-thumbnail.min.js"></script>
+        <script src="/blog/libs/lightgallery/js/lg-pager.min.js"></script>
+        <script src="/blog/libs/lightgallery/js/lg-autoplay.min.js"></script>
+        <script src="/blog/libs/lightgallery/js/lg-fullscreen.min.js"></script>
+        <script src="/blog/libs/lightgallery/js/lg-zoom.min.js"></script>
+        <script src="/blog/libs/lightgallery/js/lg-hash.min.js"></script>
+        <script src="/blog/libs/lightgallery/js/lg-share.min.js"></script>
+        <script src="/blog/libs/lightgallery/js/lg-video.min.js"></script>
+    
+    
+        <script src="/blog/libs/justified-gallery/jquery.justifiedGallery.min.js"></script>
+    
+
+
+
+<!-- Custom Scripts -->
+<script src="/blog/js/main.js"></script>
+
+    </div>
+</body>
+</html>

@@ -1,0 +1,484 @@
+<!DOCTYPE html>
+<html lang=zh>
+<head>
+    <meta charset="utf-8">
+    
+    <title>读书笔记-深入分析 Java Web 技术内幕（二） | 着陆的橘子</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+    <meta name="description" content="第二部分: Java 基础知识1. Javac 编译原理Java 源代码经历词法分析器、语法分析器、语义分析，代码生成最终转换为字节码 词法分析器: Scanner(扫描全文件)、Lexer(识别符合 Java 语法规范的 Token 序列) 语法分析器: AST(抽象语法树) 语义分析器: 让 AST 的信息更加完善, 包含了: 映射符号表、处理注解、处理标注(@Unchecked), 检查变量">
+<meta name="keywords" content="读书">
+<meta property="og:type" content="article">
+<meta property="og:title" content="读书笔记-深入分析 Java Web 技术内幕（二）">
+<meta property="og:url" content="https://aaronshi32.github.io/2018/04/23/读书笔记-深入分析 Java Web 技术内幕（二）/index.html">
+<meta property="og:site_name" content="着陆的橘子">
+<meta property="og:description" content="第二部分: Java 基础知识1. Javac 编译原理Java 源代码经历词法分析器、语法分析器、语义分析，代码生成最终转换为字节码 词法分析器: Scanner(扫描全文件)、Lexer(识别符合 Java 语法规范的 Token 序列) 语法分析器: AST(抽象语法树) 语义分析器: 让 AST 的信息更加完善, 包含了: 映射符号表、处理注解、处理标注(@Unchecked), 检查变量">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:updated_time" content="2018-05-02T10:24:01.338Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="读书笔记-深入分析 Java Web 技术内幕（二）">
+<meta name="twitter:description" content="第二部分: Java 基础知识1. Javac 编译原理Java 源代码经历词法分析器、语法分析器、语义分析，代码生成最终转换为字节码 词法分析器: Scanner(扫描全文件)、Lexer(识别符合 Java 语法规范的 Token 序列) 语法分析器: AST(抽象语法树) 语义分析器: 让 AST 的信息更加完善, 包含了: 映射符号表、处理注解、处理标注(@Unchecked), 检查变量">
+    
+
+    
+
+    
+
+    <link rel="stylesheet" href="/blog/libs/font-awesome/css/font-awesome.min.css">
+    <link rel="stylesheet" href="/blog/libs/open-sans/styles.css">
+    <link rel="stylesheet" href="/blog/libs/source-code-pro/styles.css">
+
+    <link rel="stylesheet" href="/blog/css/style.css">
+
+    <script src="/blog/libs/jquery/2.1.3/jquery.min.js"></script>
+    
+    
+        <link rel="stylesheet" href="/blog/libs/lightgallery/css/lightgallery.min.css">
+    
+    
+        <link rel="stylesheet" href="/blog/libs/justified-gallery/justifiedGallery.min.css">
+    
+    
+    
+    
+
+
+</head>
+
+<body>
+    <div id="container">
+        <header id="header">
+    <div id="header-main" class="header-inner">
+        <div class="outer">
+            <a href="/blog/" id="logo">
+                <i class="logo"></i>
+                <span class="site-title">着陆的橘子</span>
+            </a>
+            <nav id="main-nav">
+                
+                    <a class="main-nav-link" href="/.">主页</a>
+                
+                    <a class="main-nav-link" href="/about/cv.pdf">关于</a>
+                
+            </nav>
+            
+                
+                <nav id="sub-nav">
+                    <div class="profile" id="profile-nav">
+                        <a id="profile-anchor" href="javascript:;">
+                            <img class="avatar" src="/css/images/avatar.png" />
+                            <i class="fa fa-caret-down"></i>
+                        </a>
+                    </div>
+                </nav>
+            
+            <div id="search-form-wrap">
+
+    <form class="search-form">
+        <input type="text" class="ins-search-input search-form-input" placeholder="文章" />
+        <button type="submit" class="search-form-submit"></button>
+    </form>
+    <div class="ins-search">
+    <div class="ins-search-mask"></div>
+    <div class="ins-search-container">
+        <div class="ins-input-wrapper">
+            <input type="text" class="ins-search-input" placeholder="想要查找什么..." />
+            <span class="ins-close ins-selectable"><i class="fa fa-times-circle"></i></span>
+        </div>
+        <div class="ins-section-wrapper">
+            <div class="ins-section-container"></div>
+        </div>
+    </div>
+</div>
+<script>
+(function (window) {
+    var INSIGHT_CONFIG = {
+        TRANSLATION: {
+            POSTS: '文章',
+            PAGES: '页面',
+            CATEGORIES: '分类',
+            TAGS: '标签',
+            UNTITLED: '(未命名)',
+        },
+        ROOT_URL: '/',
+        CONTENT_URL: '/content.json',
+    };
+    window.INSIGHT_CONFIG = INSIGHT_CONFIG;
+})(window);
+</script>
+<script src="/blog/js/insight.js"></script>
+
+</div>
+        </div>
+    </div>
+    <div id="main-nav-mobile" class="header-sub header-inner">
+        <table class="menu outer">
+            <tr>
+                
+                    <td><a class="main-nav-link" href="/.">主页</a></td>
+                
+                    <td><a class="main-nav-link" href="/about/cv.pdf">关于</a></td>
+                
+                <td>
+                    
+    <div class="search-form">
+        <input type="text" class="ins-search-input search-form-input" placeholder="搜索" />
+    </div>
+
+                </td>
+            </tr>
+        </table>
+    </div>
+</header>
+
+        <div class="outer">
+            
+                
+
+<aside id="profile">
+    <div class="inner profile-inner">
+        <div class="base-info profile-block">
+            <img id="avatar" src="/css/images/avatar.png" />
+            <h2 id="name">AaronShi32</h2>
+            <h3 id="title">Senior Software Developer</h3>
+            <span id="location"><i class="fa fa-map-marker"></i>Beijing, China</span>
+            <a id="follow" target="_blank" href="https://github.com/AaronShi32">Follow</a>
+        </div>
+        <div class="article-info profile-block">
+            <div class="article-info-block">
+                48
+                <span>文章</span>
+            </div>
+            <div class="article-info-block">
+                10
+                <span>标签</span>
+            </div>
+        </div>
+        
+        <div class="profile-block social-links">
+            <table>
+                <tr>
+                    
+                    
+                    <td>
+                        <a href="https://github.com/AaronShi32" target="_blank" title="github" >
+                            <i class="fa fa-github"></i>
+                        </a>
+                    </td>
+                    
+                    <td>
+                        <a href="https://www.linkedin.com/in/cfshi" target="_blank" title="linkedin-square" >
+                            <i class="fa fa-linkedin-square"></i>
+                        </a>
+                    </td>
+                    
+                </tr>
+            </table>
+        </div>
+        
+    </div>
+</aside>
+
+            
+            <section id="main"><article id="post-读书笔记-深入分析 Java Web 技术内幕（二）" class="article article-type-post" itemscope itemprop="blogPost">
+    <div class="article-inner">
+        
+        
+            <header class="article-header">
+                
+    
+        <h1 class="article-title" itemprop="name">
+            读书笔记-深入分析 Java Web 技术内幕（二）
+        </h1>
+    
+
+                
+                    <div class="article-meta">
+                        
+    <div class="article-date">
+        <i class="fa fa-calendar"></i>
+        <a href="/blog/2018/04/23/读书笔记-深入分析 Java Web 技术内幕（二）/">
+            <time datetime="2018-04-23T08:15:26.000Z" itemprop="datePublished">2018-04-23</time>
+        </a>
+    </div>
+
+
+                        
+                        
+    <div class="article-tag">
+        <i class="fa fa-tag"></i>
+        <a class="tag-link" href="/blog/tags/读书/">读书</a>
+    </div>
+
+                    </div>
+                
+            </header>
+        
+        
+        <div class="article-entry" itemprop="articleBody">
+        
+            
+            <h3 id="第二部分-Java-基础知识"><a href="#第二部分-Java-基础知识" class="headerlink" title="第二部分: Java 基础知识"></a>第二部分: Java 基础知识</h3><h5 id="1-Javac-编译原理"><a href="#1-Javac-编译原理" class="headerlink" title="1. Javac 编译原理"></a>1. Javac 编译原理</h5><p>Java 源代码经历词法分析器、语法分析器、语义分析，代码生成最终转换为字节码</p>
+<p>词法分析器: Scanner(扫描全文件)、Lexer(识别符合 Java 语法规范的 Token 序列)</p>
+<p>语法分析器: AST(抽象语法树)</p>
+<p>语义分析器: 让 AST 的信息更加完善, 包含了: 映射符号表、处理注解、处理标注(@Unchecked), 检查变量合法性、数据流分析(还是各种语法检查)、语义分析(优化代码逻辑, 消除无用代码, 解除语法糖) </p>
+<p>代码生成器: 遍历语法树, 生成字节码, 写入 class 文件</p>
+<p>以上 4 个环节都会对语法树进行不同额处理操作, 采用的设计模式是访问者模式</p>
+<p>想要操作 Java 源码: 业内 Eclipse JDT </p>
+<h5 id="2-深入-class-文件结构"><a href="#2-深入-class-文件结构" class="headerlink" title="2. 深入 class 文件结构"></a>2. 深入 class 文件结构</h5><p>有两种翻译 class 的工具:</p>
+<ol>
+<li><p>Oolong 是 JVM 的汇编语言, 使用方式: java COM.sootNsmoke.oolong.Gnoloo Message.class 生成 Message.j 文件</p>
+</li>
+<li><p>通过 JDK 自带的 javap, 使用方式: javap -verbose Message &gt; message.txt</p>
+</li>
+</ol>
+<h5 id="3-深入分析-ClassLoader-工作机制"><a href="#3-深入分析-ClassLoader-工作机制" class="headerlink" title="3. 深入分析 ClassLoader 工作机制"></a>3. 深入分析 ClassLoader 工作机制</h5><ol>
+<li>将 class 加载到 JVM 中</li>
+</ol>
+<ul>
+<li><p>defineClass(byte[], int, int): 将字节流解析成 JVM 能够识别的 Class 对象</p>
+</li>
+<li><p>findClass(String): 类的加载规则实现于此</p>
+</li>
+<li><p>loadClass(String): 获取类的对象</p>
+</li>
+<li><p>resolveClass(Class&lt;?&gt;): 让 JVM 加载类的同时并链接</p>
+</li>
+</ul>
+<ol>
+<li>审查每个类应该由谁加载: 父优先的等级加载机制</li>
+</ol>
+<ul>
+<li><p>Bootstrap ClassLoader: 主要加载 JVM 自身工作需要的类, 这个 ClassLoader 完全是由 JVM 控制, 没有子类, 参数: -Xbootclasspath:</p>
+</li>
+<li><p>ExtClassLoader: 用于加载目标为 System.getProperty(“java.ext.dirs”) 的类, 是 AppClassLoader 的父类, 参数:<br>-Djava.ext.dirs</p>
+</li>
+<li><p>AppClassLoader: 用于加载 classpath 的类, <strong>也是所有自实现的类加载器的父类</strong>, 参数: -Djava.class.path=</p>
+</li>
+</ul>
+<ol>
+<li>重解析: 将字节码重新解析成统一要求的对象格式</li>
+</ol>
+<ul>
+<li><p>字节码验证, Class类数据结构分析及、相应的内存分配、最后的符号表的链接</p>
+</li>
+<li><p>类中的静态属性和初始化赋值, 静态代码块的执行</p>
+</li>
+</ul>
+<p>常见的类加载错误分析</p>
+<ul>
+<li>ClassNotFoundException</li>
+</ul>
+<p>检查当前 classpath 目录下有没有指定的文件存在, 用 this.getClass().getClassLoader().getResource(“”).toString() 获取 classpath 路径</p>
+<ul>
+<li>NoClassDefFoundError</li>
+</ul>
+<p>使用 new 关键字、属性引用某个类、继承了某个接口或类、方法的某个参数中引用了某个类时, 触发 JVM 隐式加载这些类发现不存在</p>
+<p>Tomcat 的 ClassLoader 层级</p>
+<ul>
+<li>ExtClassLoader -&gt; AppClassLoader -&gt; StandardClassLoader -&gt; WebappClassLoader</li>
+</ul>
+<p>加载 Tomcat 容器本身仍然是 AppClassLoader, 在 WebAppClassLoader 中增加了缓存, 取代了加载时优先查找 JVM 的 findLoaderClass 缓存</p>
+<p>类的热部署原理: 创建不同的 ClassLoader 实例对象, 然后通过这个不同的实例对象类加载同名的类</p>
+<h5 id="4-JVM-体系结构与工作方式"><a href="#4-JVM-体系结构与工作方式" class="headerlink" title="4. JVM 体系结构与工作方式"></a>4. JVM 体系结构与工作方式</h5><p>CPU 是跟指令集挂钩的, 顾名思义就是计算机能识别的机器语言, 如 RISC, CISC, MMX 等, 来自于 Intel 和 AMD</p>
+<p>JVM 也有用一套指令集, 俗称 JVM 字节码指令集, 用来执行 class 的字节码</p>
+<p>JVM 结构组成: </p>
+<ul>
+<li><p>类加载器  </p>
+</li>
+<li><p>执行引擎(负责执行 class 文件中包含的字节码指令, 相当于实际机器上的 CPU, 目标是内存区的栈) </p>
+<ul>
+<li><p>SUN 的 Hotspot 是基于栈的执行引擎</p>
+</li>
+<li><p>Google 的 Dalvik 是基于寄存器的执行引擎</p>
+</li>
+</ul>
+</li>
+<li><p>内存区(内存管理: 方法区、Java 堆、栈、PC寄存器、本地方法区) </p>
+</li>
+<li><p>本地方法调用(调用 C/C++ 实现本地方法的代码返回结果)</p>
+</li>
+</ul>
+<p>在执行引擎技术里面衍生了 JIT: 在Java编程语言和环境中，即时编译器（JIT compiler，just-in-time compiler）是一个把 Java 的字节码（包括需要被解释的指令的程序）转换成可以直接发送给处理器的指令的程序</p>
+<h5 id="5-JVM-内存管理"><a href="#5-JVM-内存管理" class="headerlink" title="5. JVM 内存管理"></a>5. JVM 内存管理</h5><p>Java 涉及到需要分配的内存有: <strong>堆(-Xmx 和 -Xms)</strong>, 线程(为其分配个堆栈), 类和类加载器(存活于 PermGen 区), NIO(直接使用本地内存), JNI(加载实现的类库)</p>
+<p>在 Java 虚拟机规范中将 Java 运行时数据划分为 6 种, 分别为: PC 寄存器, Java 栈(为线程分配的空间), 堆(线程共享), 方法区(存储的是类结构信息, 类加载器加载完就存放与此, 线程共享, 永久区中), 本地方法区(为 Native 方法准备的空间), 运行时常量池(存放每个 class 文件中的常量表, 隶属于方法区的一部分)</p>
+<p>根可达算法决定了哪些对象是垃圾, 垃圾回收算法决定了怎么回收: 基于分代的GC(Young, Old, Perm 区依次递进)</p>
+<p>Serial Collector 算法 &amp; Parallel Collector 算法 &amp; CMS Collector 算法</p>
+<p>GC 日志参数:</p>
+<p>-verbose:gc 可以辅助输出一些详细的 GC 信息</p>
+<p>-XX:+PrintGCDetails 输出 GC 详细信息</p>
+<p>-XX:+PrintGCApplicationStoppedTime 输出 GC 造成应用程序暂停的时间</p>
+<p>-XX:+PrintGCDateStamps GC 发生的时间信息</p>
+<p>-XX:+PrintHeapAtGC 在 GC 前后输出堆中各个区域的大小</p>
+
+        
+        </div>
+        <footer class="article-footer">
+            <div class="share-container">
+
+
+
+</div>
+
+    <a data-url="https://aaronshi32.github.io/2018/04/23/读书笔记-深入分析 Java Web 技术内幕（二）/" data-id="cjm7udfaq001yues63dddacso" class="article-share-link"><i class="fa fa-share"></i>如需转载，请注明出处</a>
+<script>
+    (function ($) {
+        // Prevent duplicate binding
+        if (typeof(__SHARE_BUTTON_BINDED__) === 'undefined' || !__SHARE_BUTTON_BINDED__) {
+            __SHARE_BUTTON_BINDED__ = true;
+        } else {
+            return;
+        }
+        $('body').on('click', function() {
+            $('.article-share-box.on').removeClass('on');
+        }).on('click', '.article-share-link', function(e) {
+            e.stopPropagation();
+
+            var $this = $(this),
+                url = $this.attr('data-url'),
+                encodedUrl = encodeURIComponent(url),
+                id = 'article-share-box-' + $this.attr('data-id'),
+                offset = $this.offset(),
+                box;
+
+            if ($('#' + id).length) {
+                box = $('#' + id);
+
+                if (box.hasClass('on')){
+                    box.removeClass('on');
+                    return;
+                }
+            } else {
+                var html = [
+                    '<div id="' + id + '" class="article-share-box">',
+                        '<input class="article-share-input" value="' + url + '">',
+                        '<div class="article-share-links">',
+                            '<a href="https://twitter.com/intent/tweet?url=' + encodedUrl + '" class="fa fa-twitter article-share-twitter" target="_blank" title="Twitter"></a>',
+                            '<a href="https://www.facebook.com/sharer.php?u=' + encodedUrl + '" class="fa fa-facebook article-share-facebook" target="_blank" title="Facebook"></a>',
+                            '<a href="http://pinterest.com/pin/create/button/?url=' + encodedUrl + '" class="fa fa-pinterest article-share-pinterest" target="_blank" title="Pinterest"></a>',
+                            '<a href="https://plus.google.com/share?url=' + encodedUrl + '" class="fa fa-google article-share-google" target="_blank" title="Google+"></a>',
+                        '</div>',
+                    '</div>'
+                ].join('');
+
+              box = $(html);
+
+              $('body').append(box);
+            }
+
+            $('.article-share-box.on').hide();
+
+            box.css({
+                top: offset.top + 25,
+                left: offset.left
+            }).addClass('on');
+
+        }).on('click', '.article-share-box', function (e) {
+            e.stopPropagation();
+        }).on('click', '.article-share-box-input', function () {
+            $(this).select();
+        }).on('click', '.article-share-box-link', function (e) {
+            e.preventDefault();
+            e.stopPropagation();
+
+            window.open(this.href, 'article-share-box-window-' + Date.now(), 'width=500,height=450');
+        });
+    })(jQuery);
+</script>
+
+            
+    
+
+        </footer>
+    </div>
+    
+        
+<nav id="article-nav">
+    
+        <a href="/blog/2018/04/28/读书笔记-深入分析 Java Web 技术内幕（三）/" id="article-nav-newer" class="article-nav-link-wrap">
+            <strong class="article-nav-caption">上一篇</strong>
+            <div class="article-nav-title">
+                
+                    读书笔记-深入分析 Java Web 技术内幕（三）
+                
+            </div>
+        </a>
+    
+    
+        <a href="/blog/2018/04/19/读书笔记-深入分析 Java Web 技术内幕（一）/" id="article-nav-older" class="article-nav-link-wrap">
+            <strong class="article-nav-caption">下一篇</strong>
+            <div class="article-nav-title">读书笔记-深入分析 Java Web 技术内幕（一）</div>
+        </a>
+    
+</nav>
+
+
+    
+</article>
+
+
+    
+    <section id="comments">
+    
+    </section>
+
+</section>
+            
+                <aside id="sidebar">
+   
+        
+    
+        
+    <div class="widget-wrap">
+        <h3 class="widget-title">归档</h3>
+        <div class="widget">
+            <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/blog/archives/2018/08/">八月 2018</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/blog/archives/2018/07/">七月 2018</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/blog/archives/2018/06/">六月 2018</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/blog/archives/2018/05/">五月 2018</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/blog/archives/2018/04/">四月 2018</a><span class="archive-list-count">6</span></li><li class="archive-list-item"><a class="archive-list-link" href="/blog/archives/2018/03/">三月 2018</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/blog/archives/2018/02/">二月 2018</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/blog/archives/2018/01/">一月 2018</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/blog/archives/2017/12/">十二月 2017</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/blog/archives/2017/11/">十一月 2017</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/blog/archives/2017/10/">十月 2017</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/blog/archives/2017/08/">八月 2017</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/blog/archives/2017/07/">七月 2017</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/blog/archives/2017/06/">六月 2017</a><span class="archive-list-count">4</span></li><li class="archive-list-item"><a class="archive-list-link" href="/blog/archives/2017/05/">五月 2017</a><span class="archive-list-count">6</span></li><li class="archive-list-item"><a class="archive-list-link" href="/blog/archives/2017/03/">三月 2017</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/blog/archives/2017/02/">二月 2017</a><span class="archive-list-count">4</span></li><li class="archive-list-item"><a class="archive-list-link" href="/blog/archives/2017/01/">一月 2017</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/blog/archives/2016/12/">十二月 2016</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/blog/archives/2016/11/">十一月 2016</a><span class="archive-list-count">6</span></li><li class="archive-list-item"><a class="archive-list-link" href="/blog/archives/2016/10/">十月 2016</a><span class="archive-list-count">1</span></li></ul>
+        </div>
+    </div>
+
+    
+        
+    <div class="widget-wrap">
+        <h3 class="widget-title">标签</h3>
+        <div class="widget">
+            <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/blog/tags/JavaScript/">JavaScript</a><span class="tag-list-count">4</span></li><li class="tag-list-item"><a class="tag-list-link" href="/blog/tags/人工智能/">人工智能</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/blog/tags/基础知识/">基础知识</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/blog/tags/工具/">工具</a><span class="tag-list-count">6</span></li><li class="tag-list-item"><a class="tag-list-link" href="/blog/tags/日常/">日常</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/blog/tags/框架/">框架</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/blog/tags/疑难杂症/">疑难杂症</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/blog/tags/系统/">系统</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/blog/tags/读书/">读书</a><span class="tag-list-count">28</span></li><li class="tag-list-item"><a class="tag-list-link" href="/blog/tags/面试/">面试</a><span class="tag-list-count">8</span></li></ul>
+        </div>
+    </div>
+
+    
+    <div id="toTop" class="fa fa-angle-up"></div>
+</aside>
+            
+        </div>
+        <footer id="footer">
+    <div class="outer">
+        <div id="footer-info" class="inner">
+            &copy; 2018 AaronShi<br>
+            Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>. Theme by <a href="http://github.com/ppoffice">PPOffice</a>
+        </div>
+    </div>
+</footer>
+        
+
+    
+        <script src="/blog/libs/lightgallery/js/lightgallery.min.js"></script>
+        <script src="/blog/libs/lightgallery/js/lg-thumbnail.min.js"></script>
+        <script src="/blog/libs/lightgallery/js/lg-pager.min.js"></script>
+        <script src="/blog/libs/lightgallery/js/lg-autoplay.min.js"></script>
+        <script src="/blog/libs/lightgallery/js/lg-fullscreen.min.js"></script>
+        <script src="/blog/libs/lightgallery/js/lg-zoom.min.js"></script>
+        <script src="/blog/libs/lightgallery/js/lg-hash.min.js"></script>
+        <script src="/blog/libs/lightgallery/js/lg-share.min.js"></script>
+        <script src="/blog/libs/lightgallery/js/lg-video.min.js"></script>
+    
+    
+        <script src="/blog/libs/justified-gallery/jquery.justifiedGallery.min.js"></script>
+    
+
+
+
+<!-- Custom Scripts -->
+<script src="/blog/js/main.js"></script>
+
+    </div>
+</body>
+</html>

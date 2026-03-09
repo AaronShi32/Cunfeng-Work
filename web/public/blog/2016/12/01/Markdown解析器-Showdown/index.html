@@ -1,0 +1,422 @@
+<!DOCTYPE html>
+<html lang=zh>
+<head>
+    <meta charset="utf-8">
+    
+    <title>Markdown解析器-Showdown | 着陆的橘子</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+    <meta name="description" content="由于工作中需要将 markdown 格式的文件转换成 html，因此抽空研究了下业界的工具Showdown，Showdown 是一个可以将标准 markdown 规范解析生成基础 html 的工具，使用起来很简单，通过命令：showdown makehtml -i &amp;lt;input&amp;gt; -o &amp;lt;output&amp;gt;即可完成转化，详细的介绍请参考官方文档 Showdown，在此就不过多赘">
+<meta name="keywords" content="工具">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Markdown解析器-Showdown">
+<meta property="og:url" content="https://aaronshi32.github.io/2016/12/01/Markdown解析器-Showdown/index.html">
+<meta property="og:site_name" content="着陆的橘子">
+<meta property="og:description" content="由于工作中需要将 markdown 格式的文件转换成 html，因此抽空研究了下业界的工具Showdown，Showdown 是一个可以将标准 markdown 规范解析生成基础 html 的工具，使用起来很简单，通过命令：showdown makehtml -i &amp;lt;input&amp;gt; -o &amp;lt;output&amp;gt;即可完成转化，详细的介绍请参考官方文档 Showdown，在此就不过多赘">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:updated_time" content="2017-03-14T03:04:50.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Markdown解析器-Showdown">
+<meta name="twitter:description" content="由于工作中需要将 markdown 格式的文件转换成 html，因此抽空研究了下业界的工具Showdown，Showdown 是一个可以将标准 markdown 规范解析生成基础 html 的工具，使用起来很简单，通过命令：showdown makehtml -i &amp;lt;input&amp;gt; -o &amp;lt;output&amp;gt;即可完成转化，详细的介绍请参考官方文档 Showdown，在此就不过多赘">
+    
+
+    
+
+    
+
+    <link rel="stylesheet" href="/blog/libs/font-awesome/css/font-awesome.min.css">
+    <link rel="stylesheet" href="/blog/libs/open-sans/styles.css">
+    <link rel="stylesheet" href="/blog/libs/source-code-pro/styles.css">
+
+    <link rel="stylesheet" href="/blog/css/style.css">
+
+    <script src="/blog/libs/jquery/2.1.3/jquery.min.js"></script>
+    
+    
+        <link rel="stylesheet" href="/blog/libs/lightgallery/css/lightgallery.min.css">
+    
+    
+        <link rel="stylesheet" href="/blog/libs/justified-gallery/justifiedGallery.min.css">
+    
+    
+    
+    
+
+
+</head>
+
+<body>
+    <div id="container">
+        <header id="header">
+    <div id="header-main" class="header-inner">
+        <div class="outer">
+            <a href="/blog/" id="logo">
+                <i class="logo"></i>
+                <span class="site-title">着陆的橘子</span>
+            </a>
+            <nav id="main-nav">
+                
+                    <a class="main-nav-link" href="/.">主页</a>
+                
+                    <a class="main-nav-link" href="/about/cv.pdf">关于</a>
+                
+            </nav>
+            
+                
+                <nav id="sub-nav">
+                    <div class="profile" id="profile-nav">
+                        <a id="profile-anchor" href="javascript:;">
+                            <img class="avatar" src="/css/images/avatar.png" />
+                            <i class="fa fa-caret-down"></i>
+                        </a>
+                    </div>
+                </nav>
+            
+            <div id="search-form-wrap">
+
+    <form class="search-form">
+        <input type="text" class="ins-search-input search-form-input" placeholder="文章" />
+        <button type="submit" class="search-form-submit"></button>
+    </form>
+    <div class="ins-search">
+    <div class="ins-search-mask"></div>
+    <div class="ins-search-container">
+        <div class="ins-input-wrapper">
+            <input type="text" class="ins-search-input" placeholder="想要查找什么..." />
+            <span class="ins-close ins-selectable"><i class="fa fa-times-circle"></i></span>
+        </div>
+        <div class="ins-section-wrapper">
+            <div class="ins-section-container"></div>
+        </div>
+    </div>
+</div>
+<script>
+(function (window) {
+    var INSIGHT_CONFIG = {
+        TRANSLATION: {
+            POSTS: '文章',
+            PAGES: '页面',
+            CATEGORIES: '分类',
+            TAGS: '标签',
+            UNTITLED: '(未命名)',
+        },
+        ROOT_URL: '/',
+        CONTENT_URL: '/content.json',
+    };
+    window.INSIGHT_CONFIG = INSIGHT_CONFIG;
+})(window);
+</script>
+<script src="/blog/js/insight.js"></script>
+
+</div>
+        </div>
+    </div>
+    <div id="main-nav-mobile" class="header-sub header-inner">
+        <table class="menu outer">
+            <tr>
+                
+                    <td><a class="main-nav-link" href="/.">主页</a></td>
+                
+                    <td><a class="main-nav-link" href="/about/cv.pdf">关于</a></td>
+                
+                <td>
+                    
+    <div class="search-form">
+        <input type="text" class="ins-search-input search-form-input" placeholder="搜索" />
+    </div>
+
+                </td>
+            </tr>
+        </table>
+    </div>
+</header>
+
+        <div class="outer">
+            
+                
+
+<aside id="profile">
+    <div class="inner profile-inner">
+        <div class="base-info profile-block">
+            <img id="avatar" src="/css/images/avatar.png" />
+            <h2 id="name">AaronShi32</h2>
+            <h3 id="title">Senior Software Developer</h3>
+            <span id="location"><i class="fa fa-map-marker"></i>Beijing, China</span>
+            <a id="follow" target="_blank" href="https://github.com/AaronShi32">Follow</a>
+        </div>
+        <div class="article-info profile-block">
+            <div class="article-info-block">
+                48
+                <span>文章</span>
+            </div>
+            <div class="article-info-block">
+                10
+                <span>标签</span>
+            </div>
+        </div>
+        
+        <div class="profile-block social-links">
+            <table>
+                <tr>
+                    
+                    
+                    <td>
+                        <a href="https://github.com/AaronShi32" target="_blank" title="github" >
+                            <i class="fa fa-github"></i>
+                        </a>
+                    </td>
+                    
+                    <td>
+                        <a href="https://www.linkedin.com/in/cfshi" target="_blank" title="linkedin-square" >
+                            <i class="fa fa-linkedin-square"></i>
+                        </a>
+                    </td>
+                    
+                </tr>
+            </table>
+        </div>
+        
+    </div>
+</aside>
+
+            
+            <section id="main"><article id="post-Markdown解析器-Showdown" class="article article-type-post" itemscope itemprop="blogPost">
+    <div class="article-inner">
+        
+        
+            <header class="article-header">
+                
+    
+        <h1 class="article-title" itemprop="name">
+            Markdown解析器-Showdown
+        </h1>
+    
+
+                
+                    <div class="article-meta">
+                        
+    <div class="article-date">
+        <i class="fa fa-calendar"></i>
+        <a href="/blog/2016/12/01/Markdown解析器-Showdown/">
+            <time datetime="2016-12-01T07:26:35.000Z" itemprop="datePublished">2016-12-01</time>
+        </a>
+    </div>
+
+
+                        
+                        
+    <div class="article-tag">
+        <i class="fa fa-tag"></i>
+        <a class="tag-link" href="/blog/tags/工具/">工具</a>
+    </div>
+
+                    </div>
+                
+            </header>
+        
+        
+        <div class="article-entry" itemprop="articleBody">
+        
+            
+            <p>由于工作中需要将 markdown 格式的文件转换成 html，因此抽空研究了下业界的工具<code>Showdown</code>，Showdown 是一个可以将标准 markdown 规范解析生成基础 html 的工具，使用起来很简单，通过命令：<code>showdown makehtml -i &lt;input&gt; -o &lt;output&gt;</code>即可完成转化，详细的介绍请参考官方文档 <a href="https://github.com/showdownjs" target="_blank" rel="noopener">Showdown</a>，在此就不过多赘述了。</p>
+<h4 id="Extensions-与-Listeners"><a href="#Extensions-与-Listeners" class="headerlink" title="Extensions 与 Listeners"></a>Extensions 与 Listeners</h4><p>通过研究发现，当需要解析一些”自定义”的 markdown 规范时，Showdown 提供了清晰良好的代码格式，方便我们扩展，包括<code>extensions</code>, <code>listener</code>的方式，可以进行注册，监听，来看 Showdown 的入口文件，里面有这样三行代码： </p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//src/cli/makehtml.cmd.js</span></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">run</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">var</span> converter = <span class="keyword">new</span> showdown.Converter(argv);</span><br><span class="line">  ...</span><br><span class="line">  input = fs.readFileSync(argv.i, enc);</span><br><span class="line">  ...</span><br><span class="line">  output = converter.makeHtml(input);</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>可以分析出，<code>converter</code>通过接受参数，来配置各种<code>extensions</code>和<code>listener</code>，然后直接从源文件中读取，经过 makeHtml 一转换就变成 html 了</p>
+<p>官方也提供了几个现有的 <code>extensions</code>， 如 <a href="https://github.com/showdownjs/table-extension" target="_blank" rel="noopener">table-extension</a> <a href="https://github.com/showdownjs/prettify-extension" target="_blank" rel="noopener">prettify-extension</a> 等，这些现有的<code>extensions</code>都是对 markdown 的元素进行了自定义的解析和渲染，如果是基于标准的 markdown 语法，使用这种方式进行自定义渲染就非常方便了</p>
+<p>关于 Listeners 可以参考下面的工作原理章节</p>
+<h4 id="工作原理"><a href="#工作原理" class="headerlink" title="工作原理"></a>工作原理</h4><p>关于工作原理，可以用一句话来概括：<strong>Showdown使用正则表达式解析 markdown 语法，然后直接渲染成 html</strong>，注意这里面有两个关键词：</p>
+<ul>
+<li><p>正则表达式解析</p>
+<p>  来看一个 Parser 的源码片段：</p>
+</li>
+</ul>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 斜体和黑体的解析器：italicsAndBold</span></span><br><span class="line">showdown.subParser(<span class="string">'italicsAndBold'</span>, <span class="function"><span class="keyword">function</span> (<span class="params">text, options, globals</span>) </span>&#123;</span><br><span class="line"><span class="meta">  'use strict'</span>;</span><br><span class="line"></span><br><span class="line">  text = globals.converter._dispatch(<span class="string">'italicsAndBold.before'</span>, text, options, globals);</span><br><span class="line"></span><br><span class="line">  <span class="keyword">if</span> (options.literalMidWordUnderscores) &#123;</span><br><span class="line">    <span class="comment">//underscores</span></span><br><span class="line">    <span class="comment">// Since we are consuming a \s character, we need to add it</span></span><br><span class="line">    text = text.replace(<span class="regexp">/(^|\s|&gt;|\b)__(?=\S)([\s\S]+?)__(?=\b|&lt;|\s|$)/gm</span>, <span class="string">'$1&lt;strong&gt;$2&lt;/strong&gt;'</span>);</span><br><span class="line">    text = text.replace(<span class="regexp">/(^|\s|&gt;|\b)_(?=\S)([\s\S]+?)_(?=\b|&lt;|\s|$)/gm</span>, <span class="string">'$1&lt;em&gt;$2&lt;/em&gt;'</span>);</span><br><span class="line">    <span class="comment">//asterisks</span></span><br><span class="line">    text = text.replace(<span class="regexp">/(\*\*)(?=\S)([^\r]*?\S[*]*)\1/g</span>, <span class="string">'&lt;strong&gt;$2&lt;/strong&gt;'</span>);</span><br><span class="line">    text = text.replace(<span class="regexp">/(\*)(?=\S)([^\r]*?\S)\1/g</span>, <span class="string">'&lt;em&gt;$2&lt;/em&gt;'</span>);</span><br><span class="line"></span><br><span class="line">  &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">    <span class="comment">// &lt;strong&gt; must go first:</span></span><br><span class="line">    text = text.replace(<span class="regexp">/(\*\*|__)(?=\S)([^\r]*?\S[*_]*)\1/g</span>, <span class="string">'&lt;strong&gt;$2&lt;/strong&gt;'</span>);</span><br><span class="line">    text = text.replace(<span class="regexp">/(\*|_)(?=\S)([^\r]*?\S)\1/g</span>, <span class="string">'&lt;em&gt;$2&lt;/em&gt;'</span>);</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  text = globals.converter._dispatch(<span class="string">'italicsAndBold.after'</span>, text, options, globals);</span><br><span class="line">  <span class="keyword">return</span> text;</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+<p>每个 Parser 的开始和结束，都抛出了相应的事件供监听，这就是 <code>listener</code> 扩展的机制，每次处理的结果都是返回 text 文本，可以看到在解析器中，对输入的文本进行正则表达式的匹配并直接替换成了相应的 html 元素</p>
+<ul>
+<li><p>直接渲染</p>
+<p>  所谓直接渲染，就是上面代码中的<code>replace</code>，这样的处理为后续的需求埋下隐患：</p>
+<ol>
+<li><p>如果某个 markdown 片段需要作为整体的渲染，则无法满足</p>
+</li>
+<li><p>如果对渲染之后的 html 进行样式更改，加入css，则无法满足</p>
+<p>可以看出，replace 替换的仅仅是 html 基本元素样式，且没有 id，class 等信息，因此极大程度上约束了生成的 html 样式，并不利于满足一些实际需求，然而 Showdown 的代码架构，将各个 markdown 元素分别定义了单独的解析器，这就为我们提供了一个思路，可以根据自定义的 markdown 的格式通过自定义的 parser 解析出来就好了，例如：</p>
+<figure class="highlight markdown"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="section">### start 修订记录 ###</span></span><br><span class="line">1.0</span><br><span class="line">date: 11.3</span><br><span class="line">2.0</span><br><span class="line">date: 12.9</span><br><span class="line"><span class="section">### end 修订记录 ###</span></span><br></pre></td></tr></table></figure>
+</li>
+</ol>
+</li>
+</ul>
+<p>解析器可以以 start 和 end 作为判断，整体将修订记录渲染成想要的格式，因此，对 Showdown 工程有以下重构想法：</p>
+<p><strong>解析和渲染解耦，不通过 replace 直接完成, 而是通过 taffydb 将解析出来的数据进行存储(参考jsdoc)，这样做的好处是：规则制定者可以自定义 markdown 语法片段并通过解析器解析出来，然后存放到数据库中，不需要关心接下来如何渲染，前端工程师可以直接从数据库中取出相应的片段信息，配合css，进行定制化渲染。借助于中间数据库的解耦，使得最后生成出来的html可以加入css样式，从而满足一切定制化需求，即 <code>解析 - 数据 -渲染</code></strong></p>
+<h4 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h4><p>以上是在结合工作需求的基础上研究 Showdown 工具的一些想法，还是软件工程里的一句老话：从需求出发的改动才附有意义</p>
+
+        
+        </div>
+        <footer class="article-footer">
+            <div class="share-container">
+
+
+
+</div>
+
+    <a data-url="https://aaronshi32.github.io/2016/12/01/Markdown解析器-Showdown/" data-id="cjm7udf9z000cues63prgkie5" class="article-share-link"><i class="fa fa-share"></i>如需转载，请注明出处</a>
+<script>
+    (function ($) {
+        // Prevent duplicate binding
+        if (typeof(__SHARE_BUTTON_BINDED__) === 'undefined' || !__SHARE_BUTTON_BINDED__) {
+            __SHARE_BUTTON_BINDED__ = true;
+        } else {
+            return;
+        }
+        $('body').on('click', function() {
+            $('.article-share-box.on').removeClass('on');
+        }).on('click', '.article-share-link', function(e) {
+            e.stopPropagation();
+
+            var $this = $(this),
+                url = $this.attr('data-url'),
+                encodedUrl = encodeURIComponent(url),
+                id = 'article-share-box-' + $this.attr('data-id'),
+                offset = $this.offset(),
+                box;
+
+            if ($('#' + id).length) {
+                box = $('#' + id);
+
+                if (box.hasClass('on')){
+                    box.removeClass('on');
+                    return;
+                }
+            } else {
+                var html = [
+                    '<div id="' + id + '" class="article-share-box">',
+                        '<input class="article-share-input" value="' + url + '">',
+                        '<div class="article-share-links">',
+                            '<a href="https://twitter.com/intent/tweet?url=' + encodedUrl + '" class="fa fa-twitter article-share-twitter" target="_blank" title="Twitter"></a>',
+                            '<a href="https://www.facebook.com/sharer.php?u=' + encodedUrl + '" class="fa fa-facebook article-share-facebook" target="_blank" title="Facebook"></a>',
+                            '<a href="http://pinterest.com/pin/create/button/?url=' + encodedUrl + '" class="fa fa-pinterest article-share-pinterest" target="_blank" title="Pinterest"></a>',
+                            '<a href="https://plus.google.com/share?url=' + encodedUrl + '" class="fa fa-google article-share-google" target="_blank" title="Google+"></a>',
+                        '</div>',
+                    '</div>'
+                ].join('');
+
+              box = $(html);
+
+              $('body').append(box);
+            }
+
+            $('.article-share-box.on').hide();
+
+            box.css({
+                top: offset.top + 25,
+                left: offset.left
+            }).addClass('on');
+
+        }).on('click', '.article-share-box', function (e) {
+            e.stopPropagation();
+        }).on('click', '.article-share-box-input', function () {
+            $(this).select();
+        }).on('click', '.article-share-box-link', function (e) {
+            e.preventDefault();
+            e.stopPropagation();
+
+            window.open(this.href, 'article-share-box-window-' + Date.now(), 'width=500,height=450');
+        });
+    })(jQuery);
+</script>
+
+            
+    
+
+        </footer>
+    </div>
+    
+        
+<nav id="article-nav">
+    
+        <a href="/blog/2017/01/09/2017书单/" id="article-nav-newer" class="article-nav-link-wrap">
+            <strong class="article-nav-caption">上一篇</strong>
+            <div class="article-nav-title">
+                
+                    2017书单
+                
+            </div>
+        </a>
+    
+    
+        <a href="/blog/2016/11/30/前端资源打包工具-WebPack/" id="article-nav-older" class="article-nav-link-wrap">
+            <strong class="article-nav-caption">下一篇</strong>
+            <div class="article-nav-title">前端资源打包工具-WebPack</div>
+        </a>
+    
+</nav>
+
+
+    
+</article>
+
+
+    
+    <section id="comments">
+    
+    </section>
+
+</section>
+            
+                <aside id="sidebar">
+   
+        
+    
+        
+    <div class="widget-wrap">
+        <h3 class="widget-title">归档</h3>
+        <div class="widget">
+            <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/blog/archives/2018/08/">八月 2018</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/blog/archives/2018/07/">七月 2018</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/blog/archives/2018/06/">六月 2018</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/blog/archives/2018/05/">五月 2018</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/blog/archives/2018/04/">四月 2018</a><span class="archive-list-count">6</span></li><li class="archive-list-item"><a class="archive-list-link" href="/blog/archives/2018/03/">三月 2018</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/blog/archives/2018/02/">二月 2018</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/blog/archives/2018/01/">一月 2018</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/blog/archives/2017/12/">十二月 2017</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/blog/archives/2017/11/">十一月 2017</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/blog/archives/2017/10/">十月 2017</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/blog/archives/2017/08/">八月 2017</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/blog/archives/2017/07/">七月 2017</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/blog/archives/2017/06/">六月 2017</a><span class="archive-list-count">4</span></li><li class="archive-list-item"><a class="archive-list-link" href="/blog/archives/2017/05/">五月 2017</a><span class="archive-list-count">6</span></li><li class="archive-list-item"><a class="archive-list-link" href="/blog/archives/2017/03/">三月 2017</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/blog/archives/2017/02/">二月 2017</a><span class="archive-list-count">4</span></li><li class="archive-list-item"><a class="archive-list-link" href="/blog/archives/2017/01/">一月 2017</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/blog/archives/2016/12/">十二月 2016</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/blog/archives/2016/11/">十一月 2016</a><span class="archive-list-count">6</span></li><li class="archive-list-item"><a class="archive-list-link" href="/blog/archives/2016/10/">十月 2016</a><span class="archive-list-count">1</span></li></ul>
+        </div>
+    </div>
+
+    
+        
+    <div class="widget-wrap">
+        <h3 class="widget-title">标签</h3>
+        <div class="widget">
+            <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/blog/tags/JavaScript/">JavaScript</a><span class="tag-list-count">4</span></li><li class="tag-list-item"><a class="tag-list-link" href="/blog/tags/人工智能/">人工智能</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/blog/tags/基础知识/">基础知识</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/blog/tags/工具/">工具</a><span class="tag-list-count">6</span></li><li class="tag-list-item"><a class="tag-list-link" href="/blog/tags/日常/">日常</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/blog/tags/框架/">框架</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/blog/tags/疑难杂症/">疑难杂症</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/blog/tags/系统/">系统</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/blog/tags/读书/">读书</a><span class="tag-list-count">28</span></li><li class="tag-list-item"><a class="tag-list-link" href="/blog/tags/面试/">面试</a><span class="tag-list-count">8</span></li></ul>
+        </div>
+    </div>
+
+    
+    <div id="toTop" class="fa fa-angle-up"></div>
+</aside>
+            
+        </div>
+        <footer id="footer">
+    <div class="outer">
+        <div id="footer-info" class="inner">
+            &copy; 2018 AaronShi<br>
+            Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>. Theme by <a href="http://github.com/ppoffice">PPOffice</a>
+        </div>
+    </div>
+</footer>
+        
+
+    
+        <script src="/blog/libs/lightgallery/js/lightgallery.min.js"></script>
+        <script src="/blog/libs/lightgallery/js/lg-thumbnail.min.js"></script>
+        <script src="/blog/libs/lightgallery/js/lg-pager.min.js"></script>
+        <script src="/blog/libs/lightgallery/js/lg-autoplay.min.js"></script>
+        <script src="/blog/libs/lightgallery/js/lg-fullscreen.min.js"></script>
+        <script src="/blog/libs/lightgallery/js/lg-zoom.min.js"></script>
+        <script src="/blog/libs/lightgallery/js/lg-hash.min.js"></script>
+        <script src="/blog/libs/lightgallery/js/lg-share.min.js"></script>
+        <script src="/blog/libs/lightgallery/js/lg-video.min.js"></script>
+    
+    
+        <script src="/blog/libs/justified-gallery/jquery.justifiedGallery.min.js"></script>
+    
+
+
+
+<!-- Custom Scripts -->
+<script src="/blog/js/main.js"></script>
+
+    </div>
+</body>
+</html>

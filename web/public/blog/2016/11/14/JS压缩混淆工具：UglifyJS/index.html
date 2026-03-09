@@ -1,0 +1,428 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    
+    <title>JS压缩混淆工具-UglifyJS | 升哥的博客</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+    <meta name="description" content="最近写了一些JS的项目，顺便研究了下UglifyJS工具，它是一款JS代码处理工具，提供了压缩，混淆和代码规范化等功能，同时还支持命令行和NodeJS两种使用方式，在代码基本格式化功能的基础上，可自定义扩展一些功能选项，满足具体项目中的使用。在业界内，JQuery使用UglifyJS进行代码压缩混淆，其结果具备准确性和稳定性。
+SourceMapUglifyJS支持使用/生成SourceMap,">
+<meta property="og:type" content="article">
+<meta property="og:title" content="JS压缩混淆工具-UglifyJS">
+<meta property="og:url" content="http://yoursite.com/2016/11/14/JS压缩混淆工具：UglifyJS/index.html">
+<meta property="og:site_name" content="升哥的博客">
+<meta property="og:description" content="最近写了一些JS的项目，顺便研究了下UglifyJS工具，它是一款JS代码处理工具，提供了压缩，混淆和代码规范化等功能，同时还支持命令行和NodeJS两种使用方式，在代码基本格式化功能的基础上，可自定义扩展一些功能选项，满足具体项目中的使用。在业界内，JQuery使用UglifyJS进行代码压缩混淆，其结果具备准确性和稳定性。
+SourceMapUglifyJS支持使用/生成SourceMap,">
+<meta property="og:updated_time" content="2016-11-14T08:35:19.267Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="JS压缩混淆工具-UglifyJS">
+<meta name="twitter:description" content="最近写了一些JS的项目，顺便研究了下UglifyJS工具，它是一款JS代码处理工具，提供了压缩，混淆和代码规范化等功能，同时还支持命令行和NodeJS两种使用方式，在代码基本格式化功能的基础上，可自定义扩展一些功能选项，满足具体项目中的使用。在业界内，JQuery使用UglifyJS进行代码压缩混淆，其结果具备准确性和稳定性。
+SourceMapUglifyJS支持使用/生成SourceMap,">
+    
+
+    
+
+    
+
+    <link rel="stylesheet" href="/blog/libs/font-awesome/css/font-awesome.min.css">
+    <link rel="stylesheet" href="/blog/libs/open-sans/styles.css">
+    <link rel="stylesheet" href="/blog/libs/source-code-pro/styles.css">
+
+    <link rel="stylesheet" href="/blog/css/style.css">
+
+    <script src="/blog/libs/jquery/2.1.3/jquery.min.js"></script>
+    
+    
+        <link rel="stylesheet" href="/blog/libs/lightgallery/css/lightgallery.min.css">
+    
+    
+        <link rel="stylesheet" href="/blog/libs/justified-gallery/justifiedGallery.min.css">
+    
+    
+    
+    
+
+
+</head>
+
+<body>
+    <div id="container">
+        <header id="header">
+    <div id="header-main" class="header-inner">
+        <div class="outer">
+            <a href="/blog/" id="logo">
+                <i class="logo"></i>
+                <span class="site-title">升哥的博客</span>
+            </a>
+            <nav id="main-nav">
+                
+                    <a class="main-nav-link" href="/.">主页</a>
+                
+                    <a class="main-nav-link" href="/about">关于</a>
+                
+            </nav>
+            
+                
+                <nav id="sub-nav">
+                    <div class="profile" id="profile-nav">
+                        <a id="profile-anchor" href="javascript:;">
+                            <img class="avatar" src="/css/images/avatar.png" />
+                            <i class="fa fa-caret-down"></i>
+                        </a>
+                    </div>
+                </nav>
+            
+            <div id="search-form-wrap">
+
+    <form class="search-form">
+        <input type="text" class="ins-search-input search-form-input" placeholder="文章" />
+        <button type="submit" class="search-form-submit"></button>
+    </form>
+    <div class="ins-search">
+    <div class="ins-search-mask"></div>
+    <div class="ins-search-container">
+        <div class="ins-input-wrapper">
+            <input type="text" class="ins-search-input" placeholder="Type something..." />
+            <span class="ins-close ins-selectable"><i class="fa fa-times-circle"></i></span>
+        </div>
+        <div class="ins-section-wrapper">
+            <div class="ins-section-container"></div>
+        </div>
+    </div>
+</div>
+<script>
+(function (window) {
+    var INSIGHT_CONFIG = {
+        TRANSLATION: {
+            POSTS: 'Posts',
+            PAGES: 'Pages',
+            CATEGORIES: 'Categories',
+            TAGS: 'Tags',
+            UNTITLED: '(Untitled)',
+        },
+        ROOT_URL: '/',
+        CONTENT_URL: '/content.json',
+    };
+    window.INSIGHT_CONFIG = INSIGHT_CONFIG;
+})(window);
+</script>
+<script src="/blog/js/insight.js"></script>
+
+</div>
+        </div>
+    </div>
+    <div id="main-nav-mobile" class="header-sub header-inner">
+        <table class="menu outer">
+            <tr>
+                
+                    <td><a class="main-nav-link" href="/.">主页</a></td>
+                
+                    <td><a class="main-nav-link" href="/about">关于</a></td>
+                
+                <td>
+                    
+    <div class="search-form">
+        <input type="text" class="ins-search-input search-form-input" placeholder="Search" />
+    </div>
+
+                </td>
+            </tr>
+        </table>
+    </div>
+</header>
+
+        <div class="outer">
+            
+                
+
+<aside id="profile">
+    <div class="inner profile-inner">
+        <div class="base-info profile-block">
+            <img id="avatar" src="/css/images/avatar.png" />
+            <h2 id="name">AaronShi32</h2>
+            <h3 id="title">Software Developer</h3>
+            <span id="location"><i class="fa fa-map-marker"></i>Beijing, China</span>
+            <a id="follow" target="_blank" href="https://github.com/AaronShi32">Follow</a>
+        </div>
+        <div class="article-info profile-block">
+            <div class="article-info-block">
+                2
+                <span>posts</span>
+            </div>
+            <div class="article-info-block">
+                2
+                <span>tags</span>
+            </div>
+        </div>
+        
+        <div class="profile-block social-links">
+            <table>
+                <tr>
+                    
+                    
+                    <td>
+                        <a href="https://github.com/AaronShi32" target="_blank" title="github" >
+                            <i class="fa fa-github"></i>
+                        </a>
+                    </td>
+                    
+                    <td>
+                        <a href="https://www.linkedin.com/in/cfshi" target="_blank" title="linkedin-square" >
+                            <i class="fa fa-linkedin-square"></i>
+                        </a>
+                    </td>
+                    
+                </tr>
+            </table>
+        </div>
+        
+    </div>
+</aside>
+
+            
+            <section id="main"><article id="post-JS压缩混淆工具：UglifyJS" class="article article-type-post" itemscope itemprop="blogPost">
+    <div class="article-inner">
+        
+        
+            <header class="article-header">
+                
+    
+        <h1 class="article-title" itemprop="name">
+            JS压缩混淆工具-UglifyJS
+        </h1>
+    
+
+                
+                    <div class="article-meta">
+                        
+    <div class="article-date">
+        <i class="fa fa-calendar"></i>
+        <a href="/blog/2016/11/14/JS压缩混淆工具：UglifyJS/">
+            <time datetime="2016-11-14T08:08:52.000Z" itemprop="datePublished">2016-11-14</time>
+        </a>
+    </div>
+
+
+                        
+                        
+    <div class="article-tag">
+        <i class="fa fa-tag"></i>
+        <a class="tag-link" href="/blog/tags/JavaScript/">JavaScript</a>, <a class="tag-link" href="/blog/tags/工具/">工具</a>
+    </div>
+
+                    </div>
+                
+            </header>
+        
+        
+        <div class="article-entry" itemprop="articleBody">
+        
+            
+            <p>最近写了一些JS的项目，顺便研究了下UglifyJS工具，它是一款JS代码处理工具，提供了压缩，混淆和代码规范化等功能，同时还支持命令行和NodeJS两种使用方式，在代码基本格式化功能的基础上，可自定义扩展一些功能选项，满足具体项目中的使用。在业界内，JQuery使用UglifyJS进行代码压缩混淆，其结果具备准确性和稳定性。</p>
+<h4 id="SourceMap"><a href="#SourceMap" class="headerlink" title="SourceMap"></a>SourceMap</h4><p>UglifyJS支持使用/生成SourceMap, 那什么是SourceMap，简单来说就是一个解码表，JS代码从原生到压缩混淆之后，从原来的几百行甚至几千行中，压缩到几十行。不仅代码行数骤减，同时经过混淆，代码的变量声明都进行了替换，因此当我们看混淆之后的代码，很难读懂代码的本意，这也是压缩混淆的本地，减少JS代码的大小，方便网络传输，理论上也相当于对代码进行了保护。利弊相对，压缩混淆之后的代码对调试来说尤为困难，因此SourceMap技术就出现了。</p>
+<p>简单来讲，压缩混淆之后的代码通过SourceMap，即可还原成原始的JS代码，这就是为什么说它是一个解码表的原因，因为反向还原了JS代码，结合到UglifyJS而言，其支持以下几个选项：</p>
+<ul>
+<li>source-map                  指定生成一个SourceMap的文件名</li>
+<li>source-map-root             指定SourceMap的根目录位置</li>
+<li>source-map-url              指定SourceMap的网络路径</li>
+<li>source-map-inline           在压缩混淆的JS代码后，追加SourceMap内容</li>
+<li>in-source-map               指定一个SourceMap</li>
+</ul>
+<h4 id="功能：压缩"><a href="#功能：压缩" class="headerlink" title="功能：压缩"></a>功能：压缩</h4><p>使用UglifyJS进行代码压缩，-c 选项即启用压缩，例如：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line"><span class="meta">"use strict"</span>;</div><div class="line"><span class="keyword">var</span> net = <span class="built_in">require</span>(<span class="string">'net'</span>);</div><div class="line"></div><div class="line"><span class="keyword">const</span> IP = <span class="string">"127.0.0.1"</span>;</div><div class="line"><span class="keyword">const</span> PORT = <span class="number">8887</span>;</div><div class="line"></div><div class="line"><span class="keyword">var</span> client = <span class="keyword">new</span> net.Socket();</div><div class="line">client.connect(PORT, IP, <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</div><div class="line"></div><div class="line">    <span class="built_in">console</span>.log(<span class="string">'CONNECTED TO: '</span> + IP + <span class="string">':'</span> + PORT);</div><div class="line">    client.write(<span class="string">'I am Chuck Norris!'</span>);</div><div class="line"></div><div class="line">&#125;);</div></pre></td></tr></table></figure>
+<p>压缩后变成</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="meta">"use strict"</span>;<span class="keyword">var</span> net=<span class="built_in">require</span>(<span class="string">"net"</span>);<span class="keyword">const</span> IP=<span class="string">"127.0.0.1"</span>,PORT=<span class="number">8887</span>;<span class="keyword">var</span> client=<span class="keyword">new</span> net.Socket;client.connect(PORT,IP,<span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;<span class="built_in">console</span>.log(<span class="string">"CONNECTED TO: "</span>+IP+<span class="string">":"</span>+PORT),client.write(<span class="string">"I am Chuck Norris!"</span>)&#125;);</div></pre></td></tr></table></figure>
+<p>可以看出，压缩之后去掉了空行以及连续声明时候的关键字const，如果让你调试这样的出错代码，没有SourceMap，则无从下手</p>
+<h4 id="功能：混淆"><a href="#功能：混淆" class="headerlink" title="功能：混淆"></a>功能：混淆</h4><p>使用UglifyJS进行代码混淆，-m 选项即启用混淆，例如，还是上面的代码，经过混淆后变成</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="meta">"use strict"</span>;<span class="keyword">var</span> c=<span class="built_in">require</span>(<span class="string">"net"</span>);<span class="keyword">const</span> e=<span class="string">"127.0.0.1"</span>;<span class="keyword">const</span> n=<span class="number">8887</span>;<span class="keyword">var</span> o=<span class="keyword">new</span> c.Socket;o.connect(n,e,<span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;<span class="built_in">console</span>.log(<span class="string">"CONNECTED TO: "</span>+e+<span class="string">":"</span>+n);o.write(<span class="string">"I am Chuck Norris!"</span>)&#125;);</div></pre></td></tr></table></figure>
+<p>可以看出，混淆把变量都替换成了单字符，相比于压缩，进一步的减小了代码量</p>
+<h4 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h4><p>UglifyJS是一款出色的JS代码压缩，混淆工具，其具有丰富的功能，例如代码美化，支持NodeJS自定义编程等，更多细节请参考 <a href="https://github.com/mishoo/UglifyJS2" target="_blank" rel="external">UglifyJS</a></p>
+
+        
+        </div>
+        <footer class="article-footer">
+            <div class="share-container">
+
+
+
+</div>
+
+    <a data-url="http://yoursite.com/2016/11/14/JS压缩混淆工具：UglifyJS/" data-id="civhsjbpa0001c8k8jrxg9q2j" class="article-share-link"><i class="fa fa-share"></i>Share</a>
+<script>
+    (function ($) {
+        // Prevent duplicate binding
+        if (typeof(__SHARE_BUTTON_BINDED__) === 'undefined' || !__SHARE_BUTTON_BINDED__) {
+            __SHARE_BUTTON_BINDED__ = true;
+        } else {
+            return;
+        }
+        $('body').on('click', function() {
+            $('.article-share-box.on').removeClass('on');
+        }).on('click', '.article-share-link', function(e) {
+            e.stopPropagation();
+
+            var $this = $(this),
+                url = $this.attr('data-url'),
+                encodedUrl = encodeURIComponent(url),
+                id = 'article-share-box-' + $this.attr('data-id'),
+                offset = $this.offset(),
+                box;
+
+            if ($('#' + id).length) {
+                box = $('#' + id);
+
+                if (box.hasClass('on')){
+                    box.removeClass('on');
+                    return;
+                }
+            } else {
+                var html = [
+                    '<div id="' + id + '" class="article-share-box">',
+                        '<input class="article-share-input" value="' + url + '">',
+                        '<div class="article-share-links">',
+                            '<a href="https://twitter.com/intent/tweet?url=' + encodedUrl + '" class="fa fa-twitter article-share-twitter" target="_blank" title="Twitter"></a>',
+                            '<a href="https://www.facebook.com/sharer.php?u=' + encodedUrl + '" class="fa fa-facebook article-share-facebook" target="_blank" title="Facebook"></a>',
+                            '<a href="http://pinterest.com/pin/create/button/?url=' + encodedUrl + '" class="fa fa-pinterest article-share-pinterest" target="_blank" title="Pinterest"></a>',
+                            '<a href="https://plus.google.com/share?url=' + encodedUrl + '" class="fa fa-google article-share-google" target="_blank" title="Google+"></a>',
+                        '</div>',
+                    '</div>'
+                ].join('');
+
+              box = $(html);
+
+              $('body').append(box);
+            }
+
+            $('.article-share-box.on').hide();
+
+            box.css({
+                top: offset.top + 25,
+                left: offset.left
+            }).addClass('on');
+
+        }).on('click', '.article-share-box', function (e) {
+            e.stopPropagation();
+        }).on('click', '.article-share-box-input', function () {
+            $(this).select();
+        }).on('click', '.article-share-box-link', function (e) {
+            e.preventDefault();
+            e.stopPropagation();
+
+            window.open(this.href, 'article-share-box-window-' + Date.now(), 'width=500,height=450');
+        });
+    })(jQuery);
+</script>
+
+            
+    
+        <a href="http://yoursite.com/2016/11/14/JS压缩混淆工具：UglifyJS/#comments" class="article-comment-link disqus-comment-count" data-disqus-url="http://yoursite.com/2016/11/14/JS压缩混淆工具：UglifyJS/">Comments</a>
+    
+
+        </footer>
+    </div>
+    
+        
+<nav id="article-nav">
+    
+    
+        <a href="/blog/2016/11/10/hello-world/" id="article-nav-older" class="article-nav-link-wrap">
+            <strong class="article-nav-caption">Older</strong>
+            <div class="article-nav-title">Hello World</div>
+        </a>
+    
+</nav>
+
+
+    
+</article>
+
+
+    
+    <section id="comments">
+    
+        
+    <div id="disqus_thread">
+        <noscript>Please enable JavaScript to view the <a href="//disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+    </div>
+
+    
+    </section>
+
+</section>
+            
+                <aside id="sidebar">
+   
+        
+    
+        
+    <div class="widget-wrap">
+        <h3 class="widget-title">归档</h3>
+        <div class="widget">
+            <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/blog/archives/2016/11/">November 2016</a><span class="archive-list-count">2</span></li></ul>
+        </div>
+    </div>
+
+    
+        
+    <div class="widget-wrap">
+        <h3 class="widget-title">标签</h3>
+        <div class="widget">
+            <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/blog/tags/JavaScript/">JavaScript</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/blog/tags/工具/">工具</a><span class="tag-list-count">1</span></li></ul>
+        </div>
+    </div>
+
+    
+    <div id="toTop" class="fa fa-angle-up"></div>
+</aside>
+            
+        </div>
+        <footer id="footer">
+    <div class="outer">
+        <div id="footer-info" class="inner">
+            &copy; 2016 AaronShi<br>
+            Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>. Theme by <a href="http://github.com/ppoffice">PPOffice</a>
+        </div>
+    </div>
+</footer>
+        
+    
+    <script>
+    var disqus_config = function () {
+        
+            this.page.url = 'http://yoursite.com/2016/11/14/JS压缩混淆工具：UglifyJS/';
+        
+        this.page.identifier = 'JS压缩混淆工具：UglifyJS';
+    };
+    (function() { 
+        var d = document, s = d.createElement('script');  
+        s.src = '//' + 'hexo-theme-icarus' + '.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', +new Date());
+        (d.head || d.body).appendChild(s);
+    })();
+</script>
+
+
+
+    
+        <script src="/blog/libs/lightgallery/js/lightgallery.min.js"></script>
+        <script src="/blog/libs/lightgallery/js/lg-thumbnail.min.js"></script>
+        <script src="/blog/libs/lightgallery/js/lg-pager.min.js"></script>
+        <script src="/blog/libs/lightgallery/js/lg-autoplay.min.js"></script>
+        <script src="/blog/libs/lightgallery/js/lg-fullscreen.min.js"></script>
+        <script src="/blog/libs/lightgallery/js/lg-zoom.min.js"></script>
+        <script src="/blog/libs/lightgallery/js/lg-hash.min.js"></script>
+        <script src="/blog/libs/lightgallery/js/lg-share.min.js"></script>
+        <script src="/blog/libs/lightgallery/js/lg-video.min.js"></script>
+    
+    
+        <script src="/blog/libs/justified-gallery/jquery.justifiedGallery.min.js"></script>
+    
+
+
+
+<!-- Custom Scripts -->
+<script src="/blog/js/main.js"></script>
+
+    </div>
+</body>
+</html>

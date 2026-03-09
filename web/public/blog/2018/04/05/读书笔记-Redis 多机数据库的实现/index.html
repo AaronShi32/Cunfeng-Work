@@ -1,0 +1,466 @@
+<!DOCTYPE html>
+<html lang=zh>
+<head>
+    <meta charset="utf-8">
+    
+    <title>读书笔记-Redis 多机数据库的实现 | 着陆的橘子</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+    <meta name="description" content="Redis：多机数据库的实现1. 复制1.1 旧版本复制功能的实现(2.8版本以前)复制功能分为 同步(sync) 和 命令传播(command propagate) 两个操作   SYNC 命令是一个非常耗费资源的操作, 生成 RDB 占据了大量的 CPU, 内存和磁盘 I/O 资源, 传输 RDB 占据了大量的网络资源, 接收并载入 RDB 会导致阻塞, 而旧版本的复制无法高效的完成: 断线重">
+<meta name="keywords" content="读书">
+<meta property="og:type" content="article">
+<meta property="og:title" content="读书笔记-Redis 多机数据库的实现">
+<meta property="og:url" content="https://aaronshi32.github.io/2018/04/05/读书笔记-Redis 多机数据库的实现/index.html">
+<meta property="og:site_name" content="着陆的橘子">
+<meta property="og:description" content="Redis：多机数据库的实现1. 复制1.1 旧版本复制功能的实现(2.8版本以前)复制功能分为 同步(sync) 和 命令传播(command propagate) 两个操作   SYNC 命令是一个非常耗费资源的操作, 生成 RDB 占据了大量的 CPU, 内存和磁盘 I/O 资源, 传输 RDB 占据了大量的网络资源, 接收并载入 RDB 会导致阻塞, 而旧版本的复制无法高效的完成: 断线重">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:image" content="https://aaronshi32.github.io/2018/04/05/读书笔记-Redis%20多机数据库的实现/redis-copy.png">
+<meta property="og:updated_time" content="2018-04-10T02:21:18.187Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="读书笔记-Redis 多机数据库的实现">
+<meta name="twitter:description" content="Redis：多机数据库的实现1. 复制1.1 旧版本复制功能的实现(2.8版本以前)复制功能分为 同步(sync) 和 命令传播(command propagate) 两个操作   SYNC 命令是一个非常耗费资源的操作, 生成 RDB 占据了大量的 CPU, 内存和磁盘 I/O 资源, 传输 RDB 占据了大量的网络资源, 接收并载入 RDB 会导致阻塞, 而旧版本的复制无法高效的完成: 断线重">
+<meta name="twitter:image" content="https://aaronshi32.github.io/2018/04/05/读书笔记-Redis%20多机数据库的实现/redis-copy.png">
+    
+
+    
+
+    
+
+    <link rel="stylesheet" href="/blog/libs/font-awesome/css/font-awesome.min.css">
+    <link rel="stylesheet" href="/blog/libs/open-sans/styles.css">
+    <link rel="stylesheet" href="/blog/libs/source-code-pro/styles.css">
+
+    <link rel="stylesheet" href="/blog/css/style.css">
+
+    <script src="/blog/libs/jquery/2.1.3/jquery.min.js"></script>
+    
+    
+        <link rel="stylesheet" href="/blog/libs/lightgallery/css/lightgallery.min.css">
+    
+    
+        <link rel="stylesheet" href="/blog/libs/justified-gallery/justifiedGallery.min.css">
+    
+    
+    
+    
+
+
+</head>
+
+<body>
+    <div id="container">
+        <header id="header">
+    <div id="header-main" class="header-inner">
+        <div class="outer">
+            <a href="/blog/" id="logo">
+                <i class="logo"></i>
+                <span class="site-title">着陆的橘子</span>
+            </a>
+            <nav id="main-nav">
+                
+                    <a class="main-nav-link" href="/.">主页</a>
+                
+                    <a class="main-nav-link" href="/about/cv.pdf">关于</a>
+                
+            </nav>
+            
+                
+                <nav id="sub-nav">
+                    <div class="profile" id="profile-nav">
+                        <a id="profile-anchor" href="javascript:;">
+                            <img class="avatar" src="/css/images/avatar.png" />
+                            <i class="fa fa-caret-down"></i>
+                        </a>
+                    </div>
+                </nav>
+            
+            <div id="search-form-wrap">
+
+    <form class="search-form">
+        <input type="text" class="ins-search-input search-form-input" placeholder="文章" />
+        <button type="submit" class="search-form-submit"></button>
+    </form>
+    <div class="ins-search">
+    <div class="ins-search-mask"></div>
+    <div class="ins-search-container">
+        <div class="ins-input-wrapper">
+            <input type="text" class="ins-search-input" placeholder="想要查找什么..." />
+            <span class="ins-close ins-selectable"><i class="fa fa-times-circle"></i></span>
+        </div>
+        <div class="ins-section-wrapper">
+            <div class="ins-section-container"></div>
+        </div>
+    </div>
+</div>
+<script>
+(function (window) {
+    var INSIGHT_CONFIG = {
+        TRANSLATION: {
+            POSTS: '文章',
+            PAGES: '页面',
+            CATEGORIES: '分类',
+            TAGS: '标签',
+            UNTITLED: '(未命名)',
+        },
+        ROOT_URL: '/',
+        CONTENT_URL: '/content.json',
+    };
+    window.INSIGHT_CONFIG = INSIGHT_CONFIG;
+})(window);
+</script>
+<script src="/blog/js/insight.js"></script>
+
+</div>
+        </div>
+    </div>
+    <div id="main-nav-mobile" class="header-sub header-inner">
+        <table class="menu outer">
+            <tr>
+                
+                    <td><a class="main-nav-link" href="/.">主页</a></td>
+                
+                    <td><a class="main-nav-link" href="/about/cv.pdf">关于</a></td>
+                
+                <td>
+                    
+    <div class="search-form">
+        <input type="text" class="ins-search-input search-form-input" placeholder="搜索" />
+    </div>
+
+                </td>
+            </tr>
+        </table>
+    </div>
+</header>
+
+        <div class="outer">
+            
+                
+
+<aside id="profile">
+    <div class="inner profile-inner">
+        <div class="base-info profile-block">
+            <img id="avatar" src="/css/images/avatar.png" />
+            <h2 id="name">AaronShi32</h2>
+            <h3 id="title">Senior Software Developer</h3>
+            <span id="location"><i class="fa fa-map-marker"></i>Beijing, China</span>
+            <a id="follow" target="_blank" href="https://github.com/AaronShi32">Follow</a>
+        </div>
+        <div class="article-info profile-block">
+            <div class="article-info-block">
+                48
+                <span>文章</span>
+            </div>
+            <div class="article-info-block">
+                10
+                <span>标签</span>
+            </div>
+        </div>
+        
+        <div class="profile-block social-links">
+            <table>
+                <tr>
+                    
+                    
+                    <td>
+                        <a href="https://github.com/AaronShi32" target="_blank" title="github" >
+                            <i class="fa fa-github"></i>
+                        </a>
+                    </td>
+                    
+                    <td>
+                        <a href="https://www.linkedin.com/in/cfshi" target="_blank" title="linkedin-square" >
+                            <i class="fa fa-linkedin-square"></i>
+                        </a>
+                    </td>
+                    
+                </tr>
+            </table>
+        </div>
+        
+    </div>
+</aside>
+
+            
+            <section id="main"><article id="post-读书笔记-Redis 多机数据库的实现" class="article article-type-post" itemscope itemprop="blogPost">
+    <div class="article-inner">
+        
+        
+            <header class="article-header">
+                
+    
+        <h1 class="article-title" itemprop="name">
+            读书笔记-Redis 多机数据库的实现
+        </h1>
+    
+
+                
+                    <div class="article-meta">
+                        
+    <div class="article-date">
+        <i class="fa fa-calendar"></i>
+        <a href="/blog/2018/04/05/读书笔记-Redis 多机数据库的实现/">
+            <time datetime="2018-04-05T09:56:15.000Z" itemprop="datePublished">2018-04-05</time>
+        </a>
+    </div>
+
+
+                        
+                        
+    <div class="article-tag">
+        <i class="fa fa-tag"></i>
+        <a class="tag-link" href="/blog/tags/读书/">读书</a>
+    </div>
+
+                    </div>
+                
+            </header>
+        
+        
+        <div class="article-entry" itemprop="articleBody">
+        
+            
+            <h3 id="Redis：多机数据库的实现"><a href="#Redis：多机数据库的实现" class="headerlink" title="Redis：多机数据库的实现"></a>Redis：多机数据库的实现</h3><h5 id="1-复制"><a href="#1-复制" class="headerlink" title="1. 复制"></a>1. 复制</h5><h5 id="1-1-旧版本复制功能的实现-2-8版本以前"><a href="#1-1-旧版本复制功能的实现-2-8版本以前" class="headerlink" title="1.1 旧版本复制功能的实现(2.8版本以前)"></a>1.1 旧版本复制功能的实现(2.8版本以前)</h5><p>复制功能分为 同步(sync) 和 命令传播(command propagate) 两个操作</p>
+<img src="/2018/04/05/读书笔记-Redis%20多机数据库的实现/redis-copy.png" title="复制操作流程图"> 
+<p>SYNC 命令是一个非常耗费资源的操作, 生成 RDB 占据了大量的 CPU, 内存和磁盘 I/O 资源, 传输 RDB 占据了大量的网络资源, 接收并载入 RDB 会导致阻塞, 而旧版本的复制无法高效的完成: <strong>断线重复制的情况</strong>, 即从服务器断线后的一致性保证, 哪怕只有几秒的短线, 只能通过 SYNC 来保证</p>
+<h5 id="1-2-新版本复制功能的实现-2-8版本以后"><a href="#1-2-新版本复制功能的实现-2-8版本以后" class="headerlink" title="1.2 新版本复制功能的实现(2.8版本以后)"></a>1.2 新版本复制功能的实现(2.8版本以后)</h5><p>PSYNC 命令, 具备完整重同步(适用于初次复制的情况) 和 部分重同步(适用于断线重复制)</p>
+<p>部分重同步功能由以下三个部分构成:</p>
+<ol>
+<li><p>主服务器的复制偏移量(replication offset) 和 从服务器的复制偏移量</p>
+</li>
+<li><p>主服务器的复制积压缓冲区(replication backlog)</p>
+</li>
+<li><p>服务器的运行 ID(run ID)</p>
+</li>
+</ol>
+<p>通过对比主从服务器的复制偏移量, 程序可以很容易的指导主从服务器是否处于一致状态</p>
+<p>复制积压缓冲区是一个固定长度的FIFO队列, 保存着主服务器的写命令, 如果它里面操作的复制偏移量小于主从不一致的偏移量, 则完整重同步, 反之大于, 则部分重同步, 这个复制积压缓冲区的大小可以配置, 约等于: </p>
+<blockquote>
+<p>service_reready_seconds <em> write_size_per_second  服务平均恢复时长 </em> 每秒写命令产生的数据大小</p>
+</blockquote>
+<p>服务器的运行ID是检测 从服务器前后是否连接的是相同的主服务器, 若是的话则部分重同步, 若不是只能完整重同步</p>
+<ul>
+<li><p>在复制操作刚开始的时候, 从服务器会成为主服务器的客户端, 并通过向主服务器发送命令请求来执行复制操作, 而在复制操作的后期, 主从服务器会相互成为对方的客户端, 涵盖了: 设置主服务器的地址和端口/建立套接字连接/发送PING命令/身份验证/发送端口信息/同步/命令传播 等操作</p>
+</li>
+<li><p>主服务器通过向从服务器传播命令来更新从服务器的状态, 保持主从服务器一致, 而从服务器则通过向主服务器发送命令来进行心跳检测, 以及命令丢失检测(偏移量校验)</p>
+</li>
+</ul>
+<h5 id="2-Sentinel"><a href="#2-Sentinel" class="headerlink" title="2. Sentinel"></a>2. Sentinel</h5><p>Sentinel 是 Redis 高可用性的解决方案: 由一个或多个 Sentinel 实例组成的 Sentinel 系统, 监视着 Redis 的主从服务器, <strong>当发现主服务器下线了, 会从从服务器中选择一个当主服务器, 并继续监控下线的主服务器, 一旦恢复上线, 会设置为新的主服务器的从服务器</strong></p>
+<p>启动一个 Sentinel 命令如下:</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">redis-sentinel /path/to/your/sentinel.conf</span><br><span class="line">or</span><br><span class="line">redis-server /path/to/your/sentinel.conf --sentinel</span><br></pre></td></tr></table></figure>
+<p>配置项:</p>
+<p>down-after-milliseconds 选项指定了 Sentinel 判断实例进入主观下线所需要的时间长度, 多个 Sentinel 监视同一个主服务器的标准是不同的</p>
+<p>主观下线靠 PING 返回无效命令的累计时长, 客观下线靠询问其他 Sentinel 状态</p>
+<p>选择 Sentinel 领头羊的算法为: <a href="https://www.cnblogs.com/mindwind/p/5231986.html" target="_blank" rel="noopener">Raft</a></p>
+<ul>
+<li><p>Sentinel 只是一个运行在特殊模式下的 Redis 服务器, 它使用了和普通模式不同的命令表, 所以 Sentinel 模式能够使用的命令和普通 Redis 服务器能够使用的命令不同</p>
+</li>
+<li><p>Sentinel 会读入用户指定的配置文件, 为每个要被监视的主服务器创建相应的实例结构, 并创建连向主服务器的命令连接和订阅连接, 其中命令连接用于向主服务器发送命令请求, 而订阅连接则用于接收指定频道的消息</p>
+</li>
+<li><p>Sentinel 通过向主服务器发送 INFO 命令来获得主服务器属下所有从服务器的地址信息, 并为这些从服务器创建相应的实例结构, 以及连向这些从服务器的命令连接和订阅连接</p>
+</li>
+<li><p>在一般情况下, Sentinel 以每十秒一次的频率向被监视的主服务器和从服务器发送 INFO 命令, 当主服务器处于下线状态, 或者 Sentinel 正在对主服务器进行故障转移操作时, Sentinel 向从服务器发送 INFO 命令的频率会改为每秒一次</p>
+</li>
+<li><p>对于监视同一个主服务器和从服务器的多个 Sentinel 来说, 它们会以每两秒一次的频率, 通过向被监视服务器的 <em>sentinel</em>:hello 频道发送消息来向其他 Sentinel 宣告自己的存在</p>
+</li>
+<li><p>每个 Sentinel 也会从 <em>sentinel</em>:hello 频道中接收其他 Sentinel 发来的信息, 并根据这些信息为其他 Sentinel 创建相应的实例结构, 以及命令连接</p>
+</li>
+<li><p>Sentinel 只会与主服务器和从服务器创建命令连接和订阅连接, Sentinel 之间只创建命令连接</p>
+</li>
+<li><p>Sentinel 以每秒一次的频率向实例(包括主服务器、从服务器、其他 Sentinel)发送 PING 命令, 并根据实例对 PING 命令的恢复来判断实例是否在线, 当一个实例在指定的时长中连续向 Sentinel 发送无效的回复时, Sentinel 会将这个实例判断为主观下线</p>
+</li>
+<li><p>当 Sentinel 将一个主服务器判断为主观下线时, 它会向同样监视这个主服务器的其他 Sentinel进行询问, 看他们是否同意这个主服务器已经进入主观下线状态</p>
+</li>
+<li><p>当 Sentinel 收集到足够多的主观下线投票时, 它会将主服务器判断为客观下线, 并发起一次针对主服务器的故障转移操作</p>
+</li>
+</ul>
+<h5 id="3-集群"><a href="#3-集群" class="headerlink" title="3. 集群"></a>3. 集群</h5><ul>
+<li><p>节点通过握手来将其他节点添加到自己所处的集群当中</p>
+</li>
+<li><p>集群中的 16384 个槽截图分别指派给集群中的各个节点, 每个节点都会记录哪些槽指派给了自己, 而哪些槽又被指派给了其他节点</p>
+</li>
+<li><p>节点在接到一个命令请求时, 会先检查这个命令请求要处理的键所在的槽是否由自己负责, 如果不是的话, 节点将向客户端返回一个 MOVED 错误, MOVED 错误携带的信息可以指引客户端转向至正在负责相关槽的节点</p>
+</li>
+<li><p>对 Redis 集群的重新分片工作是由 redis-trib 负责执行的, 重新分片的关键是将属于某个槽的所有键值对从一个节点转移至另一个节点</p>
+</li>
+<li><p>如果节点 A 正在迁移槽 i 至节点 B, 那么当节点 A 没能在自己的数据库中找到命令指定的数据库键时, 节点 A 回向客户端返回一个 ASK 错误, 指引客户端到节点 B 继续查找指定的数据库键</p>
+</li>
+<li><p>MOVED 错误表示槽的负责权已经从一个节点转移到了另一个节点, 而 ASK 错误只是两个节点在迁移槽的过程中使用的一种临时措施</p>
+</li>
+<li><p>集群里的从节点用于复制主节点, 并在主节点下线时, 代替主节点继续处理命令请求</p>
+</li>
+<li><p>集群中的节点通过发送和接收消息来进行通信, 常见的消息包括: MEET, PING, PONG, PUBLISH, FAIL 五种</p>
+</li>
+</ul>
+
+        
+        </div>
+        <footer class="article-footer">
+            <div class="share-container">
+
+
+
+</div>
+
+    <a data-url="https://aaronshi32.github.io/2018/04/05/读书笔记-Redis 多机数据库的实现/" data-id="cjm7udfao001rues63yk5cdwm" class="article-share-link"><i class="fa fa-share"></i>如需转载，请注明出处</a>
+<script>
+    (function ($) {
+        // Prevent duplicate binding
+        if (typeof(__SHARE_BUTTON_BINDED__) === 'undefined' || !__SHARE_BUTTON_BINDED__) {
+            __SHARE_BUTTON_BINDED__ = true;
+        } else {
+            return;
+        }
+        $('body').on('click', function() {
+            $('.article-share-box.on').removeClass('on');
+        }).on('click', '.article-share-link', function(e) {
+            e.stopPropagation();
+
+            var $this = $(this),
+                url = $this.attr('data-url'),
+                encodedUrl = encodeURIComponent(url),
+                id = 'article-share-box-' + $this.attr('data-id'),
+                offset = $this.offset(),
+                box;
+
+            if ($('#' + id).length) {
+                box = $('#' + id);
+
+                if (box.hasClass('on')){
+                    box.removeClass('on');
+                    return;
+                }
+            } else {
+                var html = [
+                    '<div id="' + id + '" class="article-share-box">',
+                        '<input class="article-share-input" value="' + url + '">',
+                        '<div class="article-share-links">',
+                            '<a href="https://twitter.com/intent/tweet?url=' + encodedUrl + '" class="fa fa-twitter article-share-twitter" target="_blank" title="Twitter"></a>',
+                            '<a href="https://www.facebook.com/sharer.php?u=' + encodedUrl + '" class="fa fa-facebook article-share-facebook" target="_blank" title="Facebook"></a>',
+                            '<a href="http://pinterest.com/pin/create/button/?url=' + encodedUrl + '" class="fa fa-pinterest article-share-pinterest" target="_blank" title="Pinterest"></a>',
+                            '<a href="https://plus.google.com/share?url=' + encodedUrl + '" class="fa fa-google article-share-google" target="_blank" title="Google+"></a>',
+                        '</div>',
+                    '</div>'
+                ].join('');
+
+              box = $(html);
+
+              $('body').append(box);
+            }
+
+            $('.article-share-box.on').hide();
+
+            box.css({
+                top: offset.top + 25,
+                left: offset.left
+            }).addClass('on');
+
+        }).on('click', '.article-share-box', function (e) {
+            e.stopPropagation();
+        }).on('click', '.article-share-box-input', function () {
+            $(this).select();
+        }).on('click', '.article-share-box-link', function (e) {
+            e.preventDefault();
+            e.stopPropagation();
+
+            window.open(this.href, 'article-share-box-window-' + Date.now(), 'width=500,height=450');
+        });
+    })(jQuery);
+</script>
+
+            
+    
+
+        </footer>
+    </div>
+    
+        
+<nav id="article-nav">
+    
+        <a href="/blog/2018/04/10/读书笔记-Redis 独立功能的实现/" id="article-nav-newer" class="article-nav-link-wrap">
+            <strong class="article-nav-caption">上一篇</strong>
+            <div class="article-nav-title">
+                
+                    读书笔记-Redis 独立功能的实现
+                
+            </div>
+        </a>
+    
+    
+        <a href="/blog/2018/04/02/读书笔记-Redis 单机数据库的实现/" id="article-nav-older" class="article-nav-link-wrap">
+            <strong class="article-nav-caption">下一篇</strong>
+            <div class="article-nav-title">读书笔记-Redis 单机数据库的实现</div>
+        </a>
+    
+</nav>
+
+
+    
+</article>
+
+
+    
+    <section id="comments">
+    
+    </section>
+
+</section>
+            
+                <aside id="sidebar">
+   
+        
+    
+        
+    <div class="widget-wrap">
+        <h3 class="widget-title">归档</h3>
+        <div class="widget">
+            <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/blog/archives/2018/08/">八月 2018</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/blog/archives/2018/07/">七月 2018</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/blog/archives/2018/06/">六月 2018</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/blog/archives/2018/05/">五月 2018</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/blog/archives/2018/04/">四月 2018</a><span class="archive-list-count">6</span></li><li class="archive-list-item"><a class="archive-list-link" href="/blog/archives/2018/03/">三月 2018</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/blog/archives/2018/02/">二月 2018</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/blog/archives/2018/01/">一月 2018</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/blog/archives/2017/12/">十二月 2017</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/blog/archives/2017/11/">十一月 2017</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/blog/archives/2017/10/">十月 2017</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/blog/archives/2017/08/">八月 2017</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/blog/archives/2017/07/">七月 2017</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/blog/archives/2017/06/">六月 2017</a><span class="archive-list-count">4</span></li><li class="archive-list-item"><a class="archive-list-link" href="/blog/archives/2017/05/">五月 2017</a><span class="archive-list-count">6</span></li><li class="archive-list-item"><a class="archive-list-link" href="/blog/archives/2017/03/">三月 2017</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/blog/archives/2017/02/">二月 2017</a><span class="archive-list-count">4</span></li><li class="archive-list-item"><a class="archive-list-link" href="/blog/archives/2017/01/">一月 2017</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/blog/archives/2016/12/">十二月 2016</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/blog/archives/2016/11/">十一月 2016</a><span class="archive-list-count">6</span></li><li class="archive-list-item"><a class="archive-list-link" href="/blog/archives/2016/10/">十月 2016</a><span class="archive-list-count">1</span></li></ul>
+        </div>
+    </div>
+
+    
+        
+    <div class="widget-wrap">
+        <h3 class="widget-title">标签</h3>
+        <div class="widget">
+            <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/blog/tags/JavaScript/">JavaScript</a><span class="tag-list-count">4</span></li><li class="tag-list-item"><a class="tag-list-link" href="/blog/tags/人工智能/">人工智能</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/blog/tags/基础知识/">基础知识</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/blog/tags/工具/">工具</a><span class="tag-list-count">6</span></li><li class="tag-list-item"><a class="tag-list-link" href="/blog/tags/日常/">日常</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/blog/tags/框架/">框架</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/blog/tags/疑难杂症/">疑难杂症</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/blog/tags/系统/">系统</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/blog/tags/读书/">读书</a><span class="tag-list-count">28</span></li><li class="tag-list-item"><a class="tag-list-link" href="/blog/tags/面试/">面试</a><span class="tag-list-count">8</span></li></ul>
+        </div>
+    </div>
+
+    
+    <div id="toTop" class="fa fa-angle-up"></div>
+</aside>
+            
+        </div>
+        <footer id="footer">
+    <div class="outer">
+        <div id="footer-info" class="inner">
+            &copy; 2018 AaronShi<br>
+            Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>. Theme by <a href="http://github.com/ppoffice">PPOffice</a>
+        </div>
+    </div>
+</footer>
+        
+
+    
+        <script src="/blog/libs/lightgallery/js/lightgallery.min.js"></script>
+        <script src="/blog/libs/lightgallery/js/lg-thumbnail.min.js"></script>
+        <script src="/blog/libs/lightgallery/js/lg-pager.min.js"></script>
+        <script src="/blog/libs/lightgallery/js/lg-autoplay.min.js"></script>
+        <script src="/blog/libs/lightgallery/js/lg-fullscreen.min.js"></script>
+        <script src="/blog/libs/lightgallery/js/lg-zoom.min.js"></script>
+        <script src="/blog/libs/lightgallery/js/lg-hash.min.js"></script>
+        <script src="/blog/libs/lightgallery/js/lg-share.min.js"></script>
+        <script src="/blog/libs/lightgallery/js/lg-video.min.js"></script>
+    
+    
+        <script src="/blog/libs/justified-gallery/jquery.justifiedGallery.min.js"></script>
+    
+
+
+
+<!-- Custom Scripts -->
+<script src="/blog/js/main.js"></script>
+
+    </div>
+</body>
+</html>

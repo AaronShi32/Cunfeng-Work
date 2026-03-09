@@ -1,0 +1,460 @@
+<!DOCTYPE html>
+<html lang=zh>
+<head>
+    <meta charset="utf-8">
+    
+    <title>读书笔记-程序员的自我修养（三） | 着陆的橘子</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+    <meta name="description" content="目标文件（ELF） 详解 目标文件 里有什么？  目标文件的格式，从 结构 上讲，它是已经 编译后的可执行文件，只是还 没有经过链接 的过程，其中可能有些符号或有些地址还没有被 调整，本身就是按照可执行文件格式存储的  普及 : 可执行文件格式（Executable） 主要是 Windows 下的 PE（Portable Executable） 和 Linux 下的 ELF（Executable">
+<meta name="keywords" content="读书">
+<meta property="og:type" content="article">
+<meta property="og:title" content="读书笔记-程序员的自我修养（三）">
+<meta property="og:url" content="https://aaronshi32.github.io/2017/05/09/读书笔记-程序员的自我修养（三）/index.html">
+<meta property="og:site_name" content="着陆的橘子">
+<meta property="og:description" content="目标文件（ELF） 详解 目标文件 里有什么？  目标文件的格式，从 结构 上讲，它是已经 编译后的可执行文件，只是还 没有经过链接 的过程，其中可能有些符号或有些地址还没有被 调整，本身就是按照可执行文件格式存储的  普及 : 可执行文件格式（Executable） 主要是 Windows 下的 PE（Portable Executable） 和 Linux 下的 ELF（Executable">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:updated_time" content="2017-05-09T02:20:02.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="读书笔记-程序员的自我修养（三）">
+<meta name="twitter:description" content="目标文件（ELF） 详解 目标文件 里有什么？  目标文件的格式，从 结构 上讲，它是已经 编译后的可执行文件，只是还 没有经过链接 的过程，其中可能有些符号或有些地址还没有被 调整，本身就是按照可执行文件格式存储的  普及 : 可执行文件格式（Executable） 主要是 Windows 下的 PE（Portable Executable） 和 Linux 下的 ELF（Executable">
+    
+
+    
+
+    
+
+    <link rel="stylesheet" href="/blog/libs/font-awesome/css/font-awesome.min.css">
+    <link rel="stylesheet" href="/blog/libs/open-sans/styles.css">
+    <link rel="stylesheet" href="/blog/libs/source-code-pro/styles.css">
+
+    <link rel="stylesheet" href="/blog/css/style.css">
+
+    <script src="/blog/libs/jquery/2.1.3/jquery.min.js"></script>
+    
+    
+        <link rel="stylesheet" href="/blog/libs/lightgallery/css/lightgallery.min.css">
+    
+    
+        <link rel="stylesheet" href="/blog/libs/justified-gallery/justifiedGallery.min.css">
+    
+    
+    
+    
+
+
+</head>
+
+<body>
+    <div id="container">
+        <header id="header">
+    <div id="header-main" class="header-inner">
+        <div class="outer">
+            <a href="/blog/" id="logo">
+                <i class="logo"></i>
+                <span class="site-title">着陆的橘子</span>
+            </a>
+            <nav id="main-nav">
+                
+                    <a class="main-nav-link" href="/.">主页</a>
+                
+                    <a class="main-nav-link" href="/about/cv.pdf">关于</a>
+                
+            </nav>
+            
+                
+                <nav id="sub-nav">
+                    <div class="profile" id="profile-nav">
+                        <a id="profile-anchor" href="javascript:;">
+                            <img class="avatar" src="/css/images/avatar.png" />
+                            <i class="fa fa-caret-down"></i>
+                        </a>
+                    </div>
+                </nav>
+            
+            <div id="search-form-wrap">
+
+    <form class="search-form">
+        <input type="text" class="ins-search-input search-form-input" placeholder="文章" />
+        <button type="submit" class="search-form-submit"></button>
+    </form>
+    <div class="ins-search">
+    <div class="ins-search-mask"></div>
+    <div class="ins-search-container">
+        <div class="ins-input-wrapper">
+            <input type="text" class="ins-search-input" placeholder="想要查找什么..." />
+            <span class="ins-close ins-selectable"><i class="fa fa-times-circle"></i></span>
+        </div>
+        <div class="ins-section-wrapper">
+            <div class="ins-section-container"></div>
+        </div>
+    </div>
+</div>
+<script>
+(function (window) {
+    var INSIGHT_CONFIG = {
+        TRANSLATION: {
+            POSTS: '文章',
+            PAGES: '页面',
+            CATEGORIES: '分类',
+            TAGS: '标签',
+            UNTITLED: '(未命名)',
+        },
+        ROOT_URL: '/',
+        CONTENT_URL: '/content.json',
+    };
+    window.INSIGHT_CONFIG = INSIGHT_CONFIG;
+})(window);
+</script>
+<script src="/blog/js/insight.js"></script>
+
+</div>
+        </div>
+    </div>
+    <div id="main-nav-mobile" class="header-sub header-inner">
+        <table class="menu outer">
+            <tr>
+                
+                    <td><a class="main-nav-link" href="/.">主页</a></td>
+                
+                    <td><a class="main-nav-link" href="/about/cv.pdf">关于</a></td>
+                
+                <td>
+                    
+    <div class="search-form">
+        <input type="text" class="ins-search-input search-form-input" placeholder="搜索" />
+    </div>
+
+                </td>
+            </tr>
+        </table>
+    </div>
+</header>
+
+        <div class="outer">
+            
+                
+
+<aside id="profile">
+    <div class="inner profile-inner">
+        <div class="base-info profile-block">
+            <img id="avatar" src="/css/images/avatar.png" />
+            <h2 id="name">AaronShi32</h2>
+            <h3 id="title">Senior Software Developer</h3>
+            <span id="location"><i class="fa fa-map-marker"></i>Beijing, China</span>
+            <a id="follow" target="_blank" href="https://github.com/AaronShi32">Follow</a>
+        </div>
+        <div class="article-info profile-block">
+            <div class="article-info-block">
+                48
+                <span>文章</span>
+            </div>
+            <div class="article-info-block">
+                10
+                <span>标签</span>
+            </div>
+        </div>
+        
+        <div class="profile-block social-links">
+            <table>
+                <tr>
+                    
+                    
+                    <td>
+                        <a href="https://github.com/AaronShi32" target="_blank" title="github" >
+                            <i class="fa fa-github"></i>
+                        </a>
+                    </td>
+                    
+                    <td>
+                        <a href="https://www.linkedin.com/in/cfshi" target="_blank" title="linkedin-square" >
+                            <i class="fa fa-linkedin-square"></i>
+                        </a>
+                    </td>
+                    
+                </tr>
+            </table>
+        </div>
+        
+    </div>
+</aside>
+
+            
+            <section id="main"><article id="post-读书笔记-程序员的自我修养（三）" class="article article-type-post" itemscope itemprop="blogPost">
+    <div class="article-inner">
+        
+        
+            <header class="article-header">
+                
+    
+        <h1 class="article-title" itemprop="name">
+            读书笔记-程序员的自我修养（三）
+        </h1>
+    
+
+                
+                    <div class="article-meta">
+                        
+    <div class="article-date">
+        <i class="fa fa-calendar"></i>
+        <a href="/blog/2017/05/09/读书笔记-程序员的自我修养（三）/">
+            <time datetime="2017-05-09T02:16:33.000Z" itemprop="datePublished">2017-05-09</time>
+        </a>
+    </div>
+
+
+                        
+                        
+    <div class="article-tag">
+        <i class="fa fa-tag"></i>
+        <a class="tag-link" href="/blog/tags/读书/">读书</a>
+    </div>
+
+                    </div>
+                
+            </header>
+        
+        
+        <div class="article-entry" itemprop="articleBody">
+        
+            
+            <h3 id="目标文件（ELF）-详解"><a href="#目标文件（ELF）-详解" class="headerlink" title="目标文件（ELF） 详解"></a>目标文件（ELF） 详解</h3><ul>
+<li><p><strong>目标文件</strong> 里有什么？</p>
+<ul>
+<li><p>目标文件的格式，从 <strong>结构</strong> 上讲，它是已经 <strong>编译后的可执行文件</strong>，只是还 <strong>没有经过链接</strong> 的过程，其中可能有些符号或有些地址还没有被 <strong>调整</strong>，本身就是按照可执行文件格式存储的</p>
+</li>
+<li><p><strong>普及</strong> : <strong>可执行文件格式（Executable）</strong> 主要是 <strong>Windows</strong> 下的 <strong>PE（Portable Executable）</strong> 和 <strong>Linux</strong> 下的 <strong>ELF（Executable Linkable Format）</strong>，都隶属于 <strong>COFF（Common file format）</strong> 的变种</p>
+</li>
+<li><p><strong>普及</strong> : <strong>动态链接库（DLL，Dynamic Linking Library）</strong> 即（Windows 上的 <strong>.dll</strong> 和 Linux 上 <strong>.so</strong>），<strong>静态链接库（Static Linking Library）</strong> 即（Windows 上的 <strong>.lib</strong> 和 Linux 上的 <strong>.a</strong>）</p>
+</li>
+<li><p><strong>普及</strong> :  ELF 格式的文件归为四类：<strong>可重定位文件（Relocatable File）</strong>、<strong>可执行文件（Executable File）</strong>、<strong>共享目标文件（Shared Object File）</strong> 、<strong>核心转储文件（Coredump File）</strong>，可以用 <code>file</code> 命令查看</p>
+</li>
+<li><p>概述 <strong>ELF 剖析</strong> 目标文件是什么样的 ?</p>
+<ul>
+<li><p>包含的内容： <strong>机器指令代码、数据、符号表、调试信息、字符串</strong>等</p>
+</li>
+<li><p>按照信息的不同属性，存储的单位：<strong>节（Section）</strong> 和 <strong>段（Segment）</strong></p>
+</li>
+</ul>
+</li>
+<li><p><strong>结构详解</strong>：使用 binutils 的工具 objdump 可以查看 .o 文件内部的结构</p>
+<ul>
+<li><p><strong>工具命令</strong></p>
+<ul>
+<li><p>查看主要段的基本信息：objdump -h SimpleSection.o</p>
+</li>
+<li><p>查看各个段的信息：readelf -S SimpleSection.o</p>
+</li>
+<li><p>查看ELF文件的长度：size SimpleSection.o</p>
+</li>
+<li><p>查看段的内容：objdump -s -d SimpleSection.o</p>
+</li>
+<li><p>查看ELF文件头：readelf -h SimpleSection.o</p>
+</li>
+</ul>
+</li>
+<li><p><strong>逻辑划分</strong></p>
+<ul>
+<li><p><strong>代码段[ .text ]</strong>：机器指令代码（<strong>一般是执行语句</strong>）</p>
+</li>
+<li><p><strong>数据段和只读数据段[ .data 和 .rodata ]</strong>：<strong>已初始化</strong> 的全局变量和局部静态变量</p>
+</li>
+<li><p><strong>BSS段 [ .bss ]</strong>： <strong>未初始化</strong> 的全局变量和局部静态变量，只是预留位置而已，值得注意的是：<strong>即便初始化为 0，也会放到 bss 中</strong>，因为未初始化的都是 0 </p>
+</li>
+<li><p>其他段：列举几个：<strong>.comment 存放编译器版本信息</strong>，<strong>.debug 存放调试信息</strong>，<strong>.dynamic 存放动态链接信息</strong>，<strong>.hash 存放哈希表</strong>，<strong>.symtab 存放符号表</strong>，<strong>.plt/.got 动态连接的跳转表和全局入口表</strong> 等等</p>
+</li>
+<li><p>自定义段：GCC提供了一个扩展机制，是的程序员可以制定变量所处的段：<strong><strong>attribute</strong>((section(“name”))) int global = 42</strong> ，global变量即会存放于 name 作为段名的段中</p>
+</li>
+</ul>
+</li>
+<li><p><strong>物理划分</strong></p>
+<ul>
+<li><p><strong>文件头（File Header）</strong>：描述文件 <strong>属性</strong>，其中定义了 ELF魔数（<strong>e_ident</strong>）、文件机器字节长度、数据存储方式、版本、运行平台（<strong>e_machine</strong>）、ABI版本、ELF重定位类型（<strong>e_type</strong>）、硬件平台、硬件平台版本、入口地址、程序头入口地址、段表的位置和长度（<strong>e_shoff</strong>）、段的数量 <strong>等</strong>，常定义于：/usr/include/elf.h 中，根据版本分为：<strong>Elf32_Ehdr</strong> 和 <strong>Elf64_Ehdr</strong></p>
+</li>
+<li><p><strong>段表（Section Table）</strong>：描述包含的所有段信息，比如每个段名、段的长度、在文件中的偏移、读写权限及段的其他属性。每个段的结构是由 <strong>Elf32_Shdr</strong> 的结构体组成，对于编译器和链接器来说，主要决定段的属性是类型（<strong>sh_type</strong>）（12种）和标志位（<strong>sh_flags</strong>）（读写可分配），如果段的类型是与连接相关的，那么段的链接信息就是控制如此的（<strong>sh_link</strong>、<strong>sh_info</strong>）</p>
+<ul>
+<li><p><strong>重定位表</strong>（<strong>sh_type = SHT_RELA</strong>）<strong>[.rel]</strong>：重定位代码段和数据段中那些对绝对地址的引用的位置</p>
+</li>
+<li><p><strong>字符串表</strong>（<strong>sh_type = SHT_STRTAB</strong>）<strong>[.symtab]</strong>：ELF文件中用到的很多字符串，比如段名和变量名等，比较聪明的做法是，具体字符串存放在字符串表中，段中直接引用 <strong>偏移量</strong> 即可</p>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+        
+        </div>
+        <footer class="article-footer">
+            <div class="share-container">
+
+
+
+</div>
+
+    <a data-url="https://aaronshi32.github.io/2017/05/09/读书笔记-程序员的自我修养（三）/" data-id="cjm7udfav002bues6muc9enw5" class="article-share-link"><i class="fa fa-share"></i>如需转载，请注明出处</a>
+<script>
+    (function ($) {
+        // Prevent duplicate binding
+        if (typeof(__SHARE_BUTTON_BINDED__) === 'undefined' || !__SHARE_BUTTON_BINDED__) {
+            __SHARE_BUTTON_BINDED__ = true;
+        } else {
+            return;
+        }
+        $('body').on('click', function() {
+            $('.article-share-box.on').removeClass('on');
+        }).on('click', '.article-share-link', function(e) {
+            e.stopPropagation();
+
+            var $this = $(this),
+                url = $this.attr('data-url'),
+                encodedUrl = encodeURIComponent(url),
+                id = 'article-share-box-' + $this.attr('data-id'),
+                offset = $this.offset(),
+                box;
+
+            if ($('#' + id).length) {
+                box = $('#' + id);
+
+                if (box.hasClass('on')){
+                    box.removeClass('on');
+                    return;
+                }
+            } else {
+                var html = [
+                    '<div id="' + id + '" class="article-share-box">',
+                        '<input class="article-share-input" value="' + url + '">',
+                        '<div class="article-share-links">',
+                            '<a href="https://twitter.com/intent/tweet?url=' + encodedUrl + '" class="fa fa-twitter article-share-twitter" target="_blank" title="Twitter"></a>',
+                            '<a href="https://www.facebook.com/sharer.php?u=' + encodedUrl + '" class="fa fa-facebook article-share-facebook" target="_blank" title="Facebook"></a>',
+                            '<a href="http://pinterest.com/pin/create/button/?url=' + encodedUrl + '" class="fa fa-pinterest article-share-pinterest" target="_blank" title="Pinterest"></a>',
+                            '<a href="https://plus.google.com/share?url=' + encodedUrl + '" class="fa fa-google article-share-google" target="_blank" title="Google+"></a>',
+                        '</div>',
+                    '</div>'
+                ].join('');
+
+              box = $(html);
+
+              $('body').append(box);
+            }
+
+            $('.article-share-box.on').hide();
+
+            box.css({
+                top: offset.top + 25,
+                left: offset.left
+            }).addClass('on');
+
+        }).on('click', '.article-share-box', function (e) {
+            e.stopPropagation();
+        }).on('click', '.article-share-box-input', function () {
+            $(this).select();
+        }).on('click', '.article-share-box-link', function (e) {
+            e.preventDefault();
+            e.stopPropagation();
+
+            window.open(this.href, 'article-share-box-window-' + Date.now(), 'width=500,height=450');
+        });
+    })(jQuery);
+</script>
+
+            
+    
+
+        </footer>
+    </div>
+    
+        
+<nav id="article-nav">
+    
+        <a href="/blog/2017/05/13/读书笔记-程序员的自我修养（四）/" id="article-nav-newer" class="article-nav-link-wrap">
+            <strong class="article-nav-caption">上一篇</strong>
+            <div class="article-nav-title">
+                
+                    读书笔记-程序员的自我修养（四）
+                
+            </div>
+        </a>
+    
+    
+        <a href="/blog/2017/05/08/读书笔记-程序员的自我修养（二）/" id="article-nav-older" class="article-nav-link-wrap">
+            <strong class="article-nav-caption">下一篇</strong>
+            <div class="article-nav-title">读书笔记-程序员的自我修养（二）</div>
+        </a>
+    
+</nav>
+
+
+    
+</article>
+
+
+    
+    <section id="comments">
+    
+    </section>
+
+</section>
+            
+                <aside id="sidebar">
+   
+        
+    
+        
+    <div class="widget-wrap">
+        <h3 class="widget-title">归档</h3>
+        <div class="widget">
+            <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/blog/archives/2018/08/">八月 2018</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/blog/archives/2018/07/">七月 2018</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/blog/archives/2018/06/">六月 2018</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/blog/archives/2018/05/">五月 2018</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/blog/archives/2018/04/">四月 2018</a><span class="archive-list-count">6</span></li><li class="archive-list-item"><a class="archive-list-link" href="/blog/archives/2018/03/">三月 2018</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/blog/archives/2018/02/">二月 2018</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/blog/archives/2018/01/">一月 2018</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/blog/archives/2017/12/">十二月 2017</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/blog/archives/2017/11/">十一月 2017</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/blog/archives/2017/10/">十月 2017</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/blog/archives/2017/08/">八月 2017</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/blog/archives/2017/07/">七月 2017</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/blog/archives/2017/06/">六月 2017</a><span class="archive-list-count">4</span></li><li class="archive-list-item"><a class="archive-list-link" href="/blog/archives/2017/05/">五月 2017</a><span class="archive-list-count">6</span></li><li class="archive-list-item"><a class="archive-list-link" href="/blog/archives/2017/03/">三月 2017</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/blog/archives/2017/02/">二月 2017</a><span class="archive-list-count">4</span></li><li class="archive-list-item"><a class="archive-list-link" href="/blog/archives/2017/01/">一月 2017</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/blog/archives/2016/12/">十二月 2016</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/blog/archives/2016/11/">十一月 2016</a><span class="archive-list-count">6</span></li><li class="archive-list-item"><a class="archive-list-link" href="/blog/archives/2016/10/">十月 2016</a><span class="archive-list-count">1</span></li></ul>
+        </div>
+    </div>
+
+    
+        
+    <div class="widget-wrap">
+        <h3 class="widget-title">标签</h3>
+        <div class="widget">
+            <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/blog/tags/JavaScript/">JavaScript</a><span class="tag-list-count">4</span></li><li class="tag-list-item"><a class="tag-list-link" href="/blog/tags/人工智能/">人工智能</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/blog/tags/基础知识/">基础知识</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/blog/tags/工具/">工具</a><span class="tag-list-count">6</span></li><li class="tag-list-item"><a class="tag-list-link" href="/blog/tags/日常/">日常</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/blog/tags/框架/">框架</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/blog/tags/疑难杂症/">疑难杂症</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/blog/tags/系统/">系统</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/blog/tags/读书/">读书</a><span class="tag-list-count">28</span></li><li class="tag-list-item"><a class="tag-list-link" href="/blog/tags/面试/">面试</a><span class="tag-list-count">8</span></li></ul>
+        </div>
+    </div>
+
+    
+    <div id="toTop" class="fa fa-angle-up"></div>
+</aside>
+            
+        </div>
+        <footer id="footer">
+    <div class="outer">
+        <div id="footer-info" class="inner">
+            &copy; 2018 AaronShi<br>
+            Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>. Theme by <a href="http://github.com/ppoffice">PPOffice</a>
+        </div>
+    </div>
+</footer>
+        
+
+    
+        <script src="/blog/libs/lightgallery/js/lightgallery.min.js"></script>
+        <script src="/blog/libs/lightgallery/js/lg-thumbnail.min.js"></script>
+        <script src="/blog/libs/lightgallery/js/lg-pager.min.js"></script>
+        <script src="/blog/libs/lightgallery/js/lg-autoplay.min.js"></script>
+        <script src="/blog/libs/lightgallery/js/lg-fullscreen.min.js"></script>
+        <script src="/blog/libs/lightgallery/js/lg-zoom.min.js"></script>
+        <script src="/blog/libs/lightgallery/js/lg-hash.min.js"></script>
+        <script src="/blog/libs/lightgallery/js/lg-share.min.js"></script>
+        <script src="/blog/libs/lightgallery/js/lg-video.min.js"></script>
+    
+    
+        <script src="/blog/libs/justified-gallery/jquery.justifiedGallery.min.js"></script>
+    
+
+
+
+<!-- Custom Scripts -->
+<script src="/blog/js/main.js"></script>
+
+    </div>
+</body>
+</html>

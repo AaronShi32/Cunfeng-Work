@@ -1,0 +1,510 @@
+<!DOCTYPE html>
+<html lang=zh>
+<head>
+    <meta charset="utf-8">
+    
+    <title>Java并发编程实践 | 着陆的橘子</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+    <meta name="description" content="线程安全定义: 1)不管运行时线程采取何种调度方式, 2)代码中不需要任何额外的同步或协同, 这个类都能表现出正确的行为, 无状态的对象, 不可变对象一定是线程安全的 同步机制: synchronized, volatile, lock, atom 两个维度: 防止某个线程正在使用对象状态而另一个线程在同时修改状态(同步机制); 确保当一个线程修改了对象状态后, 其他线程能够看到发生的状态变化(可">
+<meta name="keywords" content="读书,面试">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Java并发编程实践">
+<meta property="og:url" content="https://aaronshi32.github.io/2018/07/04/Java并发编程实践/index.html">
+<meta property="og:site_name" content="着陆的橘子">
+<meta property="og:description" content="线程安全定义: 1)不管运行时线程采取何种调度方式, 2)代码中不需要任何额外的同步或协同, 这个类都能表现出正确的行为, 无状态的对象, 不可变对象一定是线程安全的 同步机制: synchronized, volatile, lock, atom 两个维度: 防止某个线程正在使用对象状态而另一个线程在同时修改状态(同步机制); 确保当一个线程修改了对象状态后, 其他线程能够看到发生的状态变化(可">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:updated_time" content="2018-08-24T08:43:17.469Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Java并发编程实践">
+<meta name="twitter:description" content="线程安全定义: 1)不管运行时线程采取何种调度方式, 2)代码中不需要任何额外的同步或协同, 这个类都能表现出正确的行为, 无状态的对象, 不可变对象一定是线程安全的 同步机制: synchronized, volatile, lock, atom 两个维度: 防止某个线程正在使用对象状态而另一个线程在同时修改状态(同步机制); 确保当一个线程修改了对象状态后, 其他线程能够看到发生的状态变化(可">
+    
+
+    
+
+    
+
+    <link rel="stylesheet" href="/blog/libs/font-awesome/css/font-awesome.min.css">
+    <link rel="stylesheet" href="/blog/libs/open-sans/styles.css">
+    <link rel="stylesheet" href="/blog/libs/source-code-pro/styles.css">
+
+    <link rel="stylesheet" href="/blog/css/style.css">
+
+    <script src="/blog/libs/jquery/2.1.3/jquery.min.js"></script>
+    
+    
+        <link rel="stylesheet" href="/blog/libs/lightgallery/css/lightgallery.min.css">
+    
+    
+        <link rel="stylesheet" href="/blog/libs/justified-gallery/justifiedGallery.min.css">
+    
+    
+    
+    
+
+
+</head>
+
+<body>
+    <div id="container">
+        <header id="header">
+    <div id="header-main" class="header-inner">
+        <div class="outer">
+            <a href="/blog/" id="logo">
+                <i class="logo"></i>
+                <span class="site-title">着陆的橘子</span>
+            </a>
+            <nav id="main-nav">
+                
+                    <a class="main-nav-link" href="/.">主页</a>
+                
+                    <a class="main-nav-link" href="/about/cv.pdf">关于</a>
+                
+            </nav>
+            
+                
+                <nav id="sub-nav">
+                    <div class="profile" id="profile-nav">
+                        <a id="profile-anchor" href="javascript:;">
+                            <img class="avatar" src="/css/images/avatar.png" />
+                            <i class="fa fa-caret-down"></i>
+                        </a>
+                    </div>
+                </nav>
+            
+            <div id="search-form-wrap">
+
+    <form class="search-form">
+        <input type="text" class="ins-search-input search-form-input" placeholder="文章" />
+        <button type="submit" class="search-form-submit"></button>
+    </form>
+    <div class="ins-search">
+    <div class="ins-search-mask"></div>
+    <div class="ins-search-container">
+        <div class="ins-input-wrapper">
+            <input type="text" class="ins-search-input" placeholder="想要查找什么..." />
+            <span class="ins-close ins-selectable"><i class="fa fa-times-circle"></i></span>
+        </div>
+        <div class="ins-section-wrapper">
+            <div class="ins-section-container"></div>
+        </div>
+    </div>
+</div>
+<script>
+(function (window) {
+    var INSIGHT_CONFIG = {
+        TRANSLATION: {
+            POSTS: '文章',
+            PAGES: '页面',
+            CATEGORIES: '分类',
+            TAGS: '标签',
+            UNTITLED: '(未命名)',
+        },
+        ROOT_URL: '/',
+        CONTENT_URL: '/content.json',
+    };
+    window.INSIGHT_CONFIG = INSIGHT_CONFIG;
+})(window);
+</script>
+<script src="/blog/js/insight.js"></script>
+
+</div>
+        </div>
+    </div>
+    <div id="main-nav-mobile" class="header-sub header-inner">
+        <table class="menu outer">
+            <tr>
+                
+                    <td><a class="main-nav-link" href="/.">主页</a></td>
+                
+                    <td><a class="main-nav-link" href="/about/cv.pdf">关于</a></td>
+                
+                <td>
+                    
+    <div class="search-form">
+        <input type="text" class="ins-search-input search-form-input" placeholder="搜索" />
+    </div>
+
+                </td>
+            </tr>
+        </table>
+    </div>
+</header>
+
+        <div class="outer">
+            
+                
+
+<aside id="profile">
+    <div class="inner profile-inner">
+        <div class="base-info profile-block">
+            <img id="avatar" src="/css/images/avatar.png" />
+            <h2 id="name">AaronShi32</h2>
+            <h3 id="title">Senior Software Developer</h3>
+            <span id="location"><i class="fa fa-map-marker"></i>Beijing, China</span>
+            <a id="follow" target="_blank" href="https://github.com/AaronShi32">Follow</a>
+        </div>
+        <div class="article-info profile-block">
+            <div class="article-info-block">
+                48
+                <span>文章</span>
+            </div>
+            <div class="article-info-block">
+                10
+                <span>标签</span>
+            </div>
+        </div>
+        
+        <div class="profile-block social-links">
+            <table>
+                <tr>
+                    
+                    
+                    <td>
+                        <a href="https://github.com/AaronShi32" target="_blank" title="github" >
+                            <i class="fa fa-github"></i>
+                        </a>
+                    </td>
+                    
+                    <td>
+                        <a href="https://www.linkedin.com/in/cfshi" target="_blank" title="linkedin-square" >
+                            <i class="fa fa-linkedin-square"></i>
+                        </a>
+                    </td>
+                    
+                </tr>
+            </table>
+        </div>
+        
+    </div>
+</aside>
+
+            
+            <section id="main"><article id="post-Java并发编程实践" class="article article-type-post" itemscope itemprop="blogPost">
+    <div class="article-inner">
+        
+        
+            <header class="article-header">
+                
+    
+        <h1 class="article-title" itemprop="name">
+            Java并发编程实践
+        </h1>
+    
+
+                
+                    <div class="article-meta">
+                        
+    <div class="article-date">
+        <i class="fa fa-calendar"></i>
+        <a href="/blog/2018/07/04/Java并发编程实践/">
+            <time datetime="2018-07-04T05:36:08.000Z" itemprop="datePublished">2018-07-04</time>
+        </a>
+    </div>
+
+
+                        
+                        
+    <div class="article-tag">
+        <i class="fa fa-tag"></i>
+        <a class="tag-link" href="/blog/tags/读书/">读书</a>, <a class="tag-link" href="/blog/tags/面试/">面试</a>
+    </div>
+
+                    </div>
+                
+            </header>
+        
+        
+        <div class="article-entry" itemprop="articleBody">
+        
+            
+            <h3 id="线程安全"><a href="#线程安全" class="headerlink" title="线程安全"></a>线程安全</h3><p>定义: 1)不管运行时线程采取何种调度方式, 2)代码中不需要任何额外的同步或协同, 这个类都能表现出正确的行为, 无状态的对象, 不可变对象一定是线程安全的</p>
+<p>同步机制: synchronized, volatile, lock, atom</p>
+<p>两个维度: 防止某个线程正在使用对象状态而另一个线程在同时修改状态(同步机制); 确保当一个线程修改了对象状态后, 其他线程能够看到发生的状态变化(可见性)</p>
+<p>synchronized 是可重入的, 重入的一种实现方法是为每个锁关联一个获取计数值和一个所有者线程。当计数值为0时, 这个锁就被认为是没有被任何线程持有</p>
+<p>重排序: 在没有同步的情况下, 编译器、处理器以及运行时等都可能对操作的执行顺序进行一些意想不到的调整。在缺乏足够同步的多线程程序中, 要相对内存操作的执行顺序进行判断, 几乎无法得出正确的结论</p>
+<p>进一步衍生: 重排序的As-if-serial语义意思是，所有的动作(Action)都可以为了优化而被重排序，但是必须保证它们重排序后的结果和程序代码本身的应有结果是一致的。Java编译器、运行时和处理器都会保证单线程下的as-if-serial语义。<br>比如，<strong>为了保证这一语义，重排序不会发生在有数据依赖的操作之中</strong></p>
+<p>加锁的意义: 保证互斥行为(可见性和原子性)以及内存可见性, 确保所有线程都能看到共享变量的最新值, 所有执行读操作或者写操作的线程都必须在同一个锁上同步</p>
+<p>volatile 的实现原理: 不会将该变量上的操作重排序(内存屏障), 也不会放入缓存寄存器中</p>
+<p>同步机制可确保原子性和可见性, volatile 只能保证可见性(++count 无法保证原子性)</p>
+<p>ThreadLocal, 线程封闭, 不共享的变量: 为变量在每个线程中都创建一个副本，每个线程可以访问自己内部的副本变量, 实现为: ThreadLocal<t> -&gt; Map<thread, t=""> -&gt; thread.threadLocals -&gt; 内部类 ThreadLocalMap, 场景: 数据库连接, Session 管理</thread,></t></p>
+<p><strong>想要做到线程安全: 同步保证原子性操作, 轻量 Volatile 保证可见性, 不变的对象一定是线程安全的(final)</strong></p>
+<p>内存屏障:<br>1) Happens-before的前后两个操作不会被重排序且后者对前者的内存可见<br>2) LoadLoad屏障：对于这样的语句Load1; LoadLoad; Load2，在Load2及后续读取操作要读取的数据被访问前，保证Load1要读取的数据被读取完毕。<br>   StoreStore屏障：对于这样的语句Store1; StoreStore; Store2，在Store2及后续写入操作执行前，保证Store1的写入操作对其它处理器可见。<br>   LoadStore屏障：对于这样的语句Load1; LoadStore; Store2，在Store2及后续写入操作被刷出前，保证Load1要读取的数据被读取完毕。<br>   StoreLoad屏障：对于这样的语句Store1; StoreLoad; Load2，在Load2及后续所有读取操作执行前，保证Store1的写入对所有处理器可见</p>
+<p>volatile语义中的内存屏障:</p>
+<ul>
+<li><p>在每个volatile写操作前插入StoreStore屏障，在写操作后插入StoreLoad屏障；</p>
+</li>
+<li><p>在每个volatile读操作前插入LoadLoad屏障，在读操作后插入LoadStore屏障；</p>
+</li>
+</ul>
+<p>final语义中的内存屏障:</p>
+<ul>
+<li><p>写final域：在编译器写final域完毕，构造体结束之前，会插入一个StoreStore屏障，保证前面的对final写入对其他线程/CPU可见，并阻止重排序。</p>
+</li>
+<li><p>读final域：在上述规则2中，两步操作不能重排序的机理就是在读final域前插入了LoadLoad屏障。</p>
+</li>
+</ul>
+<h3 id="锁的实现"><a href="#锁的实现" class="headerlink" title="锁的实现"></a>锁的实现</h3><p>乐观锁和悲观锁</p>
+<ul>
+<li><p>乐观锁, 持有后再请求, 告知失败, 请求线程可在一定时间内重试, 不会挂起</p>
+</li>
+<li><p>悲观锁, 持有后再请求, 被挂起, 直到锁释放后恢复线程执行, 有可能获得该锁</p>
+</li>
+</ul>
+<h3 id="构建线程安全类"><a href="#构建线程安全类" class="headerlink" title="构建线程安全类"></a>构建线程安全类</h3><p>同步容器: Vector 和 HashTable, 方法级加锁(synchronized), 并发效率低</p>
+<p>并发容器: ConcurrentHashMap, ConcurrentLinkedQueue, CopyOnWriteArrayList 等, 灵活加锁, 并发效率高</p>
+<p>阻塞队列实现生产者-消费者: BlockingQueue 的实现有 LinkedBlockingQueue 和 ArrayBlockingQueue 都是 FIFO 队列, PriorityBlockingQueue 是优先级队列, 其中 put 和 take 方法是阻塞, offer 和 poll 是非阻塞, 对于无边界的队列而言永远不会阻塞</p>
+<p>同步工具类: 信号量(Semaphore), 栅栏(Barrier, 调用 await 的线程会中断, 直到等于 partion 时再开始执行), 闭锁(Latch, 调用 await 的线程会中断, 直到 countDown 为 0 被唤醒)</p>
+<p>区别性: 闭锁是一次性的, 不能反复使用, 栅栏可以多次使用; 闭锁用于等待事件，而栅栏用于等待其他线程</p>
+<p>工作密取: 消费者各自拥有一个双端队列 Deque, 如果一个消费者完成了自己双端队列中的全部工作，那么他就可以从其他消费者的双端队列末尾秘密的获取工作。具有更好的可伸缩性, 使用场景为网络爬虫</p>
+<p>CopyOnWrite 容器适用于读多写少的并发场景, set 方法加锁, get 方法不加锁, set 方法是 copy 一份新的内容, 修改, 再讲原引用指向新的, 这篇文章一目了然: <a href="https://www.cnblogs.com/dolphin0520/p/3938914.html" target="_blank" rel="noopener">https://www.cnblogs.com/dolphin0520/p/3938914.html</a></p>
+<h3 id="结构化并发程序"><a href="#结构化并发程序" class="headerlink" title="结构化并发程序"></a>结构化并发程序</h3><p>无限制创建线程的不足: 线程生命周期开销非常高, 资源消耗大, 稳定性低</p>
+<p>Executor 线程池框架, 抽象了执行任务的主要对象不是 Thread, 而是 Executor, 其实现了对生命周期的支持(ExecutorService), 以及统计信息收集, 应用程序管理机制和性能监控等机制, Executor 基于生产者 - 消费者模式</p>
+<p>Executors 是线程池的工厂类, 本质上是初始化 ThreadPoolExecutor, 实际开发的时候应该避免使用工厂类</p>
+<p>ExecutorService 封装了线程生命周期接口</p>
+<h3 id="线程中断-取消-关闭"><a href="#线程中断-取消-关闭" class="headerlink" title="线程中断, 取消, 关闭"></a>线程中断, 取消, 关闭</h3><p>调用 interrput 并不意味着立即停止目标线程正在进行的工作, 而只是传递了请求中断的消息, 通常, 中断是实现取消的最合理方式</p>
+<p>通过 Future 和 Executor 框架可以构建可取消的任务</p>
+<p>ExecutorService 提供了正常关闭 shutdown() 和 立刻关闭 shutdownNow()两种方法, 正常关闭速度慢但线程安全, 它会等到队列中所有任务都执行完成后才关闭</p>
+<p>还可以通过 JVM 钩子关闭线程, 但是极度不推荐, 线程可分为两种: 普通线程和守护线程 </p>
+<p>使用 newTaskFor 钩子函数来改进用来封装非标准取消的方法。这是 ThreadPoolExecutor 的新特性, 当提交一个 callable 给 ExecutorService 时，submit 返回一个 Future，可以用 Future 来取消任务。</p>
+<p>newTaskFor 钩子是一个工厂方法，创建一个 Future 来代表任务，这个 Future 属于由 FutureTask 实现的 RunnableFuture 接口，这个接口可以自定义 cancel 方法，实现自定义的取消方式</p>
+<h3 id="线程池"><a href="#线程池" class="headerlink" title="线程池"></a>线程池</h3><p>线程池大小如何界定, 是 Fix 还是 Cache? </p>
+<ul>
+<li><p>计算密集型: 线程池大小为: Ncpu + 1, I/O 密集型: 线程池大小为: 2 * Ncpu</p>
+</li>
+<li><p>newFixedThreadPool</p>
+<ul>
+<li><p>corePoolSize == maximumPoolSize</p>
+</li>
+<li><p>workQueue 是无界队列(容易造成资源耗尽)</p>
+</li>
+<li><p>当需要限制当前任务的数量以满足资源管理需求时, 那么可以选择固定大小的线程池(服务器网络请求限制)</p>
+</li>
+</ul>
+</li>
+<li><p>newCachedThreadPool</p>
+<ul>
+<li><p>workQueue 是有界队列, 饱和之后执行拒绝策略, 而实现中采用了 SynchronousQueue(同步移交)</p>
+</li>
+<li><p>提供比固定大小的线程池更好的排队性能(而不是一直hang住等待线程)</p>
+</li>
+</ul>
+</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="title">ThreadPoolExecutor</span><span class="params">(<span class="keyword">int</span> corePoolSize, // 基本大小</span></span></span><br><span class="line"><span class="function"><span class="params">                          <span class="keyword">int</span> maximumPoolSize, // 最大大小</span></span></span><br><span class="line"><span class="function"><span class="params">                          <span class="keyword">long</span> keepAliveTime, //</span></span></span><br><span class="line"><span class="function"><span class="params">                          TimeUnit unit, // 时间单位</span></span></span><br><span class="line"><span class="function"><span class="params">                          BlockingQueue&lt;Runnable&gt; workQueue, // 任务队列</span></span></span><br><span class="line"><span class="function"><span class="params">                          ThreadFactory threadFactory,</span></span></span><br><span class="line"><span class="function"><span class="params">                          RejectedExecutionHandler handler)</span> </span>&#123;...&#125;</span><br></pre></td></tr></table></figure>
+<p>只有当任务相互独立时, 为线程池或者工作队列设置界限才是合理的, 如果任务之间存在依赖性, 那么有界的线程池或队列就可能导致线程 “饥饿” 死锁问题</p>
+<h3 id="活跃性-性能和测试"><a href="#活跃性-性能和测试" class="headerlink" title="活跃性, 性能和测试"></a>活跃性, 性能和测试</h3><p>死锁与线程获得锁的顺序有关, 在数据库系统的设计中考虑了死锁的检测以及恢复, 即随机选择放弃一个事务, 让其他事务执行</p>
+<p>可伸缩性是指: 当增加计算资源时(例如 CPU, 内存, 存储容量或 I/O 带宽), 程序的吞吐量或者处理能力能相应增加</p>
+<p>缩小锁的范围(方法 -&gt; 对象 -&gt; 并发容器), 减小锁的粒度, 锁分段(ConcurrentHashMap)</p>
+<h3 id="锁的实现-1"><a href="#锁的实现-1" class="headerlink" title="锁的实现"></a>锁的实现</h3><p>锁干了什么? 答: 对共享资源的互斥性以及内存可见性</p>
+<p>内置锁有什么功能局限? 答: 无法中断一个正在等待获取锁的线程, 或者无法在请求获取一个锁时无限等待下去, 阻塞加锁</p>
+<p>显示锁有什么好处? 答: 锁粒度更低, 可实现如 ConcurrentHashMap 式的分段加锁</p>
+<p>内置锁: Synchronized 和 volatile</p>
+<p>显示锁: ReentrantLock</p>
+<p>内置锁的实现原理</p>
+<p>synchronized 有以下3种应用方式</p>
+<ul>
+<li><p>修饰实例方法，作用于当前实例加锁</p>
+</li>
+<li><p>修饰静态方法，作用于当前类对象加锁</p>
+</li>
+<li><p>修饰代码块，指定加锁对象，对给定对象加锁</p>
+</li>
+</ul>
+<p>同步代码块的实现是基于进入和退出管程(Monitor)对象实现, 翻译成字节码是 monitorenter 和 monitorexit</p>
+<p>同步方法的实现是JVM通过ACC_SYNCHRONIZED访问标志来辨别一个方法是否声明为同步方法</p>
+<p>volatile 的实现原理: 不会将该变量上的操作重排序(内存屏障), 也不会放入缓存寄存器中</p>
+<p>volatile语义中的内存屏障:</p>
+<ul>
+<li><p>在每个volatile写操作前插入StoreStore屏障，在写操作后插入StoreLoad屏障；</p>
+</li>
+<li><p>在每个volatile读操作前插入LoadLoad屏障，在读操作后插入LoadStore屏障；</p>
+</li>
+</ul>
+<p>Synchronized 可确保原子性和可见性, volatile 只能保证可见性(++count 无法保证原子性)</p>
+<p>显示锁的实现原理</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//juc lock</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">interface</span> <span class="title">lock</span></span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">lock</span><span class="params">()</span></span>;</span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">lockInterruptibly</span><span class="params">()</span> <span class="keyword">throws</span> InterruptedException</span>; <span class="comment">//中断锁</span></span><br><span class="line">    <span class="function"><span class="keyword">boolean</span> <span class="title">tryLock</span><span class="params">()</span></span>; <span class="comment">//轮询锁</span></span><br><span class="line">    <span class="function"><span class="keyword">boolean</span> <span class="title">tryLock</span><span class="params">(<span class="keyword">long</span> timeout, TimeUnit unit)</span> <span class="keyword">throws</span> InterruptedException</span>; <span class="comment">//定时锁</span></span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">unlock</span><span class="params">()</span></span>;</span><br><span class="line">    <span class="function">Condition <span class="title">newCondition</span><span class="params">()</span></span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>公平性: 在公平锁上, 线程将按照它们发出请求的顺序来获取锁, 非公平则允许插队, 取决于场景中挂起和恢复线程的开销大小, 在激烈竞争的情况下, 则采取非公平锁比较好</p>
+<p>实现: CopyOnWriteArrayList</p>
+<p>一个资源可以被多个读操作访问, 或者被一个写操作访问, 但两者不能同时进行</p>
+<p>内部是非公平锁, 读不加锁, 写加锁</p>
+<p>显示锁的底层是 AQS(AbstractQueuedSynchronizer), 它使得一组线程(称之为等待线程集合)能够通过某种方式来等待特定的条件变成真, 并自动唤醒, 与传统队列不同的是它的对象是一个个正在等待的线程</p>
+<p>总结: 与内置锁相比, 显示锁提供了一些扩展功能, 在处理锁的不可用性方面有着更高的灵活性</p>
+<p>读写锁允许多个读线程并发地访问被保护的对象, 当访问以读取操作为主的数据结构时, 它能够提高程序的可伸缩性</p>
+<h3 id="无锁"><a href="#无锁" class="headerlink" title="无锁"></a>无锁</h3><p>CAS(Compare-and-Swap): 操作系统级别支持的一种无锁操作, 通过代码中显示的重试机制来实现</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">synchronized</span> <span class="keyword">int</span> <span class="title">compareAndSwap</span><span class="params">(<span class="keyword">int</span> expectedValue, <span class="keyword">int</span> newValue)</span></span>&#123;</span><br><span class="line">    <span class="keyword">int</span> oldValue = value; <span class="comment">//当前值</span></span><br><span class="line">    <span class="keyword">if</span>(oldValue == expectedValue)&#123; <span class="comment">//当前值 == 期望值 才改变当前值</span></span><br><span class="line">         value = newValue;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> oldValue; <span class="comment">//返回当前值</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>原子变量类是基于 CAS 实现的, 比锁的粒度更细, 量级更轻, 以下是 i++ 原子性的实现</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">int</span> v;</span><br><span class="line"><span class="keyword">do</span>&#123;</span><br><span class="line">    v = value.get();</span><br><span class="line">&#125;<span class="keyword">while</span>(v != value.compareAndSwap(v, v + <span class="number">1</span>));</span><br><span class="line"><span class="keyword">return</span> v + <span class="number">1</span>;</span><br></pre></td></tr></table></figure>
+<p>在高度竞争的情况下, 锁的性能将超过原子变量的性能, 但通常竞争量很小的情况下, 原子变量更优, 这是因为锁在发生竞争时会挂起线程, 降低了CPU使用率, 调用原子变量的类可自行负责竞争管理(重试, 退让)</p>
+
+        
+        </div>
+        <footer class="article-footer">
+            <div class="share-container">
+
+
+
+</div>
+
+    <a data-url="https://aaronshi32.github.io/2018/07/04/Java并发编程实践/" data-id="cjm7udf9w0008ues6b2f9yjpw" class="article-share-link"><i class="fa fa-share"></i>如需转载，请注明出处</a>
+<script>
+    (function ($) {
+        // Prevent duplicate binding
+        if (typeof(__SHARE_BUTTON_BINDED__) === 'undefined' || !__SHARE_BUTTON_BINDED__) {
+            __SHARE_BUTTON_BINDED__ = true;
+        } else {
+            return;
+        }
+        $('body').on('click', function() {
+            $('.article-share-box.on').removeClass('on');
+        }).on('click', '.article-share-link', function(e) {
+            e.stopPropagation();
+
+            var $this = $(this),
+                url = $this.attr('data-url'),
+                encodedUrl = encodeURIComponent(url),
+                id = 'article-share-box-' + $this.attr('data-id'),
+                offset = $this.offset(),
+                box;
+
+            if ($('#' + id).length) {
+                box = $('#' + id);
+
+                if (box.hasClass('on')){
+                    box.removeClass('on');
+                    return;
+                }
+            } else {
+                var html = [
+                    '<div id="' + id + '" class="article-share-box">',
+                        '<input class="article-share-input" value="' + url + '">',
+                        '<div class="article-share-links">',
+                            '<a href="https://twitter.com/intent/tweet?url=' + encodedUrl + '" class="fa fa-twitter article-share-twitter" target="_blank" title="Twitter"></a>',
+                            '<a href="https://www.facebook.com/sharer.php?u=' + encodedUrl + '" class="fa fa-facebook article-share-facebook" target="_blank" title="Facebook"></a>',
+                            '<a href="http://pinterest.com/pin/create/button/?url=' + encodedUrl + '" class="fa fa-pinterest article-share-pinterest" target="_blank" title="Pinterest"></a>',
+                            '<a href="https://plus.google.com/share?url=' + encodedUrl + '" class="fa fa-google article-share-google" target="_blank" title="Google+"></a>',
+                        '</div>',
+                    '</div>'
+                ].join('');
+
+              box = $(html);
+
+              $('body').append(box);
+            }
+
+            $('.article-share-box.on').hide();
+
+            box.css({
+                top: offset.top + 25,
+                left: offset.left
+            }).addClass('on');
+
+        }).on('click', '.article-share-box', function (e) {
+            e.stopPropagation();
+        }).on('click', '.article-share-box-input', function () {
+            $(this).select();
+        }).on('click', '.article-share-box-link', function (e) {
+            e.preventDefault();
+            e.stopPropagation();
+
+            window.open(this.href, 'article-share-box-window-' + Date.now(), 'width=500,height=450');
+        });
+    })(jQuery);
+</script>
+
+            
+    
+
+        </footer>
+    </div>
+    
+        
+<nav id="article-nav">
+    
+        <a href="/blog/2018/07/06/Java分布式服务框架/" id="article-nav-newer" class="article-nav-link-wrap">
+            <strong class="article-nav-caption">上一篇</strong>
+            <div class="article-nav-title">
+                
+                    Java分布式服务框架
+                
+            </div>
+        </a>
+    
+    
+        <a href="/blog/2018/06/21/基础知识-MySQL/" id="article-nav-older" class="article-nav-link-wrap">
+            <strong class="article-nav-caption">下一篇</strong>
+            <div class="article-nav-title">基础知识-MySQL</div>
+        </a>
+    
+</nav>
+
+
+    
+</article>
+
+
+    
+    <section id="comments">
+    
+    </section>
+
+</section>
+            
+                <aside id="sidebar">
+   
+        
+    
+        
+    <div class="widget-wrap">
+        <h3 class="widget-title">归档</h3>
+        <div class="widget">
+            <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/blog/archives/2018/08/">八月 2018</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/blog/archives/2018/07/">七月 2018</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/blog/archives/2018/06/">六月 2018</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/blog/archives/2018/05/">五月 2018</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/blog/archives/2018/04/">四月 2018</a><span class="archive-list-count">6</span></li><li class="archive-list-item"><a class="archive-list-link" href="/blog/archives/2018/03/">三月 2018</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/blog/archives/2018/02/">二月 2018</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/blog/archives/2018/01/">一月 2018</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/blog/archives/2017/12/">十二月 2017</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/blog/archives/2017/11/">十一月 2017</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/blog/archives/2017/10/">十月 2017</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/blog/archives/2017/08/">八月 2017</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/blog/archives/2017/07/">七月 2017</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/blog/archives/2017/06/">六月 2017</a><span class="archive-list-count">4</span></li><li class="archive-list-item"><a class="archive-list-link" href="/blog/archives/2017/05/">五月 2017</a><span class="archive-list-count">6</span></li><li class="archive-list-item"><a class="archive-list-link" href="/blog/archives/2017/03/">三月 2017</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/blog/archives/2017/02/">二月 2017</a><span class="archive-list-count">4</span></li><li class="archive-list-item"><a class="archive-list-link" href="/blog/archives/2017/01/">一月 2017</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/blog/archives/2016/12/">十二月 2016</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/blog/archives/2016/11/">十一月 2016</a><span class="archive-list-count">6</span></li><li class="archive-list-item"><a class="archive-list-link" href="/blog/archives/2016/10/">十月 2016</a><span class="archive-list-count">1</span></li></ul>
+        </div>
+    </div>
+
+    
+        
+    <div class="widget-wrap">
+        <h3 class="widget-title">标签</h3>
+        <div class="widget">
+            <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/blog/tags/JavaScript/">JavaScript</a><span class="tag-list-count">4</span></li><li class="tag-list-item"><a class="tag-list-link" href="/blog/tags/人工智能/">人工智能</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/blog/tags/基础知识/">基础知识</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/blog/tags/工具/">工具</a><span class="tag-list-count">6</span></li><li class="tag-list-item"><a class="tag-list-link" href="/blog/tags/日常/">日常</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/blog/tags/框架/">框架</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/blog/tags/疑难杂症/">疑难杂症</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/blog/tags/系统/">系统</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/blog/tags/读书/">读书</a><span class="tag-list-count">28</span></li><li class="tag-list-item"><a class="tag-list-link" href="/blog/tags/面试/">面试</a><span class="tag-list-count">8</span></li></ul>
+        </div>
+    </div>
+
+    
+    <div id="toTop" class="fa fa-angle-up"></div>
+</aside>
+            
+        </div>
+        <footer id="footer">
+    <div class="outer">
+        <div id="footer-info" class="inner">
+            &copy; 2018 AaronShi<br>
+            Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>. Theme by <a href="http://github.com/ppoffice">PPOffice</a>
+        </div>
+    </div>
+</footer>
+        
+
+    
+        <script src="/blog/libs/lightgallery/js/lightgallery.min.js"></script>
+        <script src="/blog/libs/lightgallery/js/lg-thumbnail.min.js"></script>
+        <script src="/blog/libs/lightgallery/js/lg-pager.min.js"></script>
+        <script src="/blog/libs/lightgallery/js/lg-autoplay.min.js"></script>
+        <script src="/blog/libs/lightgallery/js/lg-fullscreen.min.js"></script>
+        <script src="/blog/libs/lightgallery/js/lg-zoom.min.js"></script>
+        <script src="/blog/libs/lightgallery/js/lg-hash.min.js"></script>
+        <script src="/blog/libs/lightgallery/js/lg-share.min.js"></script>
+        <script src="/blog/libs/lightgallery/js/lg-video.min.js"></script>
+    
+    
+        <script src="/blog/libs/justified-gallery/jquery.justifiedGallery.min.js"></script>
+    
+
+
+
+<!-- Custom Scripts -->
+<script src="/blog/js/main.js"></script>
+
+    </div>
+</body>
+</html>

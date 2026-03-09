@@ -1,0 +1,509 @@
+<!DOCTYPE html>
+<html lang=zh>
+<head>
+    <meta charset="utf-8">
+    
+    <title>读书笔记-Redis 数据结构与对象 | 着陆的橘子</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+    <meta name="description" content="Redis：数据结构与对象1. SDS：简单动态字符串（Simple Dynamic String）在 Redis 里面，C 语言传统的字符只会作为常量，用在一些无须修改的字符串，其他字符串都用 SDS 123456789struct sdshdr &amp;#123;	// 记录 buf 数组中已使用字节的数量	// 等于 SDS 所保存字符串的长度	int len;	// 记录buf 数组中未使用字节">
+<meta name="keywords" content="读书">
+<meta property="og:type" content="article">
+<meta property="og:title" content="读书笔记-Redis 数据结构与对象">
+<meta property="og:url" content="https://aaronshi32.github.io/2018/02/02/读书笔记-Redis 数据结构与对象/index.html">
+<meta property="og:site_name" content="着陆的橘子">
+<meta property="og:description" content="Redis：数据结构与对象1. SDS：简单动态字符串（Simple Dynamic String）在 Redis 里面，C 语言传统的字符只会作为常量，用在一些无须修改的字符串，其他字符串都用 SDS 123456789struct sdshdr &amp;#123;	// 记录 buf 数组中已使用字节的数量	// 等于 SDS 所保存字符串的长度	int len;	// 记录buf 数组中未使用字节">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:updated_time" content="2018-04-02T05:55:13.180Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="读书笔记-Redis 数据结构与对象">
+<meta name="twitter:description" content="Redis：数据结构与对象1. SDS：简单动态字符串（Simple Dynamic String）在 Redis 里面，C 语言传统的字符只会作为常量，用在一些无须修改的字符串，其他字符串都用 SDS 123456789struct sdshdr &amp;#123;	// 记录 buf 数组中已使用字节的数量	// 等于 SDS 所保存字符串的长度	int len;	// 记录buf 数组中未使用字节">
+    
+
+    
+
+    
+
+    <link rel="stylesheet" href="/blog/libs/font-awesome/css/font-awesome.min.css">
+    <link rel="stylesheet" href="/blog/libs/open-sans/styles.css">
+    <link rel="stylesheet" href="/blog/libs/source-code-pro/styles.css">
+
+    <link rel="stylesheet" href="/blog/css/style.css">
+
+    <script src="/blog/libs/jquery/2.1.3/jquery.min.js"></script>
+    
+    
+        <link rel="stylesheet" href="/blog/libs/lightgallery/css/lightgallery.min.css">
+    
+    
+        <link rel="stylesheet" href="/blog/libs/justified-gallery/justifiedGallery.min.css">
+    
+    
+    
+    
+
+
+</head>
+
+<body>
+    <div id="container">
+        <header id="header">
+    <div id="header-main" class="header-inner">
+        <div class="outer">
+            <a href="/blog/" id="logo">
+                <i class="logo"></i>
+                <span class="site-title">着陆的橘子</span>
+            </a>
+            <nav id="main-nav">
+                
+                    <a class="main-nav-link" href="/.">主页</a>
+                
+                    <a class="main-nav-link" href="/about/cv.pdf">关于</a>
+                
+            </nav>
+            
+                
+                <nav id="sub-nav">
+                    <div class="profile" id="profile-nav">
+                        <a id="profile-anchor" href="javascript:;">
+                            <img class="avatar" src="/css/images/avatar.png" />
+                            <i class="fa fa-caret-down"></i>
+                        </a>
+                    </div>
+                </nav>
+            
+            <div id="search-form-wrap">
+
+    <form class="search-form">
+        <input type="text" class="ins-search-input search-form-input" placeholder="文章" />
+        <button type="submit" class="search-form-submit"></button>
+    </form>
+    <div class="ins-search">
+    <div class="ins-search-mask"></div>
+    <div class="ins-search-container">
+        <div class="ins-input-wrapper">
+            <input type="text" class="ins-search-input" placeholder="想要查找什么..." />
+            <span class="ins-close ins-selectable"><i class="fa fa-times-circle"></i></span>
+        </div>
+        <div class="ins-section-wrapper">
+            <div class="ins-section-container"></div>
+        </div>
+    </div>
+</div>
+<script>
+(function (window) {
+    var INSIGHT_CONFIG = {
+        TRANSLATION: {
+            POSTS: '文章',
+            PAGES: '页面',
+            CATEGORIES: '分类',
+            TAGS: '标签',
+            UNTITLED: '(未命名)',
+        },
+        ROOT_URL: '/',
+        CONTENT_URL: '/content.json',
+    };
+    window.INSIGHT_CONFIG = INSIGHT_CONFIG;
+})(window);
+</script>
+<script src="/blog/js/insight.js"></script>
+
+</div>
+        </div>
+    </div>
+    <div id="main-nav-mobile" class="header-sub header-inner">
+        <table class="menu outer">
+            <tr>
+                
+                    <td><a class="main-nav-link" href="/.">主页</a></td>
+                
+                    <td><a class="main-nav-link" href="/about/cv.pdf">关于</a></td>
+                
+                <td>
+                    
+    <div class="search-form">
+        <input type="text" class="ins-search-input search-form-input" placeholder="搜索" />
+    </div>
+
+                </td>
+            </tr>
+        </table>
+    </div>
+</header>
+
+        <div class="outer">
+            
+                
+
+<aside id="profile">
+    <div class="inner profile-inner">
+        <div class="base-info profile-block">
+            <img id="avatar" src="/css/images/avatar.png" />
+            <h2 id="name">AaronShi32</h2>
+            <h3 id="title">Senior Software Developer</h3>
+            <span id="location"><i class="fa fa-map-marker"></i>Beijing, China</span>
+            <a id="follow" target="_blank" href="https://github.com/AaronShi32">Follow</a>
+        </div>
+        <div class="article-info profile-block">
+            <div class="article-info-block">
+                48
+                <span>文章</span>
+            </div>
+            <div class="article-info-block">
+                10
+                <span>标签</span>
+            </div>
+        </div>
+        
+        <div class="profile-block social-links">
+            <table>
+                <tr>
+                    
+                    
+                    <td>
+                        <a href="https://github.com/AaronShi32" target="_blank" title="github" >
+                            <i class="fa fa-github"></i>
+                        </a>
+                    </td>
+                    
+                    <td>
+                        <a href="https://www.linkedin.com/in/cfshi" target="_blank" title="linkedin-square" >
+                            <i class="fa fa-linkedin-square"></i>
+                        </a>
+                    </td>
+                    
+                </tr>
+            </table>
+        </div>
+        
+    </div>
+</aside>
+
+            
+            <section id="main"><article id="post-读书笔记-Redis 数据结构与对象" class="article article-type-post" itemscope itemprop="blogPost">
+    <div class="article-inner">
+        
+        
+            <header class="article-header">
+                
+    
+        <h1 class="article-title" itemprop="name">
+            读书笔记-Redis 数据结构与对象
+        </h1>
+    
+
+                
+                    <div class="article-meta">
+                        
+    <div class="article-date">
+        <i class="fa fa-calendar"></i>
+        <a href="/blog/2018/02/02/读书笔记-Redis 数据结构与对象/">
+            <time datetime="2018-02-02T02:49:06.000Z" itemprop="datePublished">2018-02-02</time>
+        </a>
+    </div>
+
+
+                        
+                        
+    <div class="article-tag">
+        <i class="fa fa-tag"></i>
+        <a class="tag-link" href="/blog/tags/读书/">读书</a>
+    </div>
+
+                    </div>
+                
+            </header>
+        
+        
+        <div class="article-entry" itemprop="articleBody">
+        
+            
+            <h3 id="Redis：数据结构与对象"><a href="#Redis：数据结构与对象" class="headerlink" title="Redis：数据结构与对象"></a>Redis：数据结构与对象</h3><h5 id="1-SDS：简单动态字符串（Simple-Dynamic-String）"><a href="#1-SDS：简单动态字符串（Simple-Dynamic-String）" class="headerlink" title="1. SDS：简单动态字符串（Simple Dynamic String）"></a>1. SDS：简单动态字符串（Simple Dynamic String）</h5><p>在 Redis 里面，C 语言传统的字符只会作为常量，用在一些无须修改的字符串，其他字符串都用 SDS</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">sdshdr</span> &#123;</span></span><br><span class="line">	<span class="comment">// 记录 buf 数组中已使用字节的数量</span></span><br><span class="line">	<span class="comment">// 等于 SDS 所保存字符串的长度</span></span><br><span class="line">	<span class="keyword">int</span> len;</span><br><span class="line">	<span class="comment">// 记录buf 数组中未使用字节的数量</span></span><br><span class="line">	<span class="keyword">int</span> <span class="built_in">free</span>;</span><br><span class="line">	<span class="comment">// 字节数组，用于保存字符串</span></span><br><span class="line">	<span class="keyword">char</span> buf[];</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>SDS 与 C 字符串的区别</p>
+<ol>
+<li><p>获取字符串长度：O(1)， len</p>
+<blockquote>
+<p>STRLEN key 命令复杂度仅为 O(1)</p>
+</blockquote>
+</li>
+<li><p>杜绝缓冲区溢出：buffer overflow</p>
+<p>SDSCAT（SDS API） 在拼接字符串之前会先检查空间是否足够(free)，不够的话先用 SDS 空间分配策略进行分配，再进行拼接</p>
+<blockquote>
+<p>APPEND key 永远不会抹掉其他字符串的内存空间</p>
+</blockquote>
+</li>
+<li><p>减少修改字符串时带来的内存重分配次数</p>
+<p> 对于修改 C 字符串而言，拼接操作(append)会扩展底层数组的空间大小，截断操作(trim)会释放不再使用的空间，这两种内存重分配操作前者容易引起缓冲区溢出，后者容易引起内存泄漏，为了解决这两个问题，SDS 采用 <strong>空间预分配</strong> 和 <strong>惰性空间释放</strong> 两种优化策略</p>
+<p> a. 空间预分配：当 SDS 需要修改并进行空间扩展时，程序不仅会为 SDS 分配修改所必须的空间，还会为 SDS 分配额外的未使用空间(free)</p>
+<p> a.1 分配后 len &gt; 1M，则给 free 预分配 1M 空间</p>
+<pre><code>a.2 分配后 len &lt; 1M，则给 free 预分配 len 空间
+
+通过这种预分配策略，SDS 将连续增长 N 次字符串所需要的内存重分配次数从必定 N 次降低为 最多 N 次
+
+b. 惰性空间释放：当 SDS 需要缩短保存的字符串时，程序不会立即回收多出来的字节，而是使用 free 属性将这些字节数量记录起来，等待再次使用
+</code></pre></li>
+<li><p>二进制安全</p>
+<p> buf 长度是 len，决定了结尾，即使 buf 中存在 ‘\0’，也不会被认为是结束</p>
+</li>
+<li><p>兼容部分 C 字符串函数</p>
+<blockquote>
+<p> strcasecmp(sds-&gt;buf，”hello world”)</p>
+<p> strcat(c_string，sds-&gt;buf)</p>
+</blockquote>
+</li>
+</ol>
+<h5 id="2-LinkedList：链表"><a href="#2-LinkedList：链表" class="headerlink" title="2. LinkedList：链表"></a>2. LinkedList：链表</h5><p>在 Redis 中，链表建的操作，底层实现之一的数据结构就是链表，除此之外，发布与订阅、慢查询、监视器等功能也用的是链表</p>
+<p>链表节点（listNode）：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">typedef</span> <span class="class"><span class="keyword">struct</span> <span class="title">listNode</span> &#123;</span></span><br><span class="line">	</span><br><span class="line">	<span class="comment">// 前置节点</span></span><br><span class="line">	<span class="class"><span class="keyword">struct</span> <span class="title">listNode</span> *<span class="title">prev</span>;</span></span><br><span class="line">	</span><br><span class="line">	<span class="comment">// 后置节点</span></span><br><span class="line">	<span class="class"><span class="keyword">struct</span> <span class="title">listNode</span> *<span class="title">next</span>;</span></span><br><span class="line">	</span><br><span class="line">	<span class="comment">// 节点值</span></span><br><span class="line">	<span class="keyword">void</span> *value;</span><br><span class="line"></span><br><span class="line">&#125; listNode;</span><br></pre></td></tr></table></figure>
+<p>链表（list）：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">typedef</span> <span class="class"><span class="keyword">struct</span> <span class="title">list</span> &#123;</span></span><br><span class="line">	</span><br><span class="line">	<span class="comment">// 表头节点</span></span><br><span class="line">	listNode *head;</span><br><span class="line"></span><br><span class="line">	<span class="comment">// 表尾节点</span></span><br><span class="line">	listNode *tail;</span><br><span class="line"></span><br><span class="line">	<span class="comment">// 链表所包含的节点数</span></span><br><span class="line">	<span class="keyword">unsigned</span> <span class="keyword">long</span> len;</span><br><span class="line"></span><br><span class="line">	<span class="comment">// 节点值复制函数</span></span><br><span class="line">	<span class="keyword">void</span> *(*dup) (<span class="keyword">void</span> *ptr);</span><br><span class="line"></span><br><span class="line">	<span class="comment">// 节点值释放函数</span></span><br><span class="line">	<span class="keyword">void</span> (*<span class="built_in">free</span>) (<span class="keyword">void</span> *ptr);</span><br><span class="line"></span><br><span class="line">	<span class="comment">// 节点值对比函数</span></span><br><span class="line">	<span class="keyword">int</span> (*match) (<span class="keyword">void</span> *ptr);</span><br><span class="line"></span><br><span class="line">&#125; <span class="built_in">list</span>;</span><br></pre></td></tr></table></figure>
+<p>Redis 使用 list 结构持有链表，是 <strong>双端、无环、带表头指针和表尾指针，带链表长度计数器、多态（void * 接收各种类型的值）</strong> 性质的链表</p>
+<h5 id="3-Map：字典"><a href="#3-Map：字典" class="headerlink" title="3. Map：字典"></a>3. Map：字典</h5><p>在 Redis 中，字典是哈希键的底层实现之一，字典由哈希表实现，哈希表由哈希表节点实现，哈希表节点就是键值对</p>
+<p>哈希表节点</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">typedef</span> <span class="class"><span class="keyword">struct</span> <span class="title">dictEntry</span>&#123;</span></span><br><span class="line">	</span><br><span class="line">	<span class="comment">// 键</span></span><br><span class="line">	<span class="keyword">void</span> *key;</span><br><span class="line">	</span><br><span class="line">	<span class="comment">// 值</span></span><br><span class="line">	<span class="keyword">union</span> &#123;</span><br><span class="line">		<span class="keyword">void</span> *val;</span><br><span class="line">		<span class="keyword">uint64_t</span> u64;</span><br><span class="line">		<span class="keyword">int64_t</span> s64;</span><br><span class="line">	&#125; v;</span><br><span class="line">	</span><br><span class="line">	<span class="comment">// 指向下个了哈希表节点，形成链表：解决哈希冲突</span></span><br><span class="line">	<span class="class"><span class="keyword">struct</span> <span class="title">dictEntry</span> *<span class="title">next</span>;</span></span><br><span class="line"></span><br><span class="line">&#125; dictEntry;</span><br></pre></td></tr></table></figure>
+<p>哈希表</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">typedef</span> <span class="class"><span class="keyword">struct</span> <span class="title">dictht</span> &#123;</span></span><br><span class="line">	</span><br><span class="line">	<span class="comment">// 哈希表数组</span></span><br><span class="line">	dictEntry **table;</span><br><span class="line"></span><br><span class="line">	<span class="comment">// 哈希表大小</span></span><br><span class="line">	<span class="keyword">unsigned</span> <span class="keyword">long</span> size;</span><br><span class="line"></span><br><span class="line">	<span class="comment">// 哈希表大小掩码，用于计算哈希值：等于 size - 1</span></span><br><span class="line">	<span class="keyword">unsigned</span> <span class="keyword">long</span> sizemask;</span><br><span class="line"></span><br><span class="line">	<span class="comment">// 已有节点数量</span></span><br><span class="line">	<span class="keyword">unsigned</span> <span class="keyword">long</span> used;</span><br><span class="line">	</span><br><span class="line">&#125; dictht;</span><br></pre></td></tr></table></figure>
+<p>字典</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">typedef</span> <span class="class"><span class="keyword">struct</span> <span class="title">dict</span> &#123;</span></span><br><span class="line">	</span><br><span class="line">	<span class="comment">// 类型特定函数</span></span><br><span class="line">	dictType *type;</span><br><span class="line"></span><br><span class="line">	<span class="comment">// 私有数据</span></span><br><span class="line">	<span class="keyword">void</span> *privdata;</span><br><span class="line"></span><br><span class="line">	<span class="comment">// 哈希表：每个字典由两个哈希表，一个平时使用，一个仅在 rehash 时使用</span></span><br><span class="line">	dictht ht[<span class="number">2</span>];</span><br><span class="line"></span><br><span class="line">	<span class="comment">// rehash索引</span></span><br><span class="line">	<span class="keyword">int</span> trehashidx;</span><br><span class="line"></span><br><span class="line">&#125; dict;</span><br></pre></td></tr></table></figure>
+<p>其中，type  和 privdata 是针对不同类型的键值对，为创建多态字典而设置，type 是指向 dictType 结构的指针，每个结构保存了一簇用于操作特定类型键值对的函数，比如：不同类型的哈希函数</p>
+<p>ht 属性是一个包含两个项的数组，一般情况下，字典只使用 ht[0] 哈希表，ht[1] 当进行 rehash 时使用</p>
+<p>Redis 的哈希算法使用的是 <a href="https://github.com/aappleby/smhasher" target="_blank" rel="noopener">MurmurHash</a></p>
+<blockquote>
+<p>hash = dict -&gt; type -&gt; hashFunction(key)</p>
+<p>index = hash &amp; dict -&gt; ht[x].sizemask</p>
+</blockquote>
+<p>Redis 使用链表地址发来解决冲突，新节点将插入链表表头（O(1)）</p>
+<p>重新哈希（rehash）操作对哈希表的大小进行相应的扩展或者收缩，维持负载因子（load factor）在一个合理的范围之内，实际上就是 ht[0] 和 ht[1] 相互替代（比如：扩展 ht[1] - 迁移 0-&gt;1  - 释放 ht[0]）</p>
+<blockquote>
+<p>load factor = ht[0].used / ht[0].size</p>
+</blockquote>
+<p>哈希表的扩展与收缩的<strong>时机</strong></p>
+<ol>
+<li><p>服务器目前没有执行 BGSAVE 或者 BGREWRITEAOF 命令，并且哈希表的负载因子 &gt;= 1;</p>
+</li>
+<li><p>服务器目前正在执行 BGSAVE 或者 BGREWRITEAOF 命令，并且哈希表的负载因子 &gt;= 5;</p>
+</li>
+</ol>
+<p><strong>渐进 rehash</strong>：为了避免 rehash 对服务器性能造成影响，服务器不是一次性将 ht[0] 里面的所有键值对全部 rehash 到 ht[1]，而是分多次、渐进式的将 ht[0] 里面的键值对慢慢 rehash 到 ht[1]，采用分治的思想，随着操作，随着 rehash，期间新加入的值会直接进入 ht[1]，如果 ht[0] 中 get 不到，会自动去 ht[1] 里面查找</p>
+<h5 id="4-Skip-List：跳表"><a href="#4-Skip-List：跳表" class="headerlink" title="4. Skip List：跳表"></a>4. Skip List：跳表</h5><ul>
+<li><p>跳跃表是有序集合的底层实现之一</p>
+</li>
+<li><p>Redis 的跳跃表实现由 zskiplist 和 zskiplistNode 两个结构组成, 其中 zskiplist 用于保存跳跃表信息（比如表头、表尾节点、长度）, 而 zskiplistNode 则用于表示跳跃表节点</p>
+</li>
+<li><p>每个跳跃表节点的层高都是 1 至 32 之间的随机数</p>
+</li>
+<li><p>在同一个跳跃表中, 多个节点可以包含相同的分值, 但每个节点的成员对象必须是唯一的</p>
+</li>
+<li><p>跳跃表中的节点按照分值大小进行排序, 当分值相同时, 节点按照成员对象的大小进行排序</p>
+</li>
+</ul>
+<h5 id="5-IntSet-整数集合"><a href="#5-IntSet-整数集合" class="headerlink" title="5. IntSet: 整数集合"></a>5. IntSet: 整数集合</h5><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">typedef</span> <span class="class"><span class="keyword">struct</span> <span class="title">intset</span> &#123;</span></span><br><span class="line"></span><br><span class="line">	<span class="comment">// 编码方式</span></span><br><span class="line">	<span class="keyword">uint32_t</span> encoding;</span><br><span class="line"></span><br><span class="line">	<span class="comment">// 集合包含的元素数量</span></span><br><span class="line">	<span class="keyword">uint32_t</span> length;</span><br><span class="line"></span><br><span class="line">	<span class="comment">// 保存元素的数组</span></span><br><span class="line">	<span class="keyword">int8_t</span> contents[];</span><br><span class="line"></span><br><span class="line">&#125; intset;</span><br></pre></td></tr></table></figure>
+<p>每次加入新的元素，都有可能引发升级: 1. 扩展空间, 2: 类型统一化, 3: 将新元素和老元素统一加入到扩展后的空间, 需要注意的是: 不支持降级</p>
+<ul>
+<li><p>整数集合是集合键的底层实现之一</p>
+</li>
+<li><p>整数集合的底层实现为数组, 这个数组以有序、无重复的方式保存集合元素, 在有需要时, 程序会根据新添加元素的类型, 改变这个数组的类型</p>
+</li>
+<li><p>升级操作为整数集合带来了操作上的灵活性, 并且尽可能的节约了内存</p>
+</li>
+<li><p>整数集合只支持升级操作, 不支持降级操作</p>
+</li>
+</ul>
+<h5 id="6-Zip-List-压缩列表"><a href="#6-Zip-List-压缩列表" class="headerlink" title="6. Zip List: 压缩列表"></a>6. Zip List: 压缩列表</h5><ul>
+<li><p>压缩列表是一种为节约内存而开发的顺序型数据结构</p>
+</li>
+<li><p>压缩列表被用作列表键和哈希键的底层实现之一</p>
+</li>
+<li><p>压缩列表可以包含多个节点, 每个节点可以保存一个字节数组或者整数值</p>
+</li>
+<li><p>添加新节点到压缩列表, 或者从压缩列表中删除节点, 可能会引发连锁更新操作, 但这种操作出现的几率并不高</p>
+</li>
+</ul>
+<h5 id="7-Object-对象"><a href="#7-Object-对象" class="headerlink" title="7. Object: 对象"></a>7. Object: 对象</h5><p>Redis 并没有直接使用这些数据结构来实现键值对数据库, 而是基于这些数据结构创建了一个对象系统, 这个系统包含 <strong>字符串对象、列表对象、哈希对象、集合对象和有序集合对象</strong> 五种, 根据命令, 判断哪种对象适合就用于执行</p>
+<ul>
+<li><p>Redis 数据库中的每个键值对的键和值都是一个对象</p>
+</li>
+<li><p>Redis 共有字符串、列表、哈希、集合、有序集合五种类型的对象, 每种类型的对象至少都要两种或以上的编码方式, 不同的编码可以在不同的使用场景上优化对象的使用效率</p>
+</li>
+<li><p>服务器在执行某些命令之前, 会先检查给定键的类型能否执行指定的命令, 而检查一个键的类型就是检查键的值对象的类型</p>
+</li>
+<li><p>Redis 的对象系统带有引用计数实现的内存回收机制</p>
+</li>
+<li><p>Redis 会共享值为 0 到 9999 的字符串对象</p>
+</li>
+<li><p>对象会记录自己的最后一次被访问的时间, 这个时间可以用于计算对象的空转时间</p>
+</li>
+</ul>
+
+        
+        </div>
+        <footer class="article-footer">
+            <div class="share-container">
+
+
+
+</div>
+
+    <a data-url="https://aaronshi32.github.io/2018/02/02/读书笔记-Redis 数据结构与对象/" data-id="cjm7udfan001oues6aqfmmpi8" class="article-share-link"><i class="fa fa-share"></i>如需转载，请注明出处</a>
+<script>
+    (function ($) {
+        // Prevent duplicate binding
+        if (typeof(__SHARE_BUTTON_BINDED__) === 'undefined' || !__SHARE_BUTTON_BINDED__) {
+            __SHARE_BUTTON_BINDED__ = true;
+        } else {
+            return;
+        }
+        $('body').on('click', function() {
+            $('.article-share-box.on').removeClass('on');
+        }).on('click', '.article-share-link', function(e) {
+            e.stopPropagation();
+
+            var $this = $(this),
+                url = $this.attr('data-url'),
+                encodedUrl = encodeURIComponent(url),
+                id = 'article-share-box-' + $this.attr('data-id'),
+                offset = $this.offset(),
+                box;
+
+            if ($('#' + id).length) {
+                box = $('#' + id);
+
+                if (box.hasClass('on')){
+                    box.removeClass('on');
+                    return;
+                }
+            } else {
+                var html = [
+                    '<div id="' + id + '" class="article-share-box">',
+                        '<input class="article-share-input" value="' + url + '">',
+                        '<div class="article-share-links">',
+                            '<a href="https://twitter.com/intent/tweet?url=' + encodedUrl + '" class="fa fa-twitter article-share-twitter" target="_blank" title="Twitter"></a>',
+                            '<a href="https://www.facebook.com/sharer.php?u=' + encodedUrl + '" class="fa fa-facebook article-share-facebook" target="_blank" title="Facebook"></a>',
+                            '<a href="http://pinterest.com/pin/create/button/?url=' + encodedUrl + '" class="fa fa-pinterest article-share-pinterest" target="_blank" title="Pinterest"></a>',
+                            '<a href="https://plus.google.com/share?url=' + encodedUrl + '" class="fa fa-google article-share-google" target="_blank" title="Google+"></a>',
+                        '</div>',
+                    '</div>'
+                ].join('');
+
+              box = $(html);
+
+              $('body').append(box);
+            }
+
+            $('.article-share-box.on').hide();
+
+            box.css({
+                top: offset.top + 25,
+                left: offset.left
+            }).addClass('on');
+
+        }).on('click', '.article-share-box', function (e) {
+            e.stopPropagation();
+        }).on('click', '.article-share-box-input', function () {
+            $(this).select();
+        }).on('click', '.article-share-box-link', function (e) {
+            e.preventDefault();
+            e.stopPropagation();
+
+            window.open(this.href, 'article-share-box-window-' + Date.now(), 'width=500,height=450');
+        });
+    })(jQuery);
+</script>
+
+            
+    
+
+        </footer>
+    </div>
+    
+        
+<nav id="article-nav">
+    
+        <a href="/blog/2018/03/28/2018书单/" id="article-nav-newer" class="article-nav-link-wrap">
+            <strong class="article-nav-caption">上一篇</strong>
+            <div class="article-nav-title">
+                
+                    2018书单
+                
+            </div>
+        </a>
+    
+    
+        <a href="/blog/2018/01/16/加密算法/" id="article-nav-older" class="article-nav-link-wrap">
+            <strong class="article-nav-caption">下一篇</strong>
+            <div class="article-nav-title">加密算法</div>
+        </a>
+    
+</nav>
+
+
+    
+</article>
+
+
+    
+    <section id="comments">
+    
+    </section>
+
+</section>
+            
+                <aside id="sidebar">
+   
+        
+    
+        
+    <div class="widget-wrap">
+        <h3 class="widget-title">归档</h3>
+        <div class="widget">
+            <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/blog/archives/2018/08/">八月 2018</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/blog/archives/2018/07/">七月 2018</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/blog/archives/2018/06/">六月 2018</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/blog/archives/2018/05/">五月 2018</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/blog/archives/2018/04/">四月 2018</a><span class="archive-list-count">6</span></li><li class="archive-list-item"><a class="archive-list-link" href="/blog/archives/2018/03/">三月 2018</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/blog/archives/2018/02/">二月 2018</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/blog/archives/2018/01/">一月 2018</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/blog/archives/2017/12/">十二月 2017</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/blog/archives/2017/11/">十一月 2017</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/blog/archives/2017/10/">十月 2017</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/blog/archives/2017/08/">八月 2017</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/blog/archives/2017/07/">七月 2017</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/blog/archives/2017/06/">六月 2017</a><span class="archive-list-count">4</span></li><li class="archive-list-item"><a class="archive-list-link" href="/blog/archives/2017/05/">五月 2017</a><span class="archive-list-count">6</span></li><li class="archive-list-item"><a class="archive-list-link" href="/blog/archives/2017/03/">三月 2017</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/blog/archives/2017/02/">二月 2017</a><span class="archive-list-count">4</span></li><li class="archive-list-item"><a class="archive-list-link" href="/blog/archives/2017/01/">一月 2017</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/blog/archives/2016/12/">十二月 2016</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/blog/archives/2016/11/">十一月 2016</a><span class="archive-list-count">6</span></li><li class="archive-list-item"><a class="archive-list-link" href="/blog/archives/2016/10/">十月 2016</a><span class="archive-list-count">1</span></li></ul>
+        </div>
+    </div>
+
+    
+        
+    <div class="widget-wrap">
+        <h3 class="widget-title">标签</h3>
+        <div class="widget">
+            <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/blog/tags/JavaScript/">JavaScript</a><span class="tag-list-count">4</span></li><li class="tag-list-item"><a class="tag-list-link" href="/blog/tags/人工智能/">人工智能</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/blog/tags/基础知识/">基础知识</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/blog/tags/工具/">工具</a><span class="tag-list-count">6</span></li><li class="tag-list-item"><a class="tag-list-link" href="/blog/tags/日常/">日常</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/blog/tags/框架/">框架</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/blog/tags/疑难杂症/">疑难杂症</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/blog/tags/系统/">系统</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/blog/tags/读书/">读书</a><span class="tag-list-count">28</span></li><li class="tag-list-item"><a class="tag-list-link" href="/blog/tags/面试/">面试</a><span class="tag-list-count">8</span></li></ul>
+        </div>
+    </div>
+
+    
+    <div id="toTop" class="fa fa-angle-up"></div>
+</aside>
+            
+        </div>
+        <footer id="footer">
+    <div class="outer">
+        <div id="footer-info" class="inner">
+            &copy; 2018 AaronShi<br>
+            Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>. Theme by <a href="http://github.com/ppoffice">PPOffice</a>
+        </div>
+    </div>
+</footer>
+        
+
+    
+        <script src="/blog/libs/lightgallery/js/lightgallery.min.js"></script>
+        <script src="/blog/libs/lightgallery/js/lg-thumbnail.min.js"></script>
+        <script src="/blog/libs/lightgallery/js/lg-pager.min.js"></script>
+        <script src="/blog/libs/lightgallery/js/lg-autoplay.min.js"></script>
+        <script src="/blog/libs/lightgallery/js/lg-fullscreen.min.js"></script>
+        <script src="/blog/libs/lightgallery/js/lg-zoom.min.js"></script>
+        <script src="/blog/libs/lightgallery/js/lg-hash.min.js"></script>
+        <script src="/blog/libs/lightgallery/js/lg-share.min.js"></script>
+        <script src="/blog/libs/lightgallery/js/lg-video.min.js"></script>
+    
+    
+        <script src="/blog/libs/justified-gallery/jquery.justifiedGallery.min.js"></script>
+    
+
+
+
+<!-- Custom Scripts -->
+<script src="/blog/js/main.js"></script>
+
+    </div>
+</body>
+</html>
