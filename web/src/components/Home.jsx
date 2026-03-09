@@ -4,6 +4,7 @@ import microsoftLogo from '../../img/Others/Microsoft.svg';
 import PageLayout from './PageLayout';
 import ProjectCard from './ProjectCard';
 import TechStackBar from './TechStackBar';
+import Footer from './Footer';
 import layout from '../styles/layout.module.css';
 
 const TECHS = [
@@ -21,6 +22,7 @@ export default function Home() {
         <ProjectCard logo={microsoftLogo} logoAlt="Microsoft" logoSize={48} title="Microsoft" to="/microsoft" />
       </div>
       <TechStackBar techs={TECHS} />
+      <Footer />
     </PageLayout>
   );
 }

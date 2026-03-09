@@ -1,0 +1,435 @@
+<!DOCTYPE html>
+<html lang=zh>
+<head>
+    <meta charset="utf-8">
+    
+    <title>Node命令行工具-Yargs和Commander | 着陆的橘子</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+    <meta name="description" content="日常使用Node时，避免不了编写几个命令行工具。作为命令行工具，最直接的就是针对输入的各种参数、选项等，执行相应的命令。使用原生的progress.argv虽然可以进行参数判断，但使用起来十分不方便，为此研究了下Node第三方命令行工具 yargs 和 commander Yargs首先来看一个简单的例子 1234567891011121314λ index -h">
+<meta name="keywords" content="JavaScript,工具">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Node命令行工具-Yargs和Commander">
+<meta property="og:url" content="https://aaronshi32.github.io/2016/11/16/Node命令行工具-Yargs和Commander/index.html">
+<meta property="og:site_name" content="着陆的橘子">
+<meta property="og:description" content="日常使用Node时，避免不了编写几个命令行工具。作为命令行工具，最直接的就是针对输入的各种参数、选项等，执行相应的命令。使用原生的progress.argv虽然可以进行参数判断，但使用起来十分不方便，为此研究了下Node第三方命令行工具 yargs 和 commander Yargs首先来看一个简单的例子 1234567891011121314λ index -h">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:updated_time" content="2016-11-17T09:15:38.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Node命令行工具-Yargs和Commander">
+<meta name="twitter:description" content="日常使用Node时，避免不了编写几个命令行工具。作为命令行工具，最直接的就是针对输入的各种参数、选项等，执行相应的命令。使用原生的progress.argv虽然可以进行参数判断，但使用起来十分不方便，为此研究了下Node第三方命令行工具 yargs 和 commander Yargs首先来看一个简单的例子 1234567891011121314λ index -h">
+    
+
+    
+
+    
+
+    <link rel="stylesheet" href="/blog/libs/font-awesome/css/font-awesome.min.css">
+    <link rel="stylesheet" href="/blog/libs/open-sans/styles.css">
+    <link rel="stylesheet" href="/blog/libs/source-code-pro/styles.css">
+
+    <link rel="stylesheet" href="/blog/css/style.css">
+
+    <script src="/blog/libs/jquery/2.1.3/jquery.min.js"></script>
+    
+    
+        <link rel="stylesheet" href="/blog/libs/lightgallery/css/lightgallery.min.css">
+    
+    
+        <link rel="stylesheet" href="/blog/libs/justified-gallery/justifiedGallery.min.css">
+    
+    
+    
+    
+
+
+</head>
+
+<body>
+    <div id="container">
+        <header id="header">
+    <div id="header-main" class="header-inner">
+        <div class="outer">
+            <a href="/blog/" id="logo">
+                <i class="logo"></i>
+                <span class="site-title">着陆的橘子</span>
+            </a>
+            <nav id="main-nav">
+                
+                    <a class="main-nav-link" href="/.">主页</a>
+                
+                    <a class="main-nav-link" href="/about/cv.pdf">关于</a>
+                
+            </nav>
+            
+                
+                <nav id="sub-nav">
+                    <div class="profile" id="profile-nav">
+                        <a id="profile-anchor" href="javascript:;">
+                            <img class="avatar" src="/css/images/avatar.png" />
+                            <i class="fa fa-caret-down"></i>
+                        </a>
+                    </div>
+                </nav>
+            
+            <div id="search-form-wrap">
+
+    <form class="search-form">
+        <input type="text" class="ins-search-input search-form-input" placeholder="文章" />
+        <button type="submit" class="search-form-submit"></button>
+    </form>
+    <div class="ins-search">
+    <div class="ins-search-mask"></div>
+    <div class="ins-search-container">
+        <div class="ins-input-wrapper">
+            <input type="text" class="ins-search-input" placeholder="想要查找什么..." />
+            <span class="ins-close ins-selectable"><i class="fa fa-times-circle"></i></span>
+        </div>
+        <div class="ins-section-wrapper">
+            <div class="ins-section-container"></div>
+        </div>
+    </div>
+</div>
+<script>
+(function (window) {
+    var INSIGHT_CONFIG = {
+        TRANSLATION: {
+            POSTS: '文章',
+            PAGES: '页面',
+            CATEGORIES: '分类',
+            TAGS: '标签',
+            UNTITLED: '(未命名)',
+        },
+        ROOT_URL: '/',
+        CONTENT_URL: '/content.json',
+    };
+    window.INSIGHT_CONFIG = INSIGHT_CONFIG;
+})(window);
+</script>
+<script src="/blog/js/insight.js"></script>
+
+</div>
+        </div>
+    </div>
+    <div id="main-nav-mobile" class="header-sub header-inner">
+        <table class="menu outer">
+            <tr>
+                
+                    <td><a class="main-nav-link" href="/.">主页</a></td>
+                
+                    <td><a class="main-nav-link" href="/about/cv.pdf">关于</a></td>
+                
+                <td>
+                    
+    <div class="search-form">
+        <input type="text" class="ins-search-input search-form-input" placeholder="搜索" />
+    </div>
+
+                </td>
+            </tr>
+        </table>
+    </div>
+</header>
+
+        <div class="outer">
+            
+                
+
+<aside id="profile">
+    <div class="inner profile-inner">
+        <div class="base-info profile-block">
+            <img id="avatar" src="/css/images/avatar.png" />
+            <h2 id="name">AaronShi32</h2>
+            <h3 id="title">Senior Software Developer</h3>
+            <span id="location"><i class="fa fa-map-marker"></i>Beijing, China</span>
+            <a id="follow" target="_blank" href="https://github.com/AaronShi32">Follow</a>
+        </div>
+        <div class="article-info profile-block">
+            <div class="article-info-block">
+                48
+                <span>文章</span>
+            </div>
+            <div class="article-info-block">
+                10
+                <span>标签</span>
+            </div>
+        </div>
+        
+        <div class="profile-block social-links">
+            <table>
+                <tr>
+                    
+                    
+                    <td>
+                        <a href="https://github.com/AaronShi32" target="_blank" title="github" >
+                            <i class="fa fa-github"></i>
+                        </a>
+                    </td>
+                    
+                    <td>
+                        <a href="https://www.linkedin.com/in/cfshi" target="_blank" title="linkedin-square" >
+                            <i class="fa fa-linkedin-square"></i>
+                        </a>
+                    </td>
+                    
+                </tr>
+            </table>
+        </div>
+        
+    </div>
+</aside>
+
+            
+            <section id="main"><article id="post-Node命令行工具-Yargs和Commander" class="article article-type-post" itemscope itemprop="blogPost">
+    <div class="article-inner">
+        
+        
+            <header class="article-header">
+                
+    
+        <h1 class="article-title" itemprop="name">
+            Node命令行工具-Yargs和Commander
+        </h1>
+    
+
+                
+                    <div class="article-meta">
+                        
+    <div class="article-date">
+        <i class="fa fa-calendar"></i>
+        <a href="/blog/2016/11/16/Node命令行工具-Yargs和Commander/">
+            <time datetime="2016-11-16T10:25:40.000Z" itemprop="datePublished">2016-11-16</time>
+        </a>
+    </div>
+
+
+                        
+                        
+    <div class="article-tag">
+        <i class="fa fa-tag"></i>
+        <a class="tag-link" href="/blog/tags/JavaScript/">JavaScript</a>, <a class="tag-link" href="/blog/tags/工具/">工具</a>
+    </div>
+
+                    </div>
+                
+            </header>
+        
+        
+        <div class="article-entry" itemprop="articleBody">
+        
+            
+            <p>日常使用Node时，避免不了编写几个命令行工具。作为命令行工具，最直接的就是针对输入的各种参数、选项等，执行相应的命令。使用原生的<code>progress.argv</code>虽然可以进行参数判断，但使用起来十分不方便，为此研究了下Node第三方命令行工具 yargs 和 commander</p>
+<h4 id="Yargs"><a href="#Yargs" class="headerlink" title="Yargs"></a>Yargs</h4><p>首先来看一个简单的例子</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">λ index -h                                          </span><br><span class="line">Usage: index.js &lt;command&gt; -a [num] -b [num]       </span><br><span class="line">                                                  </span><br><span class="line">Commands:                               </span><br><span class="line">  add   same as a + b                         </span><br><span class="line">  plus  same as a - b                                    </span><br><span class="line">                                                  </span><br><span class="line">Options:                                                  </span><br><span class="line">  -a, -A      load a parameter        [number] [required]</span><br><span class="line">  -b, -B      load b parameter        [number] [required]</span><br><span class="line">  -h, --help  Show help               [boolean]</span><br><span class="line">                                                             </span><br><span class="line">Examples:                                                    </span><br><span class="line">  index.js add -a 10 -b 3  //compute 10 add 3</span><br></pre></td></tr></table></figure>
+<p>这段帮助信息是用 yargs 编写的，实现起来很简单，来看代码</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#!/usr/bin/env node</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> yargs = <span class="built_in">require</span>(<span class="string">'yargs'</span>);</span><br><span class="line">ARGV = yargs.usage(<span class="string">'Usage: $0 &lt;command&gt; -a [num] -b [num]'</span>)</span><br><span class="line">	    .command(<span class="string">'add'</span>, <span class="string">'same as a + b'</span>)</span><br><span class="line">	    .command(<span class="string">'plus'</span>, <span class="string">'same as a - b'</span>)</span><br><span class="line">	    .example(<span class="string">'$0 add -a 10 -b 3'</span>, <span class="string">'//compute 10 add 3'</span>)</span><br><span class="line">	    .alias(<span class="string">'a'</span>, <span class="string">'A'</span>)</span><br><span class="line">	    .alias(<span class="string">'b'</span>, <span class="string">'B'</span>)</span><br><span class="line">	    .alias(<span class="string">'h'</span>, <span class="string">'help'</span>)</span><br><span class="line">	    .number(<span class="string">'a'</span>)</span><br><span class="line">	    .number(<span class="string">'b'</span>)</span><br><span class="line">	    .describe(<span class="string">'a'</span>, <span class="string">'load a parameters'</span>)</span><br><span class="line">	    .describe(<span class="string">'b'</span>, <span class="string">'load b parameters'</span>)</span><br><span class="line">	    .demand([<span class="string">'a'</span>,<span class="string">'b'</span>])</span><br><span class="line">	    .help(<span class="string">'h'</span>)</span><br><span class="line">	    .argv</span><br><span class="line"><span class="keyword">if</span>(ARGV.h || ARGV.help)&#123;</span><br><span class="line">    print(ARGV.help());</span><br><span class="line">    process.exit(<span class="number">0</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>上述代码可以分为几个阶段</p>
+<ul>
+<li><p>usage: 命令行工具的使用方法</p>
+</li>
+<li><p>command: 如果需要输入命令，则用 <code>command(&#39;命令&#39;，&#39;描述&#39;)</code> 的方式标注</p>
+</li>
+<li><p>example: 给出使用的例子，用 <code>example(&#39;命令&#39;，&#39;描述&#39;)</code> 的方式标注</p>
+</li>
+<li><p>alias: 对输入参数别名化，比如 -a 和 -A 是等效的</p>
+</li>
+<li><p>number(string,boolean,array…): 对输入的参数进行类型转换，比如<code>.array(a), -a 10 4 3 5</code>，那么 ARGV.a 是 <code>[10,4,3,5]</code></p>
+</li>
+<li><p>describe: 对输入参数进行描述，用 <code>describe(&#39;参数&#39;，&#39;描述&#39;)</code> 的方式标注</p>
+</li>
+<li><p>require：标注哪些参数是必备的，比如 a 和 b 的后面加入了 <code>[require]</code> 的描述</p>
+</li>
+<li><p>help/epilog: 辅助的帮助/版权信息</p>
+</li>
+</ul>
+<p>就这样，一个简单的命令行信息交互帮助信息就生成了，后面可以用 ARGV.xxx 获得输入的参数，做后续程序的逻辑判断。</p>
+<h5 id="进阶用法"><a href="#进阶用法" class="headerlink" title="进阶用法"></a>进阶用法</h5><ul>
+<li><p>ARGV._ : 获得未指定的输入参数，比如 index -a 10 -b 3 5 “no” “13”，则 ARGV._ 获得 [‘5’,’no’,’13’]</p>
+</li>
+<li><p>.check(cb)：检查输入参数合法性，如果 cb 返回 false，则输出帮助信息并退出</p>
+</li>
+<li><p>.fail(cb)：当工具运行出错时，输出错误信息</p>
+</li>
+</ul>
+<p>更多用法请参考 <a href="https://github.com/yargs/yargs" target="_blank" rel="noopener">yargs</a>，一般情况下，用 yargs 快速搭建一个命令行的使用帮助信息就足够了，不建议把判断的复杂逻辑也集成到 yargs 中</p>
+<h4 id="Commander"><a href="#Commander" class="headerlink" title="Commander"></a>Commander</h4><p>还是之前的例子，用 commander 实现的运行结果如下</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">λ commander --help</span><br><span class="line"></span><br><span class="line">  Usage: commander &lt;command&gt; -a [num] -b [num]</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">  Commands:</span><br><span class="line"></span><br><span class="line">    add    same as a + b</span><br><span class="line">    plus   same as a - b</span><br><span class="line"></span><br><span class="line">  Options:</span><br><span class="line"></span><br><span class="line">    -h, --help    output usage information</span><br><span class="line">    -a, -A [num]  load a parameter</span><br><span class="line">    -b, -B [num]  load b parameter</span><br></pre></td></tr></table></figure>
+<p>来看代码</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#!/usr/bin/env node</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> program = <span class="built_in">require</span>(<span class="string">'commander'</span>);</span><br><span class="line"></span><br><span class="line">program</span><br><span class="line">  .usage(<span class="string">'&lt;command&gt; -a [num] -b [num]'</span>)</span><br><span class="line">  .option(<span class="string">'-a, -A [num]'</span>, <span class="string">'load a parameter'</span>)</span><br><span class="line">  .option(<span class="string">'-b, -B [num]'</span>, <span class="string">'load b parameter'</span>);</span><br><span class="line"></span><br><span class="line">program</span><br><span class="line">  .command(<span class="string">'add'</span>)</span><br><span class="line">  .description(<span class="string">'same as a + b'</span>);</span><br><span class="line"></span><br><span class="line">program</span><br><span class="line">  .command(<span class="string">'plus'</span>)</span><br><span class="line">  .description(<span class="string">'same as a - b'</span>);</span><br><span class="line"></span><br><span class="line">program.parse(process.argv);</span><br></pre></td></tr></table></figure>
+<p>通过对比，个人比较喜欢 commander 的代码风格，每个 command 单独处理，可以各种自定义，比如针对某个命令输出 help 信息，而 yargs 的那种分块编码，也值得借鉴，从代码量而言，yargs 和 commander 指定复杂的命令时，前者的代码量会比较少，同样，前者在功能上比后者更加丰富，适合复杂通用的命令行工具，更多用法请参考 <a href="https://github.com/tj/commander.js" target="_blank" rel="noopener">commander</a></p>
+<h4 id="后记：Windows-上如何调用nodejs命令行工具"><a href="#后记：Windows-上如何调用nodejs命令行工具" class="headerlink" title="后记：Windows 上如何调用nodejs命令行工具"></a>后记：Windows 上如何调用nodejs命令行工具</h4><p>在本机上找到任意一个npm的安装包，都能发现有 xxx.cmd 这样的文件，打开如下</p>
+<figure class="highlight bat"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">@<span class="keyword">IF</span> <span class="keyword">EXIST</span> "%~dp0\node.exe" (</span><br><span class="line">  "%~dp0\node.exe"  "%~dp0\xxx.js" %*</span><br><span class="line">) <span class="keyword">ELSE</span> (</span><br><span class="line">  @<span class="built_in">SETLOCAL</span></span><br><span class="line">  @<span class="built_in">SET</span> PATHEXT=<span class="variable">%PATHEXT:;.JS;=;%</span></span><br><span class="line">  node  "%~dp0\xxx.js" %*</span><br><span class="line">)</span><br></pre></td></tr></table></figure>
+<p>不难理解，在window上要执行nodejs，必须要用 <code>node xxx.js</code> 的方式，而这段代码就是省略了前面的node，直接用 xxx 即可，比如之前的例子中，<code>#!/usr/bin/env node</code>用来在linux上指定脚本运行环境为node，所以可以直接用 ./script.js 加参数运行，在window上，将上面的文件中 xxx 替换成script，即可用 script 加参数运行了</p>
+<p>如果以后涉及到用Node写两个平台通用的工具，请记住编写这个文件</p>
+
+        
+        </div>
+        <footer class="article-footer">
+            <div class="share-container">
+
+
+
+</div>
+
+    <a data-url="https://aaronshi32.github.io/2016/11/16/Node命令行工具-Yargs和Commander/" data-id="cjm7udf9y000aues62lp6sbt4" class="article-share-link"><i class="fa fa-share"></i>如需转载，请注明出处</a>
+<script>
+    (function ($) {
+        // Prevent duplicate binding
+        if (typeof(__SHARE_BUTTON_BINDED__) === 'undefined' || !__SHARE_BUTTON_BINDED__) {
+            __SHARE_BUTTON_BINDED__ = true;
+        } else {
+            return;
+        }
+        $('body').on('click', function() {
+            $('.article-share-box.on').removeClass('on');
+        }).on('click', '.article-share-link', function(e) {
+            e.stopPropagation();
+
+            var $this = $(this),
+                url = $this.attr('data-url'),
+                encodedUrl = encodeURIComponent(url),
+                id = 'article-share-box-' + $this.attr('data-id'),
+                offset = $this.offset(),
+                box;
+
+            if ($('#' + id).length) {
+                box = $('#' + id);
+
+                if (box.hasClass('on')){
+                    box.removeClass('on');
+                    return;
+                }
+            } else {
+                var html = [
+                    '<div id="' + id + '" class="article-share-box">',
+                        '<input class="article-share-input" value="' + url + '">',
+                        '<div class="article-share-links">',
+                            '<a href="https://twitter.com/intent/tweet?url=' + encodedUrl + '" class="fa fa-twitter article-share-twitter" target="_blank" title="Twitter"></a>',
+                            '<a href="https://www.facebook.com/sharer.php?u=' + encodedUrl + '" class="fa fa-facebook article-share-facebook" target="_blank" title="Facebook"></a>',
+                            '<a href="http://pinterest.com/pin/create/button/?url=' + encodedUrl + '" class="fa fa-pinterest article-share-pinterest" target="_blank" title="Pinterest"></a>',
+                            '<a href="https://plus.google.com/share?url=' + encodedUrl + '" class="fa fa-google article-share-google" target="_blank" title="Google+"></a>',
+                        '</div>',
+                    '</div>'
+                ].join('');
+
+              box = $(html);
+
+              $('body').append(box);
+            }
+
+            $('.article-share-box.on').hide();
+
+            box.css({
+                top: offset.top + 25,
+                left: offset.left
+            }).addClass('on');
+
+        }).on('click', '.article-share-box', function (e) {
+            e.stopPropagation();
+        }).on('click', '.article-share-box-input', function () {
+            $(this).select();
+        }).on('click', '.article-share-box-link', function (e) {
+            e.preventDefault();
+            e.stopPropagation();
+
+            window.open(this.href, 'article-share-box-window-' + Date.now(), 'width=500,height=450');
+        });
+    })(jQuery);
+</script>
+
+            
+    
+
+        </footer>
+    </div>
+    
+        
+<nav id="article-nav">
+    
+        <a href="/blog/2016/11/17/读书笔记-大话设计模式/" id="article-nav-newer" class="article-nav-link-wrap">
+            <strong class="article-nav-caption">上一篇</strong>
+            <div class="article-nav-title">
+                
+                    读书笔记-大话设计模式
+                
+            </div>
+        </a>
+    
+    
+        <a href="/blog/2016/11/14/JS压缩混淆工具-UglifyJS/" id="article-nav-older" class="article-nav-link-wrap">
+            <strong class="article-nav-caption">下一篇</strong>
+            <div class="article-nav-title">JS压缩混淆工具-UglifyJS</div>
+        </a>
+    
+</nav>
+
+
+    
+</article>
+
+
+    
+    <section id="comments">
+    
+    </section>
+
+</section>
+            
+                <aside id="sidebar">
+   
+        
+    
+        
+    <div class="widget-wrap">
+        <h3 class="widget-title">归档</h3>
+        <div class="widget">
+            <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/blog/archives/2018/08/">八月 2018</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/blog/archives/2018/07/">七月 2018</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/blog/archives/2018/06/">六月 2018</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/blog/archives/2018/05/">五月 2018</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/blog/archives/2018/04/">四月 2018</a><span class="archive-list-count">6</span></li><li class="archive-list-item"><a class="archive-list-link" href="/blog/archives/2018/03/">三月 2018</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/blog/archives/2018/02/">二月 2018</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/blog/archives/2018/01/">一月 2018</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/blog/archives/2017/12/">十二月 2017</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/blog/archives/2017/11/">十一月 2017</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/blog/archives/2017/10/">十月 2017</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/blog/archives/2017/08/">八月 2017</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/blog/archives/2017/07/">七月 2017</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/blog/archives/2017/06/">六月 2017</a><span class="archive-list-count">4</span></li><li class="archive-list-item"><a class="archive-list-link" href="/blog/archives/2017/05/">五月 2017</a><span class="archive-list-count">6</span></li><li class="archive-list-item"><a class="archive-list-link" href="/blog/archives/2017/03/">三月 2017</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/blog/archives/2017/02/">二月 2017</a><span class="archive-list-count">4</span></li><li class="archive-list-item"><a class="archive-list-link" href="/blog/archives/2017/01/">一月 2017</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/blog/archives/2016/12/">十二月 2016</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/blog/archives/2016/11/">十一月 2016</a><span class="archive-list-count">6</span></li><li class="archive-list-item"><a class="archive-list-link" href="/blog/archives/2016/10/">十月 2016</a><span class="archive-list-count">1</span></li></ul>
+        </div>
+    </div>
+
+    
+        
+    <div class="widget-wrap">
+        <h3 class="widget-title">标签</h3>
+        <div class="widget">
+            <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/blog/tags/JavaScript/">JavaScript</a><span class="tag-list-count">4</span></li><li class="tag-list-item"><a class="tag-list-link" href="/blog/tags/人工智能/">人工智能</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/blog/tags/基础知识/">基础知识</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/blog/tags/工具/">工具</a><span class="tag-list-count">6</span></li><li class="tag-list-item"><a class="tag-list-link" href="/blog/tags/日常/">日常</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/blog/tags/框架/">框架</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/blog/tags/疑难杂症/">疑难杂症</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/blog/tags/系统/">系统</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/blog/tags/读书/">读书</a><span class="tag-list-count">28</span></li><li class="tag-list-item"><a class="tag-list-link" href="/blog/tags/面试/">面试</a><span class="tag-list-count">8</span></li></ul>
+        </div>
+    </div>
+
+    
+    <div id="toTop" class="fa fa-angle-up"></div>
+</aside>
+            
+        </div>
+        <footer id="footer">
+    <div class="outer">
+        <div id="footer-info" class="inner">
+            &copy; 2018 AaronShi<br>
+            Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>. Theme by <a href="http://github.com/ppoffice">PPOffice</a>
+        </div>
+    </div>
+</footer>
+        
+
+    
+        <script src="/blog/libs/lightgallery/js/lightgallery.min.js"></script>
+        <script src="/blog/libs/lightgallery/js/lg-thumbnail.min.js"></script>
+        <script src="/blog/libs/lightgallery/js/lg-pager.min.js"></script>
+        <script src="/blog/libs/lightgallery/js/lg-autoplay.min.js"></script>
+        <script src="/blog/libs/lightgallery/js/lg-fullscreen.min.js"></script>
+        <script src="/blog/libs/lightgallery/js/lg-zoom.min.js"></script>
+        <script src="/blog/libs/lightgallery/js/lg-hash.min.js"></script>
+        <script src="/blog/libs/lightgallery/js/lg-share.min.js"></script>
+        <script src="/blog/libs/lightgallery/js/lg-video.min.js"></script>
+    
+    
+        <script src="/blog/libs/justified-gallery/jquery.justifiedGallery.min.js"></script>
+    
+
+
+
+<!-- Custom Scripts -->
+<script src="/blog/js/main.js"></script>
+
+    </div>
+</body>
+</html>

@@ -1,0 +1,448 @@
+<!DOCTYPE html>
+<html lang=zh>
+<head>
+    <meta charset="utf-8">
+    
+    <title>读书笔记-程序员的自我修养（一） | 着陆的橘子</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+    <meta name="description" content="计算机基础知识回顾 SMP（Symmetrical Multi-Processing）对称多处理器：每个CPU在系统中所处的地位和所发挥的功能都是一样的。通常情况下的程序不可能分解成多个不相干的子问题，除非商用的计算环境（充分发挥每个CPU的能力），所以多核处理器（Mutli-core Processor）和 SMP 通常是一个概念。  层次结构，计算机科学领域的任何问题都可以通过增加一个间接的中">
+<meta name="keywords" content="读书">
+<meta property="og:type" content="article">
+<meta property="og:title" content="读书笔记-程序员的自我修养（一）">
+<meta property="og:url" content="https://aaronshi32.github.io/2017/05/06/读书笔记-程序员的自我修养（一）/index.html">
+<meta property="og:site_name" content="着陆的橘子">
+<meta property="og:description" content="计算机基础知识回顾 SMP（Symmetrical Multi-Processing）对称多处理器：每个CPU在系统中所处的地位和所发挥的功能都是一样的。通常情况下的程序不可能分解成多个不相干的子问题，除非商用的计算环境（充分发挥每个CPU的能力），所以多核处理器（Mutli-core Processor）和 SMP 通常是一个概念。  层次结构，计算机科学领域的任何问题都可以通过增加一个间接的中">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:updated_time" content="2017-05-06T02:51:28.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="读书笔记-程序员的自我修养（一）">
+<meta name="twitter:description" content="计算机基础知识回顾 SMP（Symmetrical Multi-Processing）对称多处理器：每个CPU在系统中所处的地位和所发挥的功能都是一样的。通常情况下的程序不可能分解成多个不相干的子问题，除非商用的计算环境（充分发挥每个CPU的能力），所以多核处理器（Mutli-core Processor）和 SMP 通常是一个概念。  层次结构，计算机科学领域的任何问题都可以通过增加一个间接的中">
+    
+
+    
+
+    
+
+    <link rel="stylesheet" href="/blog/libs/font-awesome/css/font-awesome.min.css">
+    <link rel="stylesheet" href="/blog/libs/open-sans/styles.css">
+    <link rel="stylesheet" href="/blog/libs/source-code-pro/styles.css">
+
+    <link rel="stylesheet" href="/blog/css/style.css">
+
+    <script src="/blog/libs/jquery/2.1.3/jquery.min.js"></script>
+    
+    
+        <link rel="stylesheet" href="/blog/libs/lightgallery/css/lightgallery.min.css">
+    
+    
+        <link rel="stylesheet" href="/blog/libs/justified-gallery/justifiedGallery.min.css">
+    
+    
+    
+    
+
+
+</head>
+
+<body>
+    <div id="container">
+        <header id="header">
+    <div id="header-main" class="header-inner">
+        <div class="outer">
+            <a href="/blog/" id="logo">
+                <i class="logo"></i>
+                <span class="site-title">着陆的橘子</span>
+            </a>
+            <nav id="main-nav">
+                
+                    <a class="main-nav-link" href="/.">主页</a>
+                
+                    <a class="main-nav-link" href="/about/cv.pdf">关于</a>
+                
+            </nav>
+            
+                
+                <nav id="sub-nav">
+                    <div class="profile" id="profile-nav">
+                        <a id="profile-anchor" href="javascript:;">
+                            <img class="avatar" src="/css/images/avatar.png" />
+                            <i class="fa fa-caret-down"></i>
+                        </a>
+                    </div>
+                </nav>
+            
+            <div id="search-form-wrap">
+
+    <form class="search-form">
+        <input type="text" class="ins-search-input search-form-input" placeholder="文章" />
+        <button type="submit" class="search-form-submit"></button>
+    </form>
+    <div class="ins-search">
+    <div class="ins-search-mask"></div>
+    <div class="ins-search-container">
+        <div class="ins-input-wrapper">
+            <input type="text" class="ins-search-input" placeholder="想要查找什么..." />
+            <span class="ins-close ins-selectable"><i class="fa fa-times-circle"></i></span>
+        </div>
+        <div class="ins-section-wrapper">
+            <div class="ins-section-container"></div>
+        </div>
+    </div>
+</div>
+<script>
+(function (window) {
+    var INSIGHT_CONFIG = {
+        TRANSLATION: {
+            POSTS: '文章',
+            PAGES: '页面',
+            CATEGORIES: '分类',
+            TAGS: '标签',
+            UNTITLED: '(未命名)',
+        },
+        ROOT_URL: '/',
+        CONTENT_URL: '/content.json',
+    };
+    window.INSIGHT_CONFIG = INSIGHT_CONFIG;
+})(window);
+</script>
+<script src="/blog/js/insight.js"></script>
+
+</div>
+        </div>
+    </div>
+    <div id="main-nav-mobile" class="header-sub header-inner">
+        <table class="menu outer">
+            <tr>
+                
+                    <td><a class="main-nav-link" href="/.">主页</a></td>
+                
+                    <td><a class="main-nav-link" href="/about/cv.pdf">关于</a></td>
+                
+                <td>
+                    
+    <div class="search-form">
+        <input type="text" class="ins-search-input search-form-input" placeholder="搜索" />
+    </div>
+
+                </td>
+            </tr>
+        </table>
+    </div>
+</header>
+
+        <div class="outer">
+            
+                
+
+<aside id="profile">
+    <div class="inner profile-inner">
+        <div class="base-info profile-block">
+            <img id="avatar" src="/css/images/avatar.png" />
+            <h2 id="name">AaronShi32</h2>
+            <h3 id="title">Senior Software Developer</h3>
+            <span id="location"><i class="fa fa-map-marker"></i>Beijing, China</span>
+            <a id="follow" target="_blank" href="https://github.com/AaronShi32">Follow</a>
+        </div>
+        <div class="article-info profile-block">
+            <div class="article-info-block">
+                48
+                <span>文章</span>
+            </div>
+            <div class="article-info-block">
+                10
+                <span>标签</span>
+            </div>
+        </div>
+        
+        <div class="profile-block social-links">
+            <table>
+                <tr>
+                    
+                    
+                    <td>
+                        <a href="https://github.com/AaronShi32" target="_blank" title="github" >
+                            <i class="fa fa-github"></i>
+                        </a>
+                    </td>
+                    
+                    <td>
+                        <a href="https://www.linkedin.com/in/cfshi" target="_blank" title="linkedin-square" >
+                            <i class="fa fa-linkedin-square"></i>
+                        </a>
+                    </td>
+                    
+                </tr>
+            </table>
+        </div>
+        
+    </div>
+</aside>
+
+            
+            <section id="main"><article id="post-读书笔记-程序员的自我修养（一）" class="article article-type-post" itemscope itemprop="blogPost">
+    <div class="article-inner">
+        
+        
+            <header class="article-header">
+                
+    
+        <h1 class="article-title" itemprop="name">
+            读书笔记-程序员的自我修养（一）
+        </h1>
+    
+
+                
+                    <div class="article-meta">
+                        
+    <div class="article-date">
+        <i class="fa fa-calendar"></i>
+        <a href="/blog/2017/05/06/读书笔记-程序员的自我修养（一）/">
+            <time datetime="2017-05-06T02:50:04.000Z" itemprop="datePublished">2017-05-06</time>
+        </a>
+    </div>
+
+
+                        
+                        
+    <div class="article-tag">
+        <i class="fa fa-tag"></i>
+        <a class="tag-link" href="/blog/tags/读书/">读书</a>
+    </div>
+
+                    </div>
+                
+            </header>
+        
+        
+        <div class="article-entry" itemprop="articleBody">
+        
+            
+            <h3 id="计算机基础知识回顾"><a href="#计算机基础知识回顾" class="headerlink" title="计算机基础知识回顾"></a>计算机基础知识回顾</h3><ul>
+<li><p>SMP（Symmetrical Multi-Processing）对称多处理器：每个CPU在系统中所处的地位和所发挥的功能都是一样的。通常情况下的程序不可能分解成多个不相干的子问题，除非商用的计算环境（充分发挥每个CPU的能力），所以多核处理器（Mutli-core Processor）和 SMP 通常是一个概念。</p>
+</li>
+<li><p>层次结构，计算机科学领域的任何问题都可以通过增加一个间接的中间层来解决。开发工具与应用程序属于同一个层次，因为它们都使用运行库提供的 <strong>应用程序编程接口（Application Programming Interface）</strong>。运行库使用操作系统提供的 <strong>系统调用接口（System call Interface）</strong>，通常以软件中断方式实现提供。操作系统内核层使用硬件层提供的 <strong>硬件规格（Hardware Specification）</strong></p>
+</li>
+<li><p>操作系统的一个功能是提供抽象的接口，另一个主要功能是管理硬件资源（CPU，存储器（内存和磁盘）和 I/O 设备）</p>
+<ul>
+<li><p>不要让CPU打盹：早期的CPU是 <strong>单一</strong> 服务式，简直浪费，后来出现了分时系统（Time-Sharing System），以 <strong>协作</strong> 的方式主动让闲CPU，供其他程序使用，再到现在，操作系统接管了所有硬件资源，本身运行在一个受硬件保护的级别，所有程序都以进程的方式运转，并且允许 <strong>抢占式</strong> 的CPU分配方式</p>
+</li>
+<li><p>设备驱动（Device Driver），操作系统 <strong>将硬件逐渐抽象成一些列的概念</strong>。比如：UNIX 中硬件设备的访问形式跟访问普通的文件形式一样，Windows 中，图像硬件被抽象成 GDI，声音和多媒体设备被抽象成 DirectX 对象等，向上提供统一的接口供程序使用，设备驱动完成向下对硬件的适配</p>
+</li>
+<li><p>I/O 设备：内存和磁盘的读取和写入是通过 I/O 端口寄存器来实现的，提供读取和写入的地址，来完成磁盘数据操作</p>
+<p>即操作系统以进程概念，使得每个进程从逻辑上来看都是独占计算机资源，实质上操作系统以抢占式的 CPU 策略，I/O 抽象模型的方式来管理这些资源</p>
+</li>
+</ul>
+</li>
+<li><p>操作系统是如何管理内存的</p>
+<ul>
+<li><p>解决的问题：如何将计算机 <strong>有限</strong> 的物理内存分配给 <strong>多个</strong> 程序使用</p>
+</li>
+<li><p>直接分配物理内存的弊端：地址空间不隔离（程序直接访问物理内存），内存使用效率低（缺乏有效的内存管理机制，使得频繁换入换出数据，内存的使用分配以程序为单位（粒度太大）），程序运行的地址不固定（程序每次装入内存执行时，数据和指令跳转涉及到重定位问题）</p>
+</li>
+<li><p>解决方法： 增加中间层来 <strong>隔离</strong>，把程序给出的地址看作是一种 <strong>虚拟地址（Virtual Address）</strong>，通过某些映射方法，保证任意一个程序所能够访问的物理内存区域跟另外一个程序相互不重叠，以达到地址空间隔离的效果</p>
+</li>
+<li><p>分段（Segmentation）：段映射，以程序所使用的的内存为单位，从虚拟地址映射到物理地址，映射结果唯一，解决了隔离和程序地址不固定的问题</p>
+</li>
+<li><p>分页（Paging）：页分割，把常用的数据和代码页装载到内存中，把不常用的代码和数据保存在磁盘里，当用到的时候再取出来。若用到的页不在内存中，操作系统会受到页错误（Page Fault），然后将需要的页装载到内存中。硬件级别：<strong>MMU（Memory Management Unit）</strong>用来支持虚拟地址到物理地址的转换，已集成到CPU内部</p>
+</li>
+</ul>
+</li>
+<li><p>程序执行流最小单元：线程（Thread），又称为轻量级进程（Lightweight Process，LWP）</p>
+<ul>
+<li><p>基础概念</p>
+<p>  <strong>线程私有</strong>（局部变量，函数的参数，TLS数据），<strong>线程之间共享</strong>（全局变量，堆数据，函数里的静态变量，程序代码，打开的文件，这些就是进程所有的东西）</p>
+<p>  <strong>调度</strong>（线程数&gt;处理器时（或者单处理器应对多线程时），会模拟出来一种并发的状态，即切换不同的线程行为，称之为线程调度 </p>
+<p>  <strong>至少三种状态</strong>：运行，就绪，等待，以时间片的改变作为区分 </p>
+<p>  <strong>调度算法</strong>：优先级调度（Priority Schedule），轮转法（Round Robin），也区分出 <strong>IO密集型线程（IO Bound Thread）</strong> 和 <strong>CPU密集型线程（CPU Bound Thread）</strong>，IO 总比 CPU 能获得更高的优先级 </p>
+<p>  为了防止 <strong>饿死（Starvation）</strong> 现象： 用户指定优先级/根据进入等待状态的频繁程序提升或降低优先级/长时间得不到执行而被提升优先级，也出现了 <strong>可抢占式线程（Preemption）</strong></p>
+</li>
+<li><p>线程安全</p>
+<p>  <strong>竞争与原子操作</strong>：多个线程同时访问一个共享数据，为此引出 <strong>原子性（Atomic）</strong>，但原子性操作只适用于简单的操作，更复杂的数据结构访问，通常用 <strong>锁</strong> 的手段</p>
+<p>  <strong>同步与锁</strong>：<strong>同步（Synchronization）</strong> 是一种机制：保证线程访问数据的原子性。<strong>锁（Lock）</strong> 是一种手段，每个线程在访问数据或资源之前，首先试图 <strong>获取（Accquire）</strong> 锁，并在访问结束之后 <strong>释放（Release）</strong> 锁</p>
+<p>  <strong>锁的演进</strong>：<strong>二元信号量（Binary Semaphore）</strong>，只允许一个线程独占，其状态有两个：占用 和 非占用，可以由一个线程获取，另一个线程释放；<strong>多元信号量（N Semaphore）</strong>，允许 N 个线程并发访问共享资源；<strong>互斥量（Mutex）</strong>，类似于二元信号量，但谁获得谁负责释放；<strong>临界区（Critical Section）</strong>：不同于之前的信号量，互斥量（作用域为进程内的所有线程），临界区的作用范围仅限于本线程，其他线程无法获取临界区的锁，因此也就无法访问；<strong>条件变量（Condition Variable）</strong>，使用条件变量可以让许多线程一起等待某个事件的发生，当事件发生时，所有线程可以一起恢复执行</p>
+<p>  <strong>读写锁（Read-Write Lock）</strong>：三种状态分别是，<strong>自由（Free），共享（Shared）和独占（Exclusive）</strong>，当处于自由状态时，试图以任何一种方式获取锁都能成功，并将锁至于对应的状态。如果锁处于共享状态，其他线程以共享的方式获取锁仍会成功（读），此时这个锁分配给了多个线程。如果其他线程试图以独占的方式获取已经处于共享状态的锁，那么他将必须等在锁被所有的线程释放后，才能将锁的状态置成独占（写）</p>
+<p>  <strong>可重入（Reentrant）</strong>：即幂等性的函数，可以称为可重入函数</p>
+<p>  <strong>过度优化</strong>：使用 volatile 关键字，解决 1. 阻止编译器为了提高速度将一个变量缓存到寄存器内而不写回，2. 阻止编译器调整操作 volatile 变量的质量顺序，<strong>但还是无法阻止CPU动态调度换序</strong></p>
+</li>
+<li><p>线程内部三种模型</p>
+<p>  多线程库的实现方式：对用户来说如果有三个线程在同时执行（<strong>用户态线程（User Thread）</strong>），对内核来说很可能只有一个线程（<strong>内核线程（Kernel Thread）</strong>），下面提及的模型都是 <strong>UT：KT</strong></p>
+<p>  <strong>一对一模型</strong>：真正意义上的并发调度，缺点是受内核线程数量限制，内核线程上下文切换调度开销较大，使得用户线程执行效率低下</p>
+<p>  <strong>多对一模型</strong>：高效的上下文切换和几乎无限制的线程数量，缺点是一个用户线程阻塞了，那么所有线程都将无法执行</p>
+<p>  <strong>多对多模型</strong>：多个用户线程映射到多个内核线程，切换方便且避免了一个阻塞全局的情况</p>
+</li>
+</ul>
+</li>
+</ul>
+
+        
+        </div>
+        <footer class="article-footer">
+            <div class="share-container">
+
+
+
+</div>
+
+    <a data-url="https://aaronshi32.github.io/2017/05/06/读书笔记-程序员的自我修养（一）/" data-id="cjm7udfas0021ues6cqwehul2" class="article-share-link"><i class="fa fa-share"></i>如需转载，请注明出处</a>
+<script>
+    (function ($) {
+        // Prevent duplicate binding
+        if (typeof(__SHARE_BUTTON_BINDED__) === 'undefined' || !__SHARE_BUTTON_BINDED__) {
+            __SHARE_BUTTON_BINDED__ = true;
+        } else {
+            return;
+        }
+        $('body').on('click', function() {
+            $('.article-share-box.on').removeClass('on');
+        }).on('click', '.article-share-link', function(e) {
+            e.stopPropagation();
+
+            var $this = $(this),
+                url = $this.attr('data-url'),
+                encodedUrl = encodeURIComponent(url),
+                id = 'article-share-box-' + $this.attr('data-id'),
+                offset = $this.offset(),
+                box;
+
+            if ($('#' + id).length) {
+                box = $('#' + id);
+
+                if (box.hasClass('on')){
+                    box.removeClass('on');
+                    return;
+                }
+            } else {
+                var html = [
+                    '<div id="' + id + '" class="article-share-box">',
+                        '<input class="article-share-input" value="' + url + '">',
+                        '<div class="article-share-links">',
+                            '<a href="https://twitter.com/intent/tweet?url=' + encodedUrl + '" class="fa fa-twitter article-share-twitter" target="_blank" title="Twitter"></a>',
+                            '<a href="https://www.facebook.com/sharer.php?u=' + encodedUrl + '" class="fa fa-facebook article-share-facebook" target="_blank" title="Facebook"></a>',
+                            '<a href="http://pinterest.com/pin/create/button/?url=' + encodedUrl + '" class="fa fa-pinterest article-share-pinterest" target="_blank" title="Pinterest"></a>',
+                            '<a href="https://plus.google.com/share?url=' + encodedUrl + '" class="fa fa-google article-share-google" target="_blank" title="Google+"></a>',
+                        '</div>',
+                    '</div>'
+                ].join('');
+
+              box = $(html);
+
+              $('body').append(box);
+            }
+
+            $('.article-share-box.on').hide();
+
+            box.css({
+                top: offset.top + 25,
+                left: offset.left
+            }).addClass('on');
+
+        }).on('click', '.article-share-box', function (e) {
+            e.stopPropagation();
+        }).on('click', '.article-share-box-input', function () {
+            $(this).select();
+        }).on('click', '.article-share-box-link', function (e) {
+            e.preventDefault();
+            e.stopPropagation();
+
+            window.open(this.href, 'article-share-box-window-' + Date.now(), 'width=500,height=450');
+        });
+    })(jQuery);
+</script>
+
+            
+    
+
+        </footer>
+    </div>
+    
+        
+<nav id="article-nav">
+    
+        <a href="/blog/2017/05/08/读书笔记-程序员的自我修养（二）/" id="article-nav-newer" class="article-nav-link-wrap">
+            <strong class="article-nav-caption">上一篇</strong>
+            <div class="article-nav-title">
+                
+                    读书笔记-程序员的自我修养（二）
+                
+            </div>
+        </a>
+    
+    
+        <a href="/blog/2017/03/14/SonarQube安装使用调试/" id="article-nav-older" class="article-nav-link-wrap">
+            <strong class="article-nav-caption">下一篇</strong>
+            <div class="article-nav-title">SonarQube - 安装使用调试</div>
+        </a>
+    
+</nav>
+
+
+    
+</article>
+
+
+    
+    <section id="comments">
+    
+    </section>
+
+</section>
+            
+                <aside id="sidebar">
+   
+        
+    
+        
+    <div class="widget-wrap">
+        <h3 class="widget-title">归档</h3>
+        <div class="widget">
+            <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/blog/archives/2018/08/">八月 2018</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/blog/archives/2018/07/">七月 2018</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/blog/archives/2018/06/">六月 2018</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/blog/archives/2018/05/">五月 2018</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/blog/archives/2018/04/">四月 2018</a><span class="archive-list-count">6</span></li><li class="archive-list-item"><a class="archive-list-link" href="/blog/archives/2018/03/">三月 2018</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/blog/archives/2018/02/">二月 2018</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/blog/archives/2018/01/">一月 2018</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/blog/archives/2017/12/">十二月 2017</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/blog/archives/2017/11/">十一月 2017</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/blog/archives/2017/10/">十月 2017</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/blog/archives/2017/08/">八月 2017</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/blog/archives/2017/07/">七月 2017</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/blog/archives/2017/06/">六月 2017</a><span class="archive-list-count">4</span></li><li class="archive-list-item"><a class="archive-list-link" href="/blog/archives/2017/05/">五月 2017</a><span class="archive-list-count">6</span></li><li class="archive-list-item"><a class="archive-list-link" href="/blog/archives/2017/03/">三月 2017</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/blog/archives/2017/02/">二月 2017</a><span class="archive-list-count">4</span></li><li class="archive-list-item"><a class="archive-list-link" href="/blog/archives/2017/01/">一月 2017</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/blog/archives/2016/12/">十二月 2016</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/blog/archives/2016/11/">十一月 2016</a><span class="archive-list-count">6</span></li><li class="archive-list-item"><a class="archive-list-link" href="/blog/archives/2016/10/">十月 2016</a><span class="archive-list-count">1</span></li></ul>
+        </div>
+    </div>
+
+    
+        
+    <div class="widget-wrap">
+        <h3 class="widget-title">标签</h3>
+        <div class="widget">
+            <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/blog/tags/JavaScript/">JavaScript</a><span class="tag-list-count">4</span></li><li class="tag-list-item"><a class="tag-list-link" href="/blog/tags/人工智能/">人工智能</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/blog/tags/基础知识/">基础知识</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/blog/tags/工具/">工具</a><span class="tag-list-count">6</span></li><li class="tag-list-item"><a class="tag-list-link" href="/blog/tags/日常/">日常</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/blog/tags/框架/">框架</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/blog/tags/疑难杂症/">疑难杂症</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/blog/tags/系统/">系统</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/blog/tags/读书/">读书</a><span class="tag-list-count">28</span></li><li class="tag-list-item"><a class="tag-list-link" href="/blog/tags/面试/">面试</a><span class="tag-list-count">8</span></li></ul>
+        </div>
+    </div>
+
+    
+    <div id="toTop" class="fa fa-angle-up"></div>
+</aside>
+            
+        </div>
+        <footer id="footer">
+    <div class="outer">
+        <div id="footer-info" class="inner">
+            &copy; 2018 AaronShi<br>
+            Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>. Theme by <a href="http://github.com/ppoffice">PPOffice</a>
+        </div>
+    </div>
+</footer>
+        
+
+    
+        <script src="/blog/libs/lightgallery/js/lightgallery.min.js"></script>
+        <script src="/blog/libs/lightgallery/js/lg-thumbnail.min.js"></script>
+        <script src="/blog/libs/lightgallery/js/lg-pager.min.js"></script>
+        <script src="/blog/libs/lightgallery/js/lg-autoplay.min.js"></script>
+        <script src="/blog/libs/lightgallery/js/lg-fullscreen.min.js"></script>
+        <script src="/blog/libs/lightgallery/js/lg-zoom.min.js"></script>
+        <script src="/blog/libs/lightgallery/js/lg-hash.min.js"></script>
+        <script src="/blog/libs/lightgallery/js/lg-share.min.js"></script>
+        <script src="/blog/libs/lightgallery/js/lg-video.min.js"></script>
+    
+    
+        <script src="/blog/libs/justified-gallery/jquery.justifiedGallery.min.js"></script>
+    
+
+
+
+<!-- Custom Scripts -->
+<script src="/blog/js/main.js"></script>
+
+    </div>
+</body>
+</html>

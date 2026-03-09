@@ -1,0 +1,509 @@
+<!DOCTYPE html>
+<html lang=zh>
+<head>
+    <meta charset="utf-8">
+    
+    <title>读书笔记-深入分析 Java Web 技术内幕（一） | 着陆的橘子</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+    <meta name="description" content="第一部分: Java Web 开发中的基础知识1. 深入 Web 请求过程1.1 HTTP 散点知识 Apache, IIS, Nginx, Tomcat, JBoss 都是基于 HTTP 的服务器, HTTP 是应用层的协议, 采用无状态的短连接通信方式 在浏览器里输入 www.baidu.com 敲击回撤的瞬间, 完成了以下操作  浏览器请求 DNS 把域名解析成对应的 IP（域名到IP地址映">
+<meta name="keywords" content="读书">
+<meta property="og:type" content="article">
+<meta property="og:title" content="读书笔记-深入分析 Java Web 技术内幕（一）">
+<meta property="og:url" content="https://aaronshi32.github.io/2018/04/19/读书笔记-深入分析 Java Web 技术内幕（一）/index.html">
+<meta property="og:site_name" content="着陆的橘子">
+<meta property="og:description" content="第一部分: Java Web 开发中的基础知识1. 深入 Web 请求过程1.1 HTTP 散点知识 Apache, IIS, Nginx, Tomcat, JBoss 都是基于 HTTP 的服务器, HTTP 是应用层的协议, 采用无状态的短连接通信方式 在浏览器里输入 www.baidu.com 敲击回撤的瞬间, 完成了以下操作  浏览器请求 DNS 把域名解析成对应的 IP（域名到IP地址映">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:updated_time" content="2018-04-23T08:04:46.283Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="读书笔记-深入分析 Java Web 技术内幕（一）">
+<meta name="twitter:description" content="第一部分: Java Web 开发中的基础知识1. 深入 Web 请求过程1.1 HTTP 散点知识 Apache, IIS, Nginx, Tomcat, JBoss 都是基于 HTTP 的服务器, HTTP 是应用层的协议, 采用无状态的短连接通信方式 在浏览器里输入 www.baidu.com 敲击回撤的瞬间, 完成了以下操作  浏览器请求 DNS 把域名解析成对应的 IP（域名到IP地址映">
+    
+
+    
+
+    
+
+    <link rel="stylesheet" href="/blog/libs/font-awesome/css/font-awesome.min.css">
+    <link rel="stylesheet" href="/blog/libs/open-sans/styles.css">
+    <link rel="stylesheet" href="/blog/libs/source-code-pro/styles.css">
+
+    <link rel="stylesheet" href="/blog/css/style.css">
+
+    <script src="/blog/libs/jquery/2.1.3/jquery.min.js"></script>
+    
+    
+        <link rel="stylesheet" href="/blog/libs/lightgallery/css/lightgallery.min.css">
+    
+    
+        <link rel="stylesheet" href="/blog/libs/justified-gallery/justifiedGallery.min.css">
+    
+    
+    
+    
+
+
+</head>
+
+<body>
+    <div id="container">
+        <header id="header">
+    <div id="header-main" class="header-inner">
+        <div class="outer">
+            <a href="/blog/" id="logo">
+                <i class="logo"></i>
+                <span class="site-title">着陆的橘子</span>
+            </a>
+            <nav id="main-nav">
+                
+                    <a class="main-nav-link" href="/.">主页</a>
+                
+                    <a class="main-nav-link" href="/about/cv.pdf">关于</a>
+                
+            </nav>
+            
+                
+                <nav id="sub-nav">
+                    <div class="profile" id="profile-nav">
+                        <a id="profile-anchor" href="javascript:;">
+                            <img class="avatar" src="/css/images/avatar.png" />
+                            <i class="fa fa-caret-down"></i>
+                        </a>
+                    </div>
+                </nav>
+            
+            <div id="search-form-wrap">
+
+    <form class="search-form">
+        <input type="text" class="ins-search-input search-form-input" placeholder="文章" />
+        <button type="submit" class="search-form-submit"></button>
+    </form>
+    <div class="ins-search">
+    <div class="ins-search-mask"></div>
+    <div class="ins-search-container">
+        <div class="ins-input-wrapper">
+            <input type="text" class="ins-search-input" placeholder="想要查找什么..." />
+            <span class="ins-close ins-selectable"><i class="fa fa-times-circle"></i></span>
+        </div>
+        <div class="ins-section-wrapper">
+            <div class="ins-section-container"></div>
+        </div>
+    </div>
+</div>
+<script>
+(function (window) {
+    var INSIGHT_CONFIG = {
+        TRANSLATION: {
+            POSTS: '文章',
+            PAGES: '页面',
+            CATEGORIES: '分类',
+            TAGS: '标签',
+            UNTITLED: '(未命名)',
+        },
+        ROOT_URL: '/',
+        CONTENT_URL: '/content.json',
+    };
+    window.INSIGHT_CONFIG = INSIGHT_CONFIG;
+})(window);
+</script>
+<script src="/blog/js/insight.js"></script>
+
+</div>
+        </div>
+    </div>
+    <div id="main-nav-mobile" class="header-sub header-inner">
+        <table class="menu outer">
+            <tr>
+                
+                    <td><a class="main-nav-link" href="/.">主页</a></td>
+                
+                    <td><a class="main-nav-link" href="/about/cv.pdf">关于</a></td>
+                
+                <td>
+                    
+    <div class="search-form">
+        <input type="text" class="ins-search-input search-form-input" placeholder="搜索" />
+    </div>
+
+                </td>
+            </tr>
+        </table>
+    </div>
+</header>
+
+        <div class="outer">
+            
+                
+
+<aside id="profile">
+    <div class="inner profile-inner">
+        <div class="base-info profile-block">
+            <img id="avatar" src="/css/images/avatar.png" />
+            <h2 id="name">AaronShi32</h2>
+            <h3 id="title">Senior Software Developer</h3>
+            <span id="location"><i class="fa fa-map-marker"></i>Beijing, China</span>
+            <a id="follow" target="_blank" href="https://github.com/AaronShi32">Follow</a>
+        </div>
+        <div class="article-info profile-block">
+            <div class="article-info-block">
+                48
+                <span>文章</span>
+            </div>
+            <div class="article-info-block">
+                10
+                <span>标签</span>
+            </div>
+        </div>
+        
+        <div class="profile-block social-links">
+            <table>
+                <tr>
+                    
+                    
+                    <td>
+                        <a href="https://github.com/AaronShi32" target="_blank" title="github" >
+                            <i class="fa fa-github"></i>
+                        </a>
+                    </td>
+                    
+                    <td>
+                        <a href="https://www.linkedin.com/in/cfshi" target="_blank" title="linkedin-square" >
+                            <i class="fa fa-linkedin-square"></i>
+                        </a>
+                    </td>
+                    
+                </tr>
+            </table>
+        </div>
+        
+    </div>
+</aside>
+
+            
+            <section id="main"><article id="post-读书笔记-深入分析 Java Web 技术内幕（一）" class="article article-type-post" itemscope itemprop="blogPost">
+    <div class="article-inner">
+        
+        
+            <header class="article-header">
+                
+    
+        <h1 class="article-title" itemprop="name">
+            读书笔记-深入分析 Java Web 技术内幕（一）
+        </h1>
+    
+
+                
+                    <div class="article-meta">
+                        
+    <div class="article-date">
+        <i class="fa fa-calendar"></i>
+        <a href="/blog/2018/04/19/读书笔记-深入分析 Java Web 技术内幕（一）/">
+            <time datetime="2018-04-19T02:33:12.000Z" itemprop="datePublished">2018-04-19</time>
+        </a>
+    </div>
+
+
+                        
+                        
+    <div class="article-tag">
+        <i class="fa fa-tag"></i>
+        <a class="tag-link" href="/blog/tags/读书/">读书</a>
+    </div>
+
+                    </div>
+                
+            </header>
+        
+        
+        <div class="article-entry" itemprop="articleBody">
+        
+            
+            <h3 id="第一部分-Java-Web-开发中的基础知识"><a href="#第一部分-Java-Web-开发中的基础知识" class="headerlink" title="第一部分: Java Web 开发中的基础知识"></a>第一部分: Java Web 开发中的基础知识</h3><h5 id="1-深入-Web-请求过程"><a href="#1-深入-Web-请求过程" class="headerlink" title="1. 深入 Web 请求过程"></a>1. 深入 Web 请求过程</h5><p>1.1 HTTP 散点知识</p>
+<p>Apache, IIS, Nginx, Tomcat, JBoss 都是基于 HTTP 的服务器, HTTP 是应用层的协议, 采用无状态的短连接通信方式</p>
+<p>在浏览器里输入 www.baidu.com 敲击回撤的瞬间, 完成了以下操作</p>
+<ul>
+<li><p>浏览器请求 DNS 把域名解析成对应的 IP（域名到IP地址映射: DNS域名服务）</p>
+</li>
+<li><p>浏览器根据这个 IP 在互联网上找到对应服务器, 发起 GET 请求, 返回数据资源</p>
+<ul>
+<li><p>请求 CDN 寻求静态资源</p>
+</li>
+<li><p>请求的数据会先到负载均衡, 缓存, 如需要最终才到数据库</p>
+</li>
+</ul>
+</li>
+</ul>
+<p>HttpClient 工具包 和 curl 命令都能够发起 HTTP 请求, 浏览器正是做了这些工作, 实际上就是建立一个 Socket 通信的过程</p>
+<p>要理解 HTTP, 最重要的就是要熟悉 HTTP 中的 HTTP Header, HTTP Header 控制着用户浏览器的渲染行为和服务器的执行逻辑</p>
+<p>显而易见, HTTP Request Header 是客户端要告诉服务器的信息, 而 HTTP Response Header 是服务器返回要告诉客户端的信息</p>
+<p>Ctrl + F5 的实现逻辑是: 在请求头中加入了 Cache-Control: no-cache 和 Pragma: no-cache, 用于指定所有缓存机制在整个请求/响应链中必须服从的指令</p>
+<p>其他用于标识缓存过期的头字段有: Expires, Last-Modified, Etag</p>
+<p>1.2 DNS 散点知识</p>
+<p>DNS 将域名转化为 IP 的先后关键步骤:</p>
+<ul>
+<li><p>[本机完成] 1) 浏览器缓存 - 2) 操作系统hosts文件</p>
+</li>
+<li><p>[本机发起请求] 3) LDNS 即在操作系统中配置的 DNS 服务器地址 - 4) 直接请求 Root 域名服务器(全球就9台) </p>
+</li>
+<li><p>[本机得到反馈结果] 5) 返回给 LDNS 一个主域名服务器地址 gTLD</p>
+</li>
+<li><p>[本机发起请求] 6) LDNS 去请求 gTLD</p>
+</li>
+<li><p>[本机得到反馈结果] 7) 返回给 LDNS 网站注册的域名服务器 - 8）请求这个注册的域名服务器得到 IP - 9） LDNS 存储这个映射缓存 - 10) 存到本机(浏览器)</p>
+</li>
+</ul>
+<p>跟踪域名解析结果: dig www.baidu.com [+trace] [+cmd] 、 nslookup </p>
+<p>清除域名缓存结果: ipconfig /flushdns 、/etc/init.d/nscd restart </p>
+<p>几种域名解析的方式主要分为 A记录、MX记录、CNAME记录、NS记录 和 TXT记录</p>
+<ul>
+<li><p>A记录: 域名对应 IP, 多个域名可以对应一个 IP, 但反之不能</p>
+</li>
+<li><p>MX记录: 邮件服务器对应的 IP</p>
+</li>
+<li><p>CNAME记录: 全称是 Canonical Name(别名解析), 一个域名可以设置多个别名</p>
+</li>
+<li><p>NS记录: 为某个域名指定 DNS 解析服务器, 也就是这个域名有指定的 IP 的 DNS 服务器去解析</p>
+</li>
+<li><p>TXT记录: 为某个主机名或域名设置说明类的文字</p>
+</li>
+</ul>
+<p>1.3 CDN 散点知识</p>
+<p>形象的比喻: CDN = 镜像(Mirror) + 缓存(Cache) + 整体负载均衡(GSLB)</p>
+<p>负载均衡的框架通常有三种: 链路负载均衡(DNS), 集群负载均衡(软硬件(LVS + HAProxy + F5)), 操作系统负载均衡(多队列网卡)</p>
+<p>CDN 的动态加速技术原理就是在 CDN 的 DNS 解析中通过动态的链路探测来寻找回源最好的一条路径, 从而加速用户访问的效率, 节省带宽</p>
+<h5 id="2-深入分析-Java-I-O-的工作机制"><a href="#2-深入分析-Java-I-O-的工作机制" class="headerlink" title="2. 深入分析 Java I/O 的工作机制"></a>2. 深入分析 Java I/O 的工作机制</h5><p>2.1 Java I/O 类库的基础架构: java.io</p>
+<ul>
+<li><p>基于字节操作的 I/O 接口: InputStream 和 OutputStream</p>
+</li>
+<li><p>基于字符操作的 I/O 接口: Writer 和 Reader</p>
+</li>
+<li><p>基于磁盘操作的 I/O 接口: File</p>
+</li>
+<li><p>基于网络操作的 I/O 接口: Socket</p>
+</li>
+</ul>
+<p>前两者是数据格式, 后两者是传输方式, 共同影响着 I/O 的效率</p>
+<p>字符到字节必须经过编码转换, 这个过程相当耗时</p>
+<p>在纯 Java 环境下, Java 序列化能够很好的工作, 但是在多语言环境下, 用 Java 序列化存储后, 很难用其他语言还原出结果。在这种情况下, 还是要尽量存储通用的数据机构, 如 JSON 或者 XML 结构数据, 当前也有比较好的序列化工具支持, 如 Google 的 protobuf 等</p>
+<p>适配器和装饰器模式, 适配器是适配接口方便调用(InputStreamReader 适配了 InputStream 对象的 Reader 接口), 装饰器的增加接口功能提升效率(FileInputStream 装饰了 InputStream)</p>
+<p>2.2 网络 I/O 的工作机制</p>
+<p>影响网络传输的因素: 网络带宽, 传输距离, TCP 拥塞控制(为 TCP 设置一个缓冲区, 让传输方和接收方的步调一致)</p>
+<p>Socket 一般都基于 TCP/IP 的流套接字</p>
+<p>NIO 是相对于 BIO: 阻塞 I/O 来的, BIO 会导致线程阻塞等待操作系统处理, 在大规模访问量时性能堪忧, 当然可以采取线程池的方法来缓解, 但线程池中线程的创建与回收也需要成本, 大量长连接的请求会一直占用线程池, 线程优先级难以掌控, 众多因素呼唤出了 NIO</p>
+<p>NIO 的两个关键词: Channel 和 Selector, Channel 好比传输方式, Selector 是这些传输方式的监控调度, Selector 是一个阻塞线程专门处理连接请求, 监控注册在其上面的 Channel 是否有数据传输发生, 一旦监控到了, 则让 Channel 进行相应的数据传输, 而 Channel 的数据传输发生在另一个非阻塞线程, 这样 Selector 不停的分发 I/O 链路让 Channel 进行通信, 换句话说:</p>
+<p><strong>Selector 检测到通信信道 I/O 有数据传输时, 通过 select() 方法取得 SocketChannel, 将数据读取或者写入 Buffer 缓冲区</strong></p>
+<p>NIO 提供了两个优化的文件访问方法: FileChannel.transferTo / FileChannel.transferFrom 和 FileChannel.map</p>
+<p>2.3 I/O 调优</p>
+<ul>
+<li>磁盘 I/O 优化</li>
+</ul>
+<ol>
+<li><p>增加缓存, 减少磁盘访问次数</p>
+</li>
+<li><p>优化磁盘的管理系统, 设计最优的磁盘方式策略, 以及磁盘的寻址策略(这是底层操作系统考虑的)</p>
+</li>
+<li><p>设计合理的磁盘存储数据块, 以及访问这些数据块的策略, 比如索引</p>
+</li>
+<li><p>应用合理的 RAID 策略提升磁盘 I/O</p>
+</li>
+</ol>
+<ul>
+<li>网络 I/O 优化</li>
+</ul>
+<ol>
+<li>TCP 网络参数调优</li>
+</ol>
+<p>1.1 cat /proc/net/netstat: 查看 TCP 的统计信息</p>
+<p>1.2 cat /proc/net/snmp: 查看当前系统的连接情况</p>
+<p>1.3 netstat -s: 查看网络的统计信息</p>
+<p>1.4 ab -c 30 -n 100000 ip:port:  向 ip 并发发送 30 个请求共 100000 个</p>
+<ol>
+<li><p>减少网络交互的次数: 两端设置缓存, 合并请求</p>
+</li>
+<li><p>减少网络传输数据量的大小: 压缩</p>
+</li>
+<li><p>尽量减少编码: 提前将字符转化成字节</p>
+</li>
+<li><p>交互方式的场景选择: 同步与异步/阻塞与非阻塞</p>
+</li>
+</ol>
+<h5 id="3-深入分析-Java-Web-中的中文编码问题"><a href="#3-深入分析-Java-Web-中的中文编码问题" class="headerlink" title="3. 深入分析 Java Web 中的中文编码问题"></a>3. 深入分析 Java Web 中的中文编码问题</h5><p>3.1 几种常见的编码</p>
+<p>在计算机中存储信息的最小单元是 1 个字节, 即 8 个 bit, 所以能表示的字符范围是 0~255 个, 人类要表示的符号太多, 无法用 1 个字节来完全表示, 要解决这个矛盾必须要有一个新的数据结构 char, 而从 char 到 byte 则必须编码</p>
+<p>存储空间与编码效率: ASCII 码, ISO-8859-1, GB2312, GBK(兼容前者, 表示的汉字更多) UTF-16, UTF-8,  其中 UTF-8 是最适合中文的编码方式(不用查码表, 计算可寻, 单字节1汉字节3, 相对于UTF16扩张一倍空间而言, UTF8省), 编码的发生场景常见于存储数据到磁盘或者数据要经过网络传输</p>
+<p>不同的编码决定着最终存储的大小, 看的是字节数而不是字符数, 一个 int 用 4 个字节存储, 一个 char 用 2 个字节存储</p>
+<ul>
+<li>一次 HTTP 请求在很多地方需要编码: URL 的编解码、HTTP Header 的编解码、POST 表单的编解码、HTTP BODY 的编解码</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">&lt;filter&gt;</span><br><span class="line">	&lt;filter-name&gt;encodingFilter&lt;/filter-name&gt;</span><br><span class="line">	&lt;filter-<span class="class"><span class="keyword">class</span>&gt;<span class="title">org</span>.<span class="title">springframework</span>.<span class="title">web</span>.<span class="title">filter</span>.<span class="title">CharacterEncodingFilter</span>&lt;/<span class="title">filter</span>-<span class="title">class</span>&gt;</span></span><br><span class="line"><span class="class">	&lt;<span class="title">init</span>-<span class="title">param</span>&gt;</span></span><br><span class="line"><span class="class">		&lt;<span class="title">param</span>-<span class="title">name</span>&gt;<span class="title">encoding</span>&lt;/<span class="title">param</span>-<span class="title">name</span>&gt;</span></span><br><span class="line"><span class="class">		&lt;<span class="title">param</span>-<span class="title">value</span>&gt;<span class="title">utf</span>-8&lt;/<span class="title">param</span>-<span class="title">value</span>&gt;</span></span><br><span class="line"><span class="class">	&lt;/<span class="title">init</span>-<span class="title">param</span>&gt;</span></span><br><span class="line"><span class="class">	&lt;<span class="title">init</span>-<span class="title">param</span>&gt;</span></span><br><span class="line"><span class="class">		&lt;<span class="title">param</span>-<span class="title">name</span>&gt;<span class="title">forceEncoding</span>&lt;/<span class="title">param</span>-<span class="title">name</span>&gt;</span></span><br><span class="line"><span class="class">		&lt;<span class="title">param</span>-<span class="title">value</span>&gt;<span class="title">true</span>&lt;/<span class="title">param</span>-<span class="title">value</span>&gt;</span></span><br><span class="line"><span class="class">	&lt;/<span class="title">init</span>-<span class="title">param</span>&gt;</span></span><br><span class="line"><span class="class">&lt;/<span class="title">filter</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+        
+        </div>
+        <footer class="article-footer">
+            <div class="share-container">
+
+
+
+</div>
+
+    <a data-url="https://aaronshi32.github.io/2018/04/19/读书笔记-深入分析 Java Web 技术内幕（一）/" data-id="cjm7udfas0023ues6jlv6hiy4" class="article-share-link"><i class="fa fa-share"></i>如需转载，请注明出处</a>
+<script>
+    (function ($) {
+        // Prevent duplicate binding
+        if (typeof(__SHARE_BUTTON_BINDED__) === 'undefined' || !__SHARE_BUTTON_BINDED__) {
+            __SHARE_BUTTON_BINDED__ = true;
+        } else {
+            return;
+        }
+        $('body').on('click', function() {
+            $('.article-share-box.on').removeClass('on');
+        }).on('click', '.article-share-link', function(e) {
+            e.stopPropagation();
+
+            var $this = $(this),
+                url = $this.attr('data-url'),
+                encodedUrl = encodeURIComponent(url),
+                id = 'article-share-box-' + $this.attr('data-id'),
+                offset = $this.offset(),
+                box;
+
+            if ($('#' + id).length) {
+                box = $('#' + id);
+
+                if (box.hasClass('on')){
+                    box.removeClass('on');
+                    return;
+                }
+            } else {
+                var html = [
+                    '<div id="' + id + '" class="article-share-box">',
+                        '<input class="article-share-input" value="' + url + '">',
+                        '<div class="article-share-links">',
+                            '<a href="https://twitter.com/intent/tweet?url=' + encodedUrl + '" class="fa fa-twitter article-share-twitter" target="_blank" title="Twitter"></a>',
+                            '<a href="https://www.facebook.com/sharer.php?u=' + encodedUrl + '" class="fa fa-facebook article-share-facebook" target="_blank" title="Facebook"></a>',
+                            '<a href="http://pinterest.com/pin/create/button/?url=' + encodedUrl + '" class="fa fa-pinterest article-share-pinterest" target="_blank" title="Pinterest"></a>',
+                            '<a href="https://plus.google.com/share?url=' + encodedUrl + '" class="fa fa-google article-share-google" target="_blank" title="Google+"></a>',
+                        '</div>',
+                    '</div>'
+                ].join('');
+
+              box = $(html);
+
+              $('body').append(box);
+            }
+
+            $('.article-share-box.on').hide();
+
+            box.css({
+                top: offset.top + 25,
+                left: offset.left
+            }).addClass('on');
+
+        }).on('click', '.article-share-box', function (e) {
+            e.stopPropagation();
+        }).on('click', '.article-share-box-input', function () {
+            $(this).select();
+        }).on('click', '.article-share-box-link', function (e) {
+            e.preventDefault();
+            e.stopPropagation();
+
+            window.open(this.href, 'article-share-box-window-' + Date.now(), 'width=500,height=450');
+        });
+    })(jQuery);
+</script>
+
+            
+    
+
+        </footer>
+    </div>
+    
+        
+<nav id="article-nav">
+    
+        <a href="/blog/2018/04/23/读书笔记-深入分析 Java Web 技术内幕（二）/" id="article-nav-newer" class="article-nav-link-wrap">
+            <strong class="article-nav-caption">上一篇</strong>
+            <div class="article-nav-title">
+                
+                    读书笔记-深入分析 Java Web 技术内幕（二）
+                
+            </div>
+        </a>
+    
+    
+        <a href="/blog/2018/04/10/读书笔记-Redis 独立功能的实现/" id="article-nav-older" class="article-nav-link-wrap">
+            <strong class="article-nav-caption">下一篇</strong>
+            <div class="article-nav-title">读书笔记-Redis 独立功能的实现</div>
+        </a>
+    
+</nav>
+
+
+    
+</article>
+
+
+    
+    <section id="comments">
+    
+    </section>
+
+</section>
+            
+                <aside id="sidebar">
+   
+        
+    
+        
+    <div class="widget-wrap">
+        <h3 class="widget-title">归档</h3>
+        <div class="widget">
+            <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/blog/archives/2018/08/">八月 2018</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/blog/archives/2018/07/">七月 2018</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/blog/archives/2018/06/">六月 2018</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/blog/archives/2018/05/">五月 2018</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/blog/archives/2018/04/">四月 2018</a><span class="archive-list-count">6</span></li><li class="archive-list-item"><a class="archive-list-link" href="/blog/archives/2018/03/">三月 2018</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/blog/archives/2018/02/">二月 2018</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/blog/archives/2018/01/">一月 2018</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/blog/archives/2017/12/">十二月 2017</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/blog/archives/2017/11/">十一月 2017</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/blog/archives/2017/10/">十月 2017</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/blog/archives/2017/08/">八月 2017</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/blog/archives/2017/07/">七月 2017</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/blog/archives/2017/06/">六月 2017</a><span class="archive-list-count">4</span></li><li class="archive-list-item"><a class="archive-list-link" href="/blog/archives/2017/05/">五月 2017</a><span class="archive-list-count">6</span></li><li class="archive-list-item"><a class="archive-list-link" href="/blog/archives/2017/03/">三月 2017</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/blog/archives/2017/02/">二月 2017</a><span class="archive-list-count">4</span></li><li class="archive-list-item"><a class="archive-list-link" href="/blog/archives/2017/01/">一月 2017</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/blog/archives/2016/12/">十二月 2016</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/blog/archives/2016/11/">十一月 2016</a><span class="archive-list-count">6</span></li><li class="archive-list-item"><a class="archive-list-link" href="/blog/archives/2016/10/">十月 2016</a><span class="archive-list-count">1</span></li></ul>
+        </div>
+    </div>
+
+    
+        
+    <div class="widget-wrap">
+        <h3 class="widget-title">标签</h3>
+        <div class="widget">
+            <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/blog/tags/JavaScript/">JavaScript</a><span class="tag-list-count">4</span></li><li class="tag-list-item"><a class="tag-list-link" href="/blog/tags/人工智能/">人工智能</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/blog/tags/基础知识/">基础知识</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/blog/tags/工具/">工具</a><span class="tag-list-count">6</span></li><li class="tag-list-item"><a class="tag-list-link" href="/blog/tags/日常/">日常</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/blog/tags/框架/">框架</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/blog/tags/疑难杂症/">疑难杂症</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/blog/tags/系统/">系统</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/blog/tags/读书/">读书</a><span class="tag-list-count">28</span></li><li class="tag-list-item"><a class="tag-list-link" href="/blog/tags/面试/">面试</a><span class="tag-list-count">8</span></li></ul>
+        </div>
+    </div>
+
+    
+    <div id="toTop" class="fa fa-angle-up"></div>
+</aside>
+            
+        </div>
+        <footer id="footer">
+    <div class="outer">
+        <div id="footer-info" class="inner">
+            &copy; 2018 AaronShi<br>
+            Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>. Theme by <a href="http://github.com/ppoffice">PPOffice</a>
+        </div>
+    </div>
+</footer>
+        
+
+    
+        <script src="/blog/libs/lightgallery/js/lightgallery.min.js"></script>
+        <script src="/blog/libs/lightgallery/js/lg-thumbnail.min.js"></script>
+        <script src="/blog/libs/lightgallery/js/lg-pager.min.js"></script>
+        <script src="/blog/libs/lightgallery/js/lg-autoplay.min.js"></script>
+        <script src="/blog/libs/lightgallery/js/lg-fullscreen.min.js"></script>
+        <script src="/blog/libs/lightgallery/js/lg-zoom.min.js"></script>
+        <script src="/blog/libs/lightgallery/js/lg-hash.min.js"></script>
+        <script src="/blog/libs/lightgallery/js/lg-share.min.js"></script>
+        <script src="/blog/libs/lightgallery/js/lg-video.min.js"></script>
+    
+    
+        <script src="/blog/libs/justified-gallery/jquery.justifiedGallery.min.js"></script>
+    
+
+
+
+<!-- Custom Scripts -->
+<script src="/blog/js/main.js"></script>
+
+    </div>
+</body>
+</html>

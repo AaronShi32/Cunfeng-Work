@@ -13,4 +13,9 @@ export default defineConfig({
     },
     outDir: 'dist',
   },
+  server: {
+    // Don't apply SPA fallback to /blog paths - serve them as static files
+    middlewareMode: false,
+  },
+  appType: 'spa',
 })

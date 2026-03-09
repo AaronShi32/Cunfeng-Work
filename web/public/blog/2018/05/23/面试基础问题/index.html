@@ -1,0 +1,593 @@
+<!DOCTYPE html>
+<html lang=zh>
+<head>
+    <meta charset="utf-8">
+    
+    <title>面试基础问题 | 着陆的橘子</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+    <meta name="description" content="数据库 查询表中重复字段  SELECT Distinct(email) FROM Person A WHERE EXISTS(SELECT email FROM Person B WHERE A.email = B.email HAVING count(*)&amp;gt;=2)  索引原理, SQL执行策略  Mysql目前主要有以下几种索引类型：FULLTEXT, HASH, BTREE, RTRE">
+<meta name="keywords" content="面试">
+<meta property="og:type" content="article">
+<meta property="og:title" content="面试基础问题">
+<meta property="og:url" content="https://aaronshi32.github.io/2018/05/23/面试基础问题/index.html">
+<meta property="og:site_name" content="着陆的橘子">
+<meta property="og:description" content="数据库 查询表中重复字段  SELECT Distinct(email) FROM Person A WHERE EXISTS(SELECT email FROM Person B WHERE A.email = B.email HAVING count(*)&amp;gt;=2)  索引原理, SQL执行策略  Mysql目前主要有以下几种索引类型：FULLTEXT, HASH, BTREE, RTRE">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:updated_time" content="2018-10-26T07:54:00.455Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="面试基础问题">
+<meta name="twitter:description" content="数据库 查询表中重复字段  SELECT Distinct(email) FROM Person A WHERE EXISTS(SELECT email FROM Person B WHERE A.email = B.email HAVING count(*)&amp;gt;=2)  索引原理, SQL执行策略  Mysql目前主要有以下几种索引类型：FULLTEXT, HASH, BTREE, RTRE">
+    
+
+    
+
+    
+
+    <link rel="stylesheet" href="/blog/libs/font-awesome/css/font-awesome.min.css">
+    <link rel="stylesheet" href="/blog/libs/open-sans/styles.css">
+    <link rel="stylesheet" href="/blog/libs/source-code-pro/styles.css">
+
+    <link rel="stylesheet" href="/blog/css/style.css">
+
+    <script src="/blog/libs/jquery/2.1.3/jquery.min.js"></script>
+    
+    
+        <link rel="stylesheet" href="/blog/libs/lightgallery/css/lightgallery.min.css">
+    
+    
+        <link rel="stylesheet" href="/blog/libs/justified-gallery/justifiedGallery.min.css">
+    
+    
+    
+    
+
+
+</head>
+
+<body>
+    <div id="container">
+        <header id="header">
+    <div id="header-main" class="header-inner">
+        <div class="outer">
+            <a href="/blog/" id="logo">
+                <i class="logo"></i>
+                <span class="site-title">着陆的橘子</span>
+            </a>
+            <nav id="main-nav">
+                
+                    <a class="main-nav-link" href="/.">主页</a>
+                
+                    <a class="main-nav-link" href="/about/cv.pdf">关于</a>
+                
+            </nav>
+            
+                
+                <nav id="sub-nav">
+                    <div class="profile" id="profile-nav">
+                        <a id="profile-anchor" href="javascript:;">
+                            <img class="avatar" src="/css/images/avatar.png" />
+                            <i class="fa fa-caret-down"></i>
+                        </a>
+                    </div>
+                </nav>
+            
+            <div id="search-form-wrap">
+
+    <form class="search-form">
+        <input type="text" class="ins-search-input search-form-input" placeholder="文章" />
+        <button type="submit" class="search-form-submit"></button>
+    </form>
+    <div class="ins-search">
+    <div class="ins-search-mask"></div>
+    <div class="ins-search-container">
+        <div class="ins-input-wrapper">
+            <input type="text" class="ins-search-input" placeholder="想要查找什么..." />
+            <span class="ins-close ins-selectable"><i class="fa fa-times-circle"></i></span>
+        </div>
+        <div class="ins-section-wrapper">
+            <div class="ins-section-container"></div>
+        </div>
+    </div>
+</div>
+<script>
+(function (window) {
+    var INSIGHT_CONFIG = {
+        TRANSLATION: {
+            POSTS: '文章',
+            PAGES: '页面',
+            CATEGORIES: '分类',
+            TAGS: '标签',
+            UNTITLED: '(未命名)',
+        },
+        ROOT_URL: '/',
+        CONTENT_URL: '/content.json',
+    };
+    window.INSIGHT_CONFIG = INSIGHT_CONFIG;
+})(window);
+</script>
+<script src="/blog/js/insight.js"></script>
+
+</div>
+        </div>
+    </div>
+    <div id="main-nav-mobile" class="header-sub header-inner">
+        <table class="menu outer">
+            <tr>
+                
+                    <td><a class="main-nav-link" href="/.">主页</a></td>
+                
+                    <td><a class="main-nav-link" href="/about/cv.pdf">关于</a></td>
+                
+                <td>
+                    
+    <div class="search-form">
+        <input type="text" class="ins-search-input search-form-input" placeholder="搜索" />
+    </div>
+
+                </td>
+            </tr>
+        </table>
+    </div>
+</header>
+
+        <div class="outer">
+            
+                
+
+<aside id="profile">
+    <div class="inner profile-inner">
+        <div class="base-info profile-block">
+            <img id="avatar" src="/css/images/avatar.png" />
+            <h2 id="name">AaronShi32</h2>
+            <h3 id="title">Senior Software Developer</h3>
+            <span id="location"><i class="fa fa-map-marker"></i>Beijing, China</span>
+            <a id="follow" target="_blank" href="https://github.com/AaronShi32">Follow</a>
+        </div>
+        <div class="article-info profile-block">
+            <div class="article-info-block">
+                48
+                <span>文章</span>
+            </div>
+            <div class="article-info-block">
+                10
+                <span>标签</span>
+            </div>
+        </div>
+        
+        <div class="profile-block social-links">
+            <table>
+                <tr>
+                    
+                    
+                    <td>
+                        <a href="https://github.com/AaronShi32" target="_blank" title="github" >
+                            <i class="fa fa-github"></i>
+                        </a>
+                    </td>
+                    
+                    <td>
+                        <a href="https://www.linkedin.com/in/cfshi" target="_blank" title="linkedin-square" >
+                            <i class="fa fa-linkedin-square"></i>
+                        </a>
+                    </td>
+                    
+                </tr>
+            </table>
+        </div>
+        
+    </div>
+</aside>
+
+            
+            <section id="main"><article id="post-面试基础问题" class="article article-type-post" itemscope itemprop="blogPost">
+    <div class="article-inner">
+        
+        
+            <header class="article-header">
+                
+    
+        <h1 class="article-title" itemprop="name">
+            面试基础问题
+        </h1>
+    
+
+                
+                    <div class="article-meta">
+                        
+    <div class="article-date">
+        <i class="fa fa-calendar"></i>
+        <a href="/blog/2018/05/23/面试基础问题/">
+            <time datetime="2018-05-23T10:47:41.000Z" itemprop="datePublished">2018-05-23</time>
+        </a>
+    </div>
+
+
+                        
+                        
+    <div class="article-tag">
+        <i class="fa fa-tag"></i>
+        <a class="tag-link" href="/blog/tags/面试/">面试</a>
+    </div>
+
+                    </div>
+                
+            </header>
+        
+        
+        <div class="article-entry" itemprop="articleBody">
+        
+            
+            <h3 id="数据库"><a href="#数据库" class="headerlink" title="数据库"></a>数据库</h3><ol>
+<li>查询表中重复字段</li>
+</ol>
+<p>SELECT Distinct(email) FROM Person A WHERE EXISTS(SELECT email FROM Person B WHERE A.email = B.email HAVING count(*)&gt;=2)</p>
+<ol>
+<li>索引原理, SQL执行策略</li>
+</ol>
+<p>Mysql目前主要有以下几种索引类型：FULLTEXT, HASH, BTREE, RTREE</p>
+<p>索引我们分为四类来讲 单列索引(普通索引，唯一索引，主键索引)、组合索引、全文索引、空间索引</p>
+<p>最左前缀原则: 在创建多列索引时，要根据业务需求，where子句中使用最频繁的一列放在最左边, 比如复合索引(a, b, c)会作用于包含 a,b,c/a,b/a 的 where 语句, 因此 a 位置应该是查询最频繁的列</p>
+<p>where 执行顺序是从左往右执行的，在数据量小的时候不用考虑，但数据量多的时候要考虑条件的先后顺序，此时应遵守一个原则：排除越多的条件放在第一个</p>
+<p>from 语句多表做笛卡尔乘积, 从右往左, 小数量的表放在最右边</p>
+<p>如何成功避开索引:</p>
+<ul>
+<li><p>like语句，‘%w’不会使用索引，‘w%’会使用索引</p>
+</li>
+<li><p>列类型为字符串类型，查询时没有用单引号引起来</p>
+</li>
+<li><p>在where查询语句中使用表达式</p>
+</li>
+<li><p>在where查询语句中对字段进行NULL值判断</p>
+</li>
+<li><p>在where查询中使用了or关键字, myisam表能用到索引， innodb不行;(用UNION替换OR,可以使用索引)</p>
+</li>
+<li><p>where中复合索引未按顺序查询的</p>
+</li>
+</ul>
+<ol>
+<li>事务的实现</li>
+</ol>
+<p>START TRANSACTION …. COMMIT …. ROLLBACK</p>
+<p>ACID, 其中隔离性通过 锁 实现, 一致性通过 undo log 实现, 原子性和持久性通过 redo log 来实现</p>
+<p>redo(重做) 和 undo(回滚) 比较: </p>
+<ul>
+<li><p>都是恢复操作: redo: 恢复提交事务修改的页操作/ undo: 回滚行记录到某个特定版本</p>
+</li>
+<li><p>记录内容不同: redo: 是物理日志，记录的是物理的修改操作/ undo: 是逻辑日志，根据每行记录进行记录</p>
+</li>
+<li><p>读取方式不同: redo : 在数据库运行时，不需要读取操作(注：数据库恢复时，才用redo)/ 在数据库运行时，需要随机读取(注：回滚时用)</p>
+</li>
+</ul>
+<p>两种隔离级别: READ COMMIT、REPEATABLE READ</p>
+<p>A, B 账户各有 1000 元, 当 A 账户的某一个事务修改为 800 元并提交, B 账户的一个事务在提交前后读取到两个不同的 A 账户金额, 即: 同一个事务中查询结果未能保持一致</p>
+<p>未解决上述问题, 使得当前事务每次读取的结果集都相同，而不管其他事务有没有提交, 但出现幻读的情形引出 MVCC</p>
+<p>多版本并发控制: MVCC 是通过保存数据在某个时间点的快照来实现的</p>
+<p>InnoDB的MVCC,是通过在每行记录后面保存两个隐藏的列来实现的,这两个列，分别保存了这个行的创建时间，一个保存的是行的删除时间。这里存储的并不是实际的时间值,而是系统版本号(可以理解为事务的ID)，每开始一个新的事务，系统版本号就会自动递增，事务开始时刻的系统版本号会作为事务的ID.</p>
+<p>MySQL 锁: </p>
+<p>读锁：也叫共享锁、S锁，若事务T对数据对象A加上S锁，则事务T可以读A但不能修改A，其他事务只能再对A加S锁，而不能加X锁，直到T释放A上的S 锁。这保证了其他事务可以读A，但在T释放A上的S锁之前不能对A做任何修改。</p>
+<p>写锁：又称排他锁、X锁。若事务T对数据对象A加上X锁，事务T可以读A也可以修改A，其他事务不能再对A加任何锁，直到T释放A上的锁。这保证了其他事务在T释放A上的锁之前不能再读取和修改A。</p>
+<p>表锁：操作对象是数据表。Mysql大多数锁策略都支持(常见mysql innodb)，是系统开销最低但并发性最低的一个锁策略。事务t对整个表加读锁，则其他事务可读不可写，若加写锁，则其他事务增删改都不行。</p>
+<p>行级锁：操作对象是数据表中的一行。是MVCC技术用的比较多的，但在MYISAM用不了，行级锁用mysql的储存引擎实现而不是mysql服务器。但行级锁对系统开销较大，处理高并发较好。</p>
+<ol>
+<li>优化点</li>
+</ol>
+<p>为什么不使用 select *</p>
+<ul>
+<li><p>不需要的字段会增加数据传输的时间，即使mysql服务器和客户端是在同一台机器上，使用的协议还是tcp，通信也需要额外的时间。 </p>
+</li>
+<li><p>select <em> 可能会获取到自己不需要的列，如果以后表结构修改了，同样也可能会对代码产生影响。比如表增加了一个字段，而我代码与其对接的对象属性里没有这个字段，select </em> 就会导致报错</p>
+</li>
+</ul>
+<ol>
+<li>drop, truncate 和 delete</li>
+</ol>
+<p>drop 删除表数据和定义, truncate 删除表数据, 不可 rollback, 使用的系统和事务日志资源少, delete 删除表数据, 按行删, 可接 where 语句, 可 rollback</p>
+<ol>
+<li>binlog</li>
+</ol>
+<p>记录数据库增删改, 不记录查询的二进制日志, 用于数据恢复</p>
+<h3 id="语法"><a href="#语法" class="headerlink" title="语法"></a>语法</h3><ol>
+<li>集合类的实现</li>
+</ol>
+<p>TreeMap 红黑树, 默认按 key 升序遍历</p>
+<p>HashMap threshold(最大容量) = len(初始化容量) * load factor(负载因子)</p>
+<p>LinkedHashMap 双向链表加HashMap, accessOrder 为 false 维持 Key 的插入顺序遍历, 为 true 时可实现 LRU</p>
+<h3 id="网络"><a href="#网络" class="headerlink" title="网络"></a>网络</h3><p>HTTP1.1的Pipeling方式本质是将请求串行化处理，后面的请求必须等待前面请求的返回才能被执行，一旦有某请求超时等，后续请求只能被阻塞，即线头阻塞；</p>
+<p>HTTP/2多个请求可同时在一个连接上并行执行。某个请求任务耗时严重，不会影响到其它连接的正常执行；</p>
+<h3 id="数据结构"><a href="#数据结构" class="headerlink" title="数据结构"></a>数据结构</h3><p>树</p>
+<p>BST 二叉排序树, O(logN) 操作复杂度, 但是依赖于输入的建树顺序, 容易退化成 O(N)</p>
+<p>AVL 平衡二叉排序树, 左右子树高度差小于1, 确保复杂度为O(logN)</p>
+<p>B树家族, 多路搜索树, 为什么B+树适合索引: 数据存在叶节点, 每次检索都是到根到叶节点的过程, 其他节点存储的数据就是索引</p>
+<ul>
+<li><p>关键字的数量不同；B+树中分支结点有m个关键字，其叶子结点也有m个，其关键字只是起到了一个索引的作用，但是B树虽然也有m个子结点，但是其只拥有 m-1 个关键字。</p>
+</li>
+<li><p>存储的位置不同；B+ 树中的数据都存储在叶子结点上，也就是其所有叶子结点的数据组合起来就是完整的数据，但是B树的数据存储在每一个结点中，并不仅仅存储在叶子结点上。</p>
+</li>
+<li><p>分支结点的构造不同；B+ 树的分支结点仅仅存储着关键字信息和儿子的指针（这里的指针指的是磁盘块的偏移量），也就是说内部结点仅仅包含着索引信息。</p>
+</li>
+<li><p>查询不同；B树在找到具体的数值以后，则结束，而B+树则需要通过索引找到叶子结点中的数据才结束，也就是说B+树的搜索过程中走了一条从根结点到叶子结点的路径。</p>
+</li>
+</ul>
+<p>BRT 红黑树, 自平衡二叉搜索树, 变色/左旋/右旋, 插入、删除、查找都是 O(logN)</p>
+<h3 id="框架"><a href="#框架" class="headerlink" title="框架"></a>框架</h3><p>Bean 生命周期(模板答案）: 通过工厂创建/通过上下文创建</p>
+<ul>
+<li><p>实例化一个 Bean(也就是 new 操作)</p>
+</li>
+<li><p>设置 Bean 的属性值(也就是 IOC 注入, 从 xml 中读取, 调用 set 接口设置)</p>
+</li>
+<li><p>如果 Bean 实现了 BeanNameAware 接口，会调用它实现的 setBeanName(String) 方法(也就是设置 Bean 的名字)</p>
+</li>
+<li><p>如果 Bean 实现了 BeanFactoryAware 接口，会调用它实现的 setBeanFactory (设置 Bean 的创建工厂）</p>
+</li>
+<li><p>(上下文独有) 如果 Bean 实现了ApplicationContextAware接口，会调用setApplicationContext(ApplicationContext)方法 (设置上下文)</p>
+</li>
+<li><p>如果 Bean 关联了 BeanPostProcessor 接口，将会调用 postProcessBeforeInitialization(Object obj, String s)方法(修改 Bean 内容, 还有 afterPropertiesSet 等等)</p>
+</li>
+<li><p>如果 Bean 在配置文件中配置了 init-method 属性会自动调用其配置的初始化方法(调用 init-method 初始化方法)</p>
+</li>
+<li><p>如果 Bean 关联了 BeanPostProcessor 接口，将会调用 postProcessAfterInitialization(Object obj, String s)方法</p>
+</li>
+<li><p>如果 Bean 实现了 DisposableBean 接口，会调用那个其实现的destroy()方法；</p>
+</li>
+<li><p>如果 Bean 配置了destroy-method 属性，会自动调用其配置的销毁方法(调用 destroy-method 销毁方法)</p>
+</li>
+</ul>
+<p>Bean 单例实现</p>
+<p>发生在 AbstractBeanFactory 的 getBean -&gt; doGetBean -&gt; getSingleton 进行bean的创建, 双重判断加锁的单例模式</p>
+<p><a href="https://www.cnblogs.com/zhaoyan001/p/6365064.html" target="_blank" rel="noopener">https://www.cnblogs.com/zhaoyan001/p/6365064.html</a></p>
+<p>静态常量, 静态代码块线程安全, 但不是 lazy-init</p>
+<p>getInstance 加锁, 单锁, 线程不安全</p>
+<p>double-check 加锁, 线程安全</p>
+<p>推荐静态内部类, 调用内部类时候才会创建</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Singleton</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">private</span> <span class="title">Singleton</span><span class="params">()</span> </span>&#123;&#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="class"><span class="keyword">class</span> <span class="title">SingletonInstance</span> </span>&#123;</span><br><span class="line">        <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> Singleton INSTANCE = <span class="keyword">new</span> Singleton();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> Singleton <span class="title">getInstance</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> SingletonInstance.INSTANCE;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>Spring 事务</p>
+<p>spring支持编程式事务管理和声明式事务管理两种方式。</p>
+<p>编程式事务管理使用TransactionTemplate或者直接使用底层的PlatformTransactionManager。对于编程式事务管理，spring推荐使用TransactionTemplate。</p>
+<p>声明式事务管理建立在AOP之上的。其本质是对方法前后进行拦截，然后在目标方法开始之前创建或者加入一个事务，在执行完目标方法之后根据执行情况提交或者回滚事务。声明式事务最大的优点就是不需要通过编程的方式管理事务，这样就不需要在业务逻辑代码中掺杂事务管理的代码，只需在配置文件中做相关的事务规则声明(或通过基于@Transactional注解的方式)，便可以将事务规则应用到业务逻辑中</p>
+<p>异常处理</p>
+<p>Service 层处理事务回滚(@Transactional), Controller 处理业务异常(通常自己封装Runtime) 然后用 @ControllerAdvice + @ExceptionHandler 进行友好展示</p>
+<p>AOP的两种实现</p>
+<p>SpringAOP 是 Spring 这个庞大的集成框架为了集成 AspectJ 而出现的一个模块</p>
+<p>从实现上来讲</p>
+<p>SpringAOP 是 基于代理实现的(Proxying), 可选两种方式</p>
+<ul>
+<li><p>JDK动态代理(Dynamic Proxy)</p>
+<ul>
+<li><p>基于标准JDK的动态代理功能</p>
+</li>
+<li><p>只针对实现了<strong>接口</strong>的业务对象</p>
+</li>
+</ul>
+</li>
+<li><p>CGLIB</p>
+<ul>
+<li><p>通过动态地对目标对象进行<strong>子类</strong>化来实现AOP代理，上面截图中的SampleBean$$EnhancerByCGLIB$$1767dd4b即为动态创建的一个子类</p>
+</li>
+<li><p>需要指定@EnableAspectJAutoProxy(proxyTargetClass = true)来强制使用</p>
+</li>
+<li><p>当业务对象没有实现任何接口的时候默认会选择CGLIB</p>
+</li>
+</ul>
+</li>
+</ul>
+<p>AspectJ 是 基于字节码操作(Bytecode Manipulation)</p>
+<p>@Around -&gt; @Before -&gt; @After -&gt; @AfterReturning</p>
+<p>其中 Around 参数为 ProceedingJoinPoint, 需要调用 proceedingJoinPoint.proceed() 才可调用方法</p>
+<h3 id="I-O-与-进程"><a href="#I-O-与-进程" class="headerlink" title="I/O 与 进程"></a>I/O 与 进程</h3><p>进程有内核态和用户态两种运行方式, 用户态可以使用 CPU 和内存来完成一些任务, 内核态可以对硬件外设进行操作(读取磁盘文件、发送数据网络)</p>
+<p>I/O 模型</p>
+<p>服务器端编程经常需要构造高性能的IO模型，常见的IO模型有四种：</p>
+<ul>
+<li><p>同步阻塞IO（Blocking IO）：即传统的IO模型。</p>
+</li>
+<li><p>同步非阻塞IO（Non-blocking IO）：默认创建的socket都是阻塞的，非阻塞IO要求socket被设置为NONBLOCK。注意这里所说的NIO并非Java的NIO（New IO）库。</p>
+</li>
+<li><p>多路复用IO（IO Multiplexing）：即经典的Reactor设计模式，有时也称为异步阻塞IO，Java中的Selector和Linux中的epoll都是这种模型。</p>
+</li>
+<li><p>异步IO（Asynchronous IO）：即经典的Proactor设计模式，也称为异步非阻塞IO。</p>
+</li>
+</ul>
+<p>同步和异步的区别在于多个任务和事件发生时，一个事件的发生或执行是否会导致整个流程的暂时等待</p>
+<p>阻塞和非阻塞的区别在于当发出请求一个操作时，如果条件不满足，是会一直等待还是返回一个标志信息。</p>
+<h3 id="缓存"><a href="#缓存" class="headerlink" title="缓存"></a>缓存</h3><p>Redis与Memcached的区别与比较</p>
+<ul>
+<li><p>Redis不仅仅支持简单的k/v类型的数据，同时还提供list，set，zset，hash等数据结构的存储。memcache支持简单的数据类型，String。</p>
+</li>
+<li><p>Redis支持数据的备份，即master-slave模式的数据备份。</p>
+</li>
+<li><p>Redis支持数据的持久化，可以将内存中的数据保持在磁盘中，重启的时候可以再次加载进行使用,而Memecache把数据全部存在内存之中</p>
+</li>
+<li><p>Memcached是多线程，非阻塞IO复用的网络模型；Redis使用单线程的IO复用模型。</p>
+</li>
+</ul>
+<p>Tair</p>
+<ul>
+<li><p>MDB: 适用容量小（一般在M级别，50G之内), 读写QPS高（万级别）的缓存场景, 是内存型产品</p>
+</li>
+<li><p>RDB: 可持久化, Redis</p>
+</li>
+<li><p>LDB: 适用于确实有持久化需求，读写QPS较高（万级别）的应用场景, 目前使用的 SSD 硬盘, 基于开源的 LevelDB 引擎</p>
+</li>
+<li><p>PDB: 即将上线</p>
+</li>
+<li><p>FASTDUMP: ODPS 快速写入到分布式缓存Tair的解决方案</p>
+</li>
+</ul>
+<p>MDB: key 最大 1K, value 最大 1M, 是典型 slab 的最大限制(内存分配机制)</p>
+<p>MDB 架构: client, 两台 ConfigServer(互为主备, 路由), 多个 DataServer(存储引擎)</p>
+<p>两台 Configserver 互为主备。通过和 DataSrver 之间的心跳检测获取集群中存活可用的 DataServer，构建数据在集群中的分布信息（对照表）。</p>
+<p>Dataserver 负责数据的存储，并按照 Configserver 的指示完成数据的复制和迁移工作。Client 在启动的时候，从 Configserver 获取数据分布信息，根据数据分布信息，和相应的 Dataserver 进行交互，完成用户的请求。</p>
+<p>ConfigServer 的考点: 一致性 Hash</p>
+<p>相邻的虚拟节点可能是多台不同的物理机，这样可以分散压力。无虚拟节点的话，只是简单的把压力转给另一台物理机</p>
+<h3 id="数据结构-1"><a href="#数据结构-1" class="headerlink" title="数据结构"></a>数据结构</h3>
+        
+        </div>
+        <footer class="article-footer">
+            <div class="share-container">
+
+
+
+</div>
+
+    <a data-url="https://aaronshi32.github.io/2018/05/23/面试基础问题/" data-id="cjm7udfb4002xues6aldlqd17" class="article-share-link"><i class="fa fa-share"></i>如需转载，请注明出处</a>
+<script>
+    (function ($) {
+        // Prevent duplicate binding
+        if (typeof(__SHARE_BUTTON_BINDED__) === 'undefined' || !__SHARE_BUTTON_BINDED__) {
+            __SHARE_BUTTON_BINDED__ = true;
+        } else {
+            return;
+        }
+        $('body').on('click', function() {
+            $('.article-share-box.on').removeClass('on');
+        }).on('click', '.article-share-link', function(e) {
+            e.stopPropagation();
+
+            var $this = $(this),
+                url = $this.attr('data-url'),
+                encodedUrl = encodeURIComponent(url),
+                id = 'article-share-box-' + $this.attr('data-id'),
+                offset = $this.offset(),
+                box;
+
+            if ($('#' + id).length) {
+                box = $('#' + id);
+
+                if (box.hasClass('on')){
+                    box.removeClass('on');
+                    return;
+                }
+            } else {
+                var html = [
+                    '<div id="' + id + '" class="article-share-box">',
+                        '<input class="article-share-input" value="' + url + '">',
+                        '<div class="article-share-links">',
+                            '<a href="https://twitter.com/intent/tweet?url=' + encodedUrl + '" class="fa fa-twitter article-share-twitter" target="_blank" title="Twitter"></a>',
+                            '<a href="https://www.facebook.com/sharer.php?u=' + encodedUrl + '" class="fa fa-facebook article-share-facebook" target="_blank" title="Facebook"></a>',
+                            '<a href="http://pinterest.com/pin/create/button/?url=' + encodedUrl + '" class="fa fa-pinterest article-share-pinterest" target="_blank" title="Pinterest"></a>',
+                            '<a href="https://plus.google.com/share?url=' + encodedUrl + '" class="fa fa-google article-share-google" target="_blank" title="Google+"></a>',
+                        '</div>',
+                    '</div>'
+                ].join('');
+
+              box = $(html);
+
+              $('body').append(box);
+            }
+
+            $('.article-share-box.on').hide();
+
+            box.css({
+                top: offset.top + 25,
+                left: offset.left
+            }).addClass('on');
+
+        }).on('click', '.article-share-box', function (e) {
+            e.stopPropagation();
+        }).on('click', '.article-share-box-input', function () {
+            $(this).select();
+        }).on('click', '.article-share-box-link', function (e) {
+            e.preventDefault();
+            e.stopPropagation();
+
+            window.open(this.href, 'article-share-box-window-' + Date.now(), 'width=500,height=450');
+        });
+    })(jQuery);
+</script>
+
+            
+    
+
+        </footer>
+    </div>
+    
+        
+<nav id="article-nav">
+    
+        <a href="/blog/2018/06/19/网络基础知识/" id="article-nav-newer" class="article-nav-link-wrap">
+            <strong class="article-nav-caption">上一篇</strong>
+            <div class="article-nav-title">
+                
+                    网络基础知识
+                
+            </div>
+        </a>
+    
+    
+        <a href="/blog/2018/05/08/Linux/" id="article-nav-older" class="article-nav-link-wrap">
+            <strong class="article-nav-caption">下一篇</strong>
+            <div class="article-nav-title">Linux 常用命令</div>
+        </a>
+    
+</nav>
+
+
+    
+</article>
+
+
+    
+    <section id="comments">
+    
+    </section>
+
+</section>
+            
+                <aside id="sidebar">
+   
+        
+    
+        
+    <div class="widget-wrap">
+        <h3 class="widget-title">归档</h3>
+        <div class="widget">
+            <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/blog/archives/2018/08/">八月 2018</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/blog/archives/2018/07/">七月 2018</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/blog/archives/2018/06/">六月 2018</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/blog/archives/2018/05/">五月 2018</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/blog/archives/2018/04/">四月 2018</a><span class="archive-list-count">6</span></li><li class="archive-list-item"><a class="archive-list-link" href="/blog/archives/2018/03/">三月 2018</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/blog/archives/2018/02/">二月 2018</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/blog/archives/2018/01/">一月 2018</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/blog/archives/2017/12/">十二月 2017</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/blog/archives/2017/11/">十一月 2017</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/blog/archives/2017/10/">十月 2017</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/blog/archives/2017/08/">八月 2017</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/blog/archives/2017/07/">七月 2017</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/blog/archives/2017/06/">六月 2017</a><span class="archive-list-count">4</span></li><li class="archive-list-item"><a class="archive-list-link" href="/blog/archives/2017/05/">五月 2017</a><span class="archive-list-count">6</span></li><li class="archive-list-item"><a class="archive-list-link" href="/blog/archives/2017/03/">三月 2017</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/blog/archives/2017/02/">二月 2017</a><span class="archive-list-count">4</span></li><li class="archive-list-item"><a class="archive-list-link" href="/blog/archives/2017/01/">一月 2017</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/blog/archives/2016/12/">十二月 2016</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/blog/archives/2016/11/">十一月 2016</a><span class="archive-list-count">6</span></li><li class="archive-list-item"><a class="archive-list-link" href="/blog/archives/2016/10/">十月 2016</a><span class="archive-list-count">1</span></li></ul>
+        </div>
+    </div>
+
+    
+        
+    <div class="widget-wrap">
+        <h3 class="widget-title">标签</h3>
+        <div class="widget">
+            <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/blog/tags/JavaScript/">JavaScript</a><span class="tag-list-count">4</span></li><li class="tag-list-item"><a class="tag-list-link" href="/blog/tags/人工智能/">人工智能</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/blog/tags/基础知识/">基础知识</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/blog/tags/工具/">工具</a><span class="tag-list-count">6</span></li><li class="tag-list-item"><a class="tag-list-link" href="/blog/tags/日常/">日常</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/blog/tags/框架/">框架</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/blog/tags/疑难杂症/">疑难杂症</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/blog/tags/系统/">系统</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/blog/tags/读书/">读书</a><span class="tag-list-count">28</span></li><li class="tag-list-item"><a class="tag-list-link" href="/blog/tags/面试/">面试</a><span class="tag-list-count">8</span></li></ul>
+        </div>
+    </div>
+
+    
+    <div id="toTop" class="fa fa-angle-up"></div>
+</aside>
+            
+        </div>
+        <footer id="footer">
+    <div class="outer">
+        <div id="footer-info" class="inner">
+            &copy; 2018 AaronShi<br>
+            Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>. Theme by <a href="http://github.com/ppoffice">PPOffice</a>
+        </div>
+    </div>
+</footer>
+        
+
+    
+        <script src="/blog/libs/lightgallery/js/lightgallery.min.js"></script>
+        <script src="/blog/libs/lightgallery/js/lg-thumbnail.min.js"></script>
+        <script src="/blog/libs/lightgallery/js/lg-pager.min.js"></script>
+        <script src="/blog/libs/lightgallery/js/lg-autoplay.min.js"></script>
+        <script src="/blog/libs/lightgallery/js/lg-fullscreen.min.js"></script>
+        <script src="/blog/libs/lightgallery/js/lg-zoom.min.js"></script>
+        <script src="/blog/libs/lightgallery/js/lg-hash.min.js"></script>
+        <script src="/blog/libs/lightgallery/js/lg-share.min.js"></script>
+        <script src="/blog/libs/lightgallery/js/lg-video.min.js"></script>
+    
+    
+        <script src="/blog/libs/justified-gallery/jquery.justifiedGallery.min.js"></script>
+    
+
+
+
+<!-- Custom Scripts -->
+<script src="/blog/js/main.js"></script>
+
+    </div>
+</body>
+</html>

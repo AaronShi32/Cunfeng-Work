@@ -1,0 +1,452 @@
+<!DOCTYPE html>
+<html lang=zh>
+<head>
+    <meta charset="utf-8">
+    
+    <title>读书笔记-Redis 独立功能的实现 | 着陆的橘子</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+    <meta name="description" content="Redis：独立功能的实现1. 发布与订阅Redis 的发布与订阅功能由 PUBLISH、(UN)SUBSCRIBE、PSUBSCRIBE 等命令组成 12345678struct redisServer &amp;#123;		// 保存所有频道的订阅关系	dict *pubsub_channels;	// 保存所有模式的订阅关系	list *pubsub_patterns;&amp;#125; Redis 将">
+<meta name="keywords" content="读书">
+<meta property="og:type" content="article">
+<meta property="og:title" content="读书笔记-Redis 独立功能的实现">
+<meta property="og:url" content="https://aaronshi32.github.io/2018/04/10/读书笔记-Redis 独立功能的实现/index.html">
+<meta property="og:site_name" content="着陆的橘子">
+<meta property="og:description" content="Redis：独立功能的实现1. 发布与订阅Redis 的发布与订阅功能由 PUBLISH、(UN)SUBSCRIBE、PSUBSCRIBE 等命令组成 12345678struct redisServer &amp;#123;		// 保存所有频道的订阅关系	dict *pubsub_channels;	// 保存所有模式的订阅关系	list *pubsub_patterns;&amp;#125; Redis 将">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:updated_time" content="2018-04-11T01:16:17.794Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="读书笔记-Redis 独立功能的实现">
+<meta name="twitter:description" content="Redis：独立功能的实现1. 发布与订阅Redis 的发布与订阅功能由 PUBLISH、(UN)SUBSCRIBE、PSUBSCRIBE 等命令组成 12345678struct redisServer &amp;#123;		// 保存所有频道的订阅关系	dict *pubsub_channels;	// 保存所有模式的订阅关系	list *pubsub_patterns;&amp;#125; Redis 将">
+    
+
+    
+
+    
+
+    <link rel="stylesheet" href="/blog/libs/font-awesome/css/font-awesome.min.css">
+    <link rel="stylesheet" href="/blog/libs/open-sans/styles.css">
+    <link rel="stylesheet" href="/blog/libs/source-code-pro/styles.css">
+
+    <link rel="stylesheet" href="/blog/css/style.css">
+
+    <script src="/blog/libs/jquery/2.1.3/jquery.min.js"></script>
+    
+    
+        <link rel="stylesheet" href="/blog/libs/lightgallery/css/lightgallery.min.css">
+    
+    
+        <link rel="stylesheet" href="/blog/libs/justified-gallery/justifiedGallery.min.css">
+    
+    
+    
+    
+
+
+</head>
+
+<body>
+    <div id="container">
+        <header id="header">
+    <div id="header-main" class="header-inner">
+        <div class="outer">
+            <a href="/blog/" id="logo">
+                <i class="logo"></i>
+                <span class="site-title">着陆的橘子</span>
+            </a>
+            <nav id="main-nav">
+                
+                    <a class="main-nav-link" href="/.">主页</a>
+                
+                    <a class="main-nav-link" href="/about/cv.pdf">关于</a>
+                
+            </nav>
+            
+                
+                <nav id="sub-nav">
+                    <div class="profile" id="profile-nav">
+                        <a id="profile-anchor" href="javascript:;">
+                            <img class="avatar" src="/css/images/avatar.png" />
+                            <i class="fa fa-caret-down"></i>
+                        </a>
+                    </div>
+                </nav>
+            
+            <div id="search-form-wrap">
+
+    <form class="search-form">
+        <input type="text" class="ins-search-input search-form-input" placeholder="文章" />
+        <button type="submit" class="search-form-submit"></button>
+    </form>
+    <div class="ins-search">
+    <div class="ins-search-mask"></div>
+    <div class="ins-search-container">
+        <div class="ins-input-wrapper">
+            <input type="text" class="ins-search-input" placeholder="想要查找什么..." />
+            <span class="ins-close ins-selectable"><i class="fa fa-times-circle"></i></span>
+        </div>
+        <div class="ins-section-wrapper">
+            <div class="ins-section-container"></div>
+        </div>
+    </div>
+</div>
+<script>
+(function (window) {
+    var INSIGHT_CONFIG = {
+        TRANSLATION: {
+            POSTS: '文章',
+            PAGES: '页面',
+            CATEGORIES: '分类',
+            TAGS: '标签',
+            UNTITLED: '(未命名)',
+        },
+        ROOT_URL: '/',
+        CONTENT_URL: '/content.json',
+    };
+    window.INSIGHT_CONFIG = INSIGHT_CONFIG;
+})(window);
+</script>
+<script src="/blog/js/insight.js"></script>
+
+</div>
+        </div>
+    </div>
+    <div id="main-nav-mobile" class="header-sub header-inner">
+        <table class="menu outer">
+            <tr>
+                
+                    <td><a class="main-nav-link" href="/.">主页</a></td>
+                
+                    <td><a class="main-nav-link" href="/about/cv.pdf">关于</a></td>
+                
+                <td>
+                    
+    <div class="search-form">
+        <input type="text" class="ins-search-input search-form-input" placeholder="搜索" />
+    </div>
+
+                </td>
+            </tr>
+        </table>
+    </div>
+</header>
+
+        <div class="outer">
+            
+                
+
+<aside id="profile">
+    <div class="inner profile-inner">
+        <div class="base-info profile-block">
+            <img id="avatar" src="/css/images/avatar.png" />
+            <h2 id="name">AaronShi32</h2>
+            <h3 id="title">Senior Software Developer</h3>
+            <span id="location"><i class="fa fa-map-marker"></i>Beijing, China</span>
+            <a id="follow" target="_blank" href="https://github.com/AaronShi32">Follow</a>
+        </div>
+        <div class="article-info profile-block">
+            <div class="article-info-block">
+                48
+                <span>文章</span>
+            </div>
+            <div class="article-info-block">
+                10
+                <span>标签</span>
+            </div>
+        </div>
+        
+        <div class="profile-block social-links">
+            <table>
+                <tr>
+                    
+                    
+                    <td>
+                        <a href="https://github.com/AaronShi32" target="_blank" title="github" >
+                            <i class="fa fa-github"></i>
+                        </a>
+                    </td>
+                    
+                    <td>
+                        <a href="https://www.linkedin.com/in/cfshi" target="_blank" title="linkedin-square" >
+                            <i class="fa fa-linkedin-square"></i>
+                        </a>
+                    </td>
+                    
+                </tr>
+            </table>
+        </div>
+        
+    </div>
+</aside>
+
+            
+            <section id="main"><article id="post-读书笔记-Redis 独立功能的实现" class="article article-type-post" itemscope itemprop="blogPost">
+    <div class="article-inner">
+        
+        
+            <header class="article-header">
+                
+    
+        <h1 class="article-title" itemprop="name">
+            读书笔记-Redis 独立功能的实现
+        </h1>
+    
+
+                
+                    <div class="article-meta">
+                        
+    <div class="article-date">
+        <i class="fa fa-calendar"></i>
+        <a href="/blog/2018/04/10/读书笔记-Redis 独立功能的实现/">
+            <time datetime="2018-04-10T02:14:49.000Z" itemprop="datePublished">2018-04-10</time>
+        </a>
+    </div>
+
+
+                        
+                        
+    <div class="article-tag">
+        <i class="fa fa-tag"></i>
+        <a class="tag-link" href="/blog/tags/读书/">读书</a>
+    </div>
+
+                    </div>
+                
+            </header>
+        
+        
+        <div class="article-entry" itemprop="articleBody">
+        
+            
+            <h3 id="Redis：独立功能的实现"><a href="#Redis：独立功能的实现" class="headerlink" title="Redis：独立功能的实现"></a>Redis：独立功能的实现</h3><h5 id="1-发布与订阅"><a href="#1-发布与订阅" class="headerlink" title="1. 发布与订阅"></a>1. 发布与订阅</h5><p>Redis 的发布与订阅功能由 PUBLISH、(UN)SUBSCRIBE、PSUBSCRIBE 等命令组成</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">struct redisServer &#123;</span><br><span class="line">	</span><br><span class="line">	<span class="comment">// 保存所有频道的订阅关系</span></span><br><span class="line">	dict *pubsub_channels;</span><br><span class="line"></span><br><span class="line">	<span class="comment">// 保存所有模式的订阅关系</span></span><br><span class="line">	list *pubsub_patterns;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>Redis 将所有频道的订阅关系都保存在服务器状态的 pubsub_channels 字典里面, 这个字典的键是某个被订阅的频道, 而键的值则是一个链表, 链表里面记录了所有订阅这个频道的客户端</p>
+<ul>
+<li><p>服务器数据结构在 pubsub_channels 字典保存了所有频道的订阅关系: SUBSCRIBE 命令负责将客户端和被订阅的频道关联到这个字典里面, 而 UNSUBCRIBE 命令则负责解除客户端和被退订频道之间的关联</p>
+</li>
+<li><p>服务器数据结构在 pubsub_patterns 链表保存了所有模式的订阅关系: PSUBCRIBE 命令负责将客户端和被订阅的模式记录到这个链表中, 而 PUNSUBSCRIBE 命令则负责移除客户端和被退订模式之间的关联</p>
+</li>
+<li><p>PUBLISH 命令通过访问 pubsub_channels 字典来向频道的所有订阅者发送消息, 通过访问 pubsub_patterns 链表来向所有匹配频道的模式的订阅者发送消息</p>
+</li>
+<li><p>PUBSUB 命令的三个子命令都是读取通过 pubsub_channels 字典和 pubsub_patterns 链表中的信息来实现的</p>
+</li>
+</ul>
+<h5 id="2-事务"><a href="#2-事务" class="headerlink" title="2. 事务"></a>2. 事务</h5><p>Redis 通过 MULTI、EXEC、WATCH 等命令来实现事务(transaction)功能</p>
+<p>WATCH 命令是一个乐观锁, 它可以在 EXEC 命令执行之前, 监事任意数量的数据库键, 并在 EXEC 命令执行时, 检查被监视的键是否至少有一个已经被修改过了, 如果是的话, 服务器将拒绝执行事务, 并向客户端返回代表事务执行失败的空回复</p>
+<ul>
+<li><p>事务在执行过程中不会被中断, 当事务队列中的所有命令都被执行完毕之后, 事务才会结束</p>
+</li>
+<li><p>带有 WATCH 命令的事务会将客户端和被监视的键在数据库的 watched_keys 字典中进行关联, 当键被修改时, 程序会将所有监视被修改键的客户端的 REDIS_DIRTY_CAS 标志打开</p>
+</li>
+<li><p>只有在客户端的 REDIS_DIRTY_CAS 标志未被打开时, 服务器才会执行客户端提交的事务, 否则将拒绝</p>
+</li>
+<li><p>Redis 的事务总是具有 ACID 中的原子性、一致性和隔离性, 当服务器运行在 AOF 持久化模式下, 并且 appendfsync 选项的值为 always 时, 事务也具有耐久性</p>
+</li>
+</ul>
+<h5 id="3-排序"><a href="#3-排序" class="headerlink" title="3. 排序"></a>3. 排序</h5><ul>
+<li><p>SORT 命令通过将被排序键包含的元素载入到数组里面, 然后对数组进行排序来完成对键进行排序工作</p>
+</li>
+<li><p>在默认情况下, SORT 命令假设被排序键包含的都是数字值, 并且以数字值的方式来进行排序</p>
+</li>
+<li><p>如果 SORT 命令使用了 ALPHA 选项, 那么 SORT 命令假设被排序键包含的都是字符串值, 并且以字符串的方式来进行排序</p>
+</li>
+<li><p>SORT 命令的排序操作由快速排序算法实现</p>
+</li>
+<li><p>当 SORT 命令使用了 BY 选项时, 命令使用其他键的值作为权重来进行排序操作</p>
+</li>
+<li><p>除了 GET 选项之外, 调整选项的摆放位置不会影响 SORT 命令的排序结果</p>
+</li>
+</ul>
+<h5 id="4-慢查询日志"><a href="#4-慢查询日志" class="headerlink" title="4. 慢查询日志"></a>4. 慢查询日志</h5><p>Reids 的慢日志查询功能用于记录执行时间超过给定时长的命令请求, 用户可以通过这个功能产生的日志来监视和优化查询速度</p>
+<ul>
+<li><p>Redis 服务器将所有的慢查询日志保存在服务器状态的 slowlog 链表中, 每个链表节点都包含一个 slowlogEntry 结构, 每个 slowlogEntry 结构代表一条慢查询日志</p>
+</li>
+<li><p>打印和删除慢查询日志可以通过遍历 slowlog 链表来完成</p>
+</li>
+<li><p>slowlog 链表的长度就是服务器所保存慢查询在日志的数量</p>
+</li>
+<li><p>新的慢查询日志会被添加到 slowlog 链表的表头, 如果日志的数量超过 slowlog-max-len 选项的值, 那么多出来的日志会被删除</p>
+</li>
+</ul>
+<h5 id="5-监视器"><a href="#5-监视器" class="headerlink" title="5. 监视器"></a>5. 监视器</h5><ul>
+<li><p>客户端可以通过执行 MONITOR 命令转换成监视器, 接收并打印服务器处理的每个命令请求信息</p>
+</li>
+<li><p>当一个客户端变为监视器时, 该客户端的 REDIS_MONITOR 标识会被打开</p>
+</li>
+<li><p>服务器将所有监视器都记录在 monitors 链表中</p>
+</li>
+<li><p>每次处理命令请求时, 服务器都会遍历 monitors 链表, 将相关信息发送给监视器</p>
+</li>
+</ul>
+
+        
+        </div>
+        <footer class="article-footer">
+            <div class="share-container">
+
+
+
+</div>
+
+    <a data-url="https://aaronshi32.github.io/2018/04/10/读书笔记-Redis 独立功能的实现/" data-id="cjm7udfaq001wues6e03abra6" class="article-share-link"><i class="fa fa-share"></i>如需转载，请注明出处</a>
+<script>
+    (function ($) {
+        // Prevent duplicate binding
+        if (typeof(__SHARE_BUTTON_BINDED__) === 'undefined' || !__SHARE_BUTTON_BINDED__) {
+            __SHARE_BUTTON_BINDED__ = true;
+        } else {
+            return;
+        }
+        $('body').on('click', function() {
+            $('.article-share-box.on').removeClass('on');
+        }).on('click', '.article-share-link', function(e) {
+            e.stopPropagation();
+
+            var $this = $(this),
+                url = $this.attr('data-url'),
+                encodedUrl = encodeURIComponent(url),
+                id = 'article-share-box-' + $this.attr('data-id'),
+                offset = $this.offset(),
+                box;
+
+            if ($('#' + id).length) {
+                box = $('#' + id);
+
+                if (box.hasClass('on')){
+                    box.removeClass('on');
+                    return;
+                }
+            } else {
+                var html = [
+                    '<div id="' + id + '" class="article-share-box">',
+                        '<input class="article-share-input" value="' + url + '">',
+                        '<div class="article-share-links">',
+                            '<a href="https://twitter.com/intent/tweet?url=' + encodedUrl + '" class="fa fa-twitter article-share-twitter" target="_blank" title="Twitter"></a>',
+                            '<a href="https://www.facebook.com/sharer.php?u=' + encodedUrl + '" class="fa fa-facebook article-share-facebook" target="_blank" title="Facebook"></a>',
+                            '<a href="http://pinterest.com/pin/create/button/?url=' + encodedUrl + '" class="fa fa-pinterest article-share-pinterest" target="_blank" title="Pinterest"></a>',
+                            '<a href="https://plus.google.com/share?url=' + encodedUrl + '" class="fa fa-google article-share-google" target="_blank" title="Google+"></a>',
+                        '</div>',
+                    '</div>'
+                ].join('');
+
+              box = $(html);
+
+              $('body').append(box);
+            }
+
+            $('.article-share-box.on').hide();
+
+            box.css({
+                top: offset.top + 25,
+                left: offset.left
+            }).addClass('on');
+
+        }).on('click', '.article-share-box', function (e) {
+            e.stopPropagation();
+        }).on('click', '.article-share-box-input', function () {
+            $(this).select();
+        }).on('click', '.article-share-box-link', function (e) {
+            e.preventDefault();
+            e.stopPropagation();
+
+            window.open(this.href, 'article-share-box-window-' + Date.now(), 'width=500,height=450');
+        });
+    })(jQuery);
+</script>
+
+            
+    
+
+        </footer>
+    </div>
+    
+        
+<nav id="article-nav">
+    
+        <a href="/blog/2018/04/19/读书笔记-深入分析 Java Web 技术内幕（一）/" id="article-nav-newer" class="article-nav-link-wrap">
+            <strong class="article-nav-caption">上一篇</strong>
+            <div class="article-nav-title">
+                
+                    读书笔记-深入分析 Java Web 技术内幕（一）
+                
+            </div>
+        </a>
+    
+    
+        <a href="/blog/2018/04/05/读书笔记-Redis 多机数据库的实现/" id="article-nav-older" class="article-nav-link-wrap">
+            <strong class="article-nav-caption">下一篇</strong>
+            <div class="article-nav-title">读书笔记-Redis 多机数据库的实现</div>
+        </a>
+    
+</nav>
+
+
+    
+</article>
+
+
+    
+    <section id="comments">
+    
+    </section>
+
+</section>
+            
+                <aside id="sidebar">
+   
+        
+    
+        
+    <div class="widget-wrap">
+        <h3 class="widget-title">归档</h3>
+        <div class="widget">
+            <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/blog/archives/2018/08/">八月 2018</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/blog/archives/2018/07/">七月 2018</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/blog/archives/2018/06/">六月 2018</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/blog/archives/2018/05/">五月 2018</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/blog/archives/2018/04/">四月 2018</a><span class="archive-list-count">6</span></li><li class="archive-list-item"><a class="archive-list-link" href="/blog/archives/2018/03/">三月 2018</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/blog/archives/2018/02/">二月 2018</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/blog/archives/2018/01/">一月 2018</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/blog/archives/2017/12/">十二月 2017</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/blog/archives/2017/11/">十一月 2017</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/blog/archives/2017/10/">十月 2017</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/blog/archives/2017/08/">八月 2017</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/blog/archives/2017/07/">七月 2017</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/blog/archives/2017/06/">六月 2017</a><span class="archive-list-count">4</span></li><li class="archive-list-item"><a class="archive-list-link" href="/blog/archives/2017/05/">五月 2017</a><span class="archive-list-count">6</span></li><li class="archive-list-item"><a class="archive-list-link" href="/blog/archives/2017/03/">三月 2017</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/blog/archives/2017/02/">二月 2017</a><span class="archive-list-count">4</span></li><li class="archive-list-item"><a class="archive-list-link" href="/blog/archives/2017/01/">一月 2017</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/blog/archives/2016/12/">十二月 2016</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/blog/archives/2016/11/">十一月 2016</a><span class="archive-list-count">6</span></li><li class="archive-list-item"><a class="archive-list-link" href="/blog/archives/2016/10/">十月 2016</a><span class="archive-list-count">1</span></li></ul>
+        </div>
+    </div>
+
+    
+        
+    <div class="widget-wrap">
+        <h3 class="widget-title">标签</h3>
+        <div class="widget">
+            <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/blog/tags/JavaScript/">JavaScript</a><span class="tag-list-count">4</span></li><li class="tag-list-item"><a class="tag-list-link" href="/blog/tags/人工智能/">人工智能</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/blog/tags/基础知识/">基础知识</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/blog/tags/工具/">工具</a><span class="tag-list-count">6</span></li><li class="tag-list-item"><a class="tag-list-link" href="/blog/tags/日常/">日常</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/blog/tags/框架/">框架</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/blog/tags/疑难杂症/">疑难杂症</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/blog/tags/系统/">系统</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/blog/tags/读书/">读书</a><span class="tag-list-count">28</span></li><li class="tag-list-item"><a class="tag-list-link" href="/blog/tags/面试/">面试</a><span class="tag-list-count">8</span></li></ul>
+        </div>
+    </div>
+
+    
+    <div id="toTop" class="fa fa-angle-up"></div>
+</aside>
+            
+        </div>
+        <footer id="footer">
+    <div class="outer">
+        <div id="footer-info" class="inner">
+            &copy; 2018 AaronShi<br>
+            Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>. Theme by <a href="http://github.com/ppoffice">PPOffice</a>
+        </div>
+    </div>
+</footer>
+        
+
+    
+        <script src="/blog/libs/lightgallery/js/lightgallery.min.js"></script>
+        <script src="/blog/libs/lightgallery/js/lg-thumbnail.min.js"></script>
+        <script src="/blog/libs/lightgallery/js/lg-pager.min.js"></script>
+        <script src="/blog/libs/lightgallery/js/lg-autoplay.min.js"></script>
+        <script src="/blog/libs/lightgallery/js/lg-fullscreen.min.js"></script>
+        <script src="/blog/libs/lightgallery/js/lg-zoom.min.js"></script>
+        <script src="/blog/libs/lightgallery/js/lg-hash.min.js"></script>
+        <script src="/blog/libs/lightgallery/js/lg-share.min.js"></script>
+        <script src="/blog/libs/lightgallery/js/lg-video.min.js"></script>
+    
+    
+        <script src="/blog/libs/justified-gallery/jquery.justifiedGallery.min.js"></script>
+    
+
+
+
+<!-- Custom Scripts -->
+<script src="/blog/js/main.js"></script>
+
+    </div>
+</body>
+</html>
