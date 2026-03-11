@@ -2,6 +2,7 @@ import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
+import rehypeRaw from 'rehype-raw';
 import interviewMd from './data/interview-zh.md?raw';
 import styles from './templates/interview.module.css';
 
@@ -17,7 +18,7 @@ export default function InterviewPage() {
       </div>
 
       <div className={styles.paper}>
-        <ReactMarkdown remarkPlugins={[remarkGfm]}>
+        <ReactMarkdown remarkPlugins={[remarkGfm]} rehypePlugins={[rehypeRaw]}>
           {interviewMd}
         </ReactMarkdown>
       </div>
