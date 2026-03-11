@@ -4,7 +4,7 @@
   align-items: center;
   padding: 40px 20px;
   min-height: 100vh;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: #f0f0f0;
 }
 
 .toolbar {
@@ -17,44 +17,43 @@
 }
 
 .backButton {
-  background: rgba(255, 255, 255, 0.2);
-  border: 1px solid rgba(255, 255, 255, 0.3);
-  color: #fff;
+  background: #fff;
+  border: 1px solid #d0d0d0;
+  color: #333;
   padding: 8px 20px;
-  border-radius: 8px;
+  border-radius: 4px;
   cursor: pointer;
-  font-size: 14px;
+  font-size: 12px;
+  font-family: "Microsoft YaHei", "微软雅黑", sans-serif;
   transition: all 0.2s ease;
-  backdrop-filter: blur(10px);
 }
 
 .backButton:hover {
-  background: rgba(255, 255, 255, 0.3);
+  background: #f5f5f5;
+  border-color: #999;
 }
 
 .downloadButton {
-  background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);
+  background: #333;
   border: none;
-  color: #1a1a2e;
-  padding: 10px 24px;
-  border-radius: 8px;
+  color: #fff;
+  padding: 8px 24px;
+  border-radius: 4px;
   cursor: pointer;
-  font-size: 14px;
-  font-weight: 600;
+  font-size: 12px;
+  font-family: "Microsoft YaHei", "微软雅黑", sans-serif;
+  font-weight: 500;
   transition: all 0.2s ease;
   margin-left: auto;
-  box-shadow: 0 4px 15px rgba(67, 233, 123, 0.3);
 }
 
 .downloadButton:hover {
-  transform: translateY(-1px);
-  box-shadow: 0 6px 20px rgba(67, 233, 123, 0.4);
+  background: #555;
 }
 
 .downloadButton:disabled {
-  opacity: 0.6;
+  opacity: 0.5;
   cursor: not-allowed;
-  transform: none;
 }
 
 /* A4 纸张容器 */
@@ -62,37 +61,37 @@
   width: 210mm;
   min-height: 297mm;
   background: #ffffff;
-  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
-  border-radius: 4px;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.12);
   overflow: hidden;
 }
 
 /* 简历内容区域 */
 .resumeContent {
-  padding: 40px 48px;
-  font-family: "Noto Sans SC", "PingFang SC", "Microsoft YaHei", -apple-system, sans-serif;
-  color: #2d3748;
-  line-height: 1.6;
+  padding: 36px 44px;
+  font-family: "Microsoft YaHei", "微软雅黑", "PingFang SC", sans-serif;
+  color: #000;
+  font-size: 12px;
+  line-height: 1.8;
 }
 
 /* 头部 - 姓名 */
 .headerName {
-  font-size: 32px;
+  font-size: 22px;
   font-weight: 700;
-  color: #1a202c;
-  margin: 0 0 8px 0;
-  letter-spacing: 2px;
+  color: #000;
+  margin: 0 0 6px 0;
+  letter-spacing: 4px;
 }
 
 /* 头部 - 联系方式 */
 .headerContacts {
-  font-size: 13px;
-  color: #718096;
-  margin: 0 0 20px 0;
+  font-size: 12px;
+  color: #333;
+  margin: 0 0 16px 0;
 }
 
 .headerContacts a {
-  color: #4a7cf7;
+  color: #333;
   text-decoration: none;
 }
 
@@ -102,20 +101,19 @@
 
 .divider {
   border: none;
-  border-top: 2px solid #4a7cf7;
-  margin: 0 0 24px 0;
+  border-top: 1.5px solid #000;
+  margin: 0 0 20px 0;
 }
 
 /* 分区标题 */
 .sectionTitle {
-  font-size: 16px;
+  font-size: 14px;
   font-weight: 700;
-  color: #1a202c;
-  margin: 24px 0 12px 0;
-  padding-bottom: 6px;
-  border-bottom: 1px solid #e2e8f0;
-  letter-spacing: 1px;
-  text-transform: uppercase;
+  color: #000;
+  margin: 20px 0 8px 0;
+  padding-bottom: 4px;
+  border-bottom: 1px solid #ccc;
+  letter-spacing: 2px;
 }
 
 .sectionTitle:first-of-type {
@@ -124,44 +122,43 @@
 
 /* 分区内容 */
 .sectionBody {
-  font-size: 14px;
-  color: #4a5568;
-  line-height: 1.75;
+  font-size: 12px;
+  color: #222;
+  line-height: 1.8;
 }
 
 .sectionBody h3 {
-  font-size: 15px;
-  font-weight: 600;
-  color: #2d3748;
-  margin: 14px 0 4px 0;
+  font-size: 12px;
+  font-weight: 700;
+  color: #000;
+  margin: 10px 0 2px 0;
 }
 
 .sectionBody p {
-  margin: 4px 0;
+  margin: 2px 0;
 }
 
 .sectionBody em {
-  color: #718096;
-  font-style: italic;
+  color: #555;
+  font-style: normal;
 }
 
 .sectionBody strong {
-  color: #2d3748;
-  font-weight: 600;
+  color: #000;
+  font-weight: 700;
 }
 
 .sectionBody ul {
-  margin: 6px 0;
-  padding-left: 20px;
+  margin: 4px 0;
+  padding-left: 18px;
 }
 
 .sectionBody li {
-  margin: 3px 0;
-  position: relative;
+  margin: 2px 0;
 }
 
 .sectionBody li::marker {
-  color: #4a7cf7;
+  color: #000;
 }
 
 /* 打印样式 */
@@ -177,16 +174,14 @@
 
   .a4Paper {
     box-shadow: none;
-    border-radius: 0;
   }
 }
 
-/* 响应式 - 小屏缩放预览 */
+/* 响应式 - 小屏 */
 @media (max-width: 900px) {
   .a4Paper {
     width: 100%;
     min-height: auto;
-    border-radius: 0;
   }
 
   .resumeContent {
@@ -194,6 +189,6 @@
   }
 
   .headerName {
-    font-size: 24px;
+    font-size: 20px;
   }
 }
