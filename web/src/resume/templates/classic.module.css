@@ -152,7 +152,8 @@
 
 /* 清除浮动 */
 .sectionBody h3 + p + p,
-.sectionBody h3 + p + ul {
+.sectionBody h3 + p + ul,
+.sectionBody h3 + p + h3 {
   clear: both;
 }
 
