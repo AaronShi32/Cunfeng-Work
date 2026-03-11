@@ -128,10 +128,23 @@
 }
 
 .sectionBody h3 {
+  display: inline;
   font-size: 12px;
   font-weight: 700;
   color: #000;
-  margin: 10px 0 2px 0;
+}
+
+/* 紧跟 h3 后的斜体段落（部门/时间），与 h3 同行显示 */
+.sectionBody h3 + p {
+  display: inline;
+  margin: 0 0 0 12px;
+}
+
+/* h3+p 后面的内容另起一行 */
+.sectionBody h3 + p + p,
+.sectionBody h3 + p + ul {
+  display: block;
+  clear: both;
 }
 
 .sectionBody p {
