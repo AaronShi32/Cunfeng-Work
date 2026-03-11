@@ -12,8 +12,9 @@
   align-items: center;
   gap: 16px;
   margin-bottom: 24px;
-  width: 100%;
-  max-width: 820px;
+  width: 210mm;
+  padding: 0 44px;
+  box-sizing: border-box;
 }
 
 .backButton {
