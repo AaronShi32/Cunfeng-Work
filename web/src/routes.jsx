@@ -1,5 +1,5 @@
 import React from 'react';
-import { Home, Microsoft, Alibaba, ENI, InstanceMigration, ASI, Resume } from './pages';
+import { Home, Microsoft, Alibaba, ENI, InstanceMigration, ASI, Resume, Interview } from './pages';
 
 const routes = [
   { path: '/', element: <Home /> },
@@ -9,6 +9,7 @@ const routes = [
   { path: '/instance-migration', element: <InstanceMigration /> },
   { path: '/asi', element: <ASI /> },
   { path: '/resume', element: <Resume /> },
+  { path: '/interview', element: <Interview /> },
 ];
 
 export default routes;
