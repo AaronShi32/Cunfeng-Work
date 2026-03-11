@@ -1,0 +1,199 @@
+.resumeWrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 40px 20px;
+  min-height: 100vh;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+}
+
+.toolbar {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 24px;
+  width: 100%;
+  max-width: 820px;
+}
+
+.backButton {
+  background: rgba(255, 255, 255, 0.2);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  color: #fff;
+  padding: 8px 20px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 14px;
+  transition: all 0.2s ease;
+  backdrop-filter: blur(10px);
+}
+
+.backButton:hover {
+  background: rgba(255, 255, 255, 0.3);
+}
+
+.downloadButton {
+  background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);
+  border: none;
+  color: #1a1a2e;
+  padding: 10px 24px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 600;
+  transition: all 0.2s ease;
+  margin-left: auto;
+  box-shadow: 0 4px 15px rgba(67, 233, 123, 0.3);
+}
+
+.downloadButton:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 6px 20px rgba(67, 233, 123, 0.4);
+}
+
+.downloadButton:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: none;
+}
+
+/* A4 纸张容器 */
+.a4Paper {
+  width: 210mm;
+  min-height: 297mm;
+  background: #ffffff;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+/* 简历内容区域 */
+.resumeContent {
+  padding: 40px 48px;
+  font-family: "Noto Sans SC", "PingFang SC", "Microsoft YaHei", -apple-system, sans-serif;
+  color: #2d3748;
+  line-height: 1.6;
+}
+
+/* 头部 - 姓名 */
+.headerName {
+  font-size: 32px;
+  font-weight: 700;
+  color: #1a202c;
+  margin: 0 0 8px 0;
+  letter-spacing: 2px;
+}
+
+/* 头部 - 联系方式 */
+.headerContacts {
+  font-size: 13px;
+  color: #718096;
+  margin: 0 0 20px 0;
+}
+
+.headerContacts a {
+  color: #4a7cf7;
+  text-decoration: none;
+}
+
+.headerContacts a:hover {
+  text-decoration: underline;
+}
+
+.divider {
+  border: none;
+  border-top: 2px solid #4a7cf7;
+  margin: 0 0 24px 0;
+}
+
+/* 分区标题 */
+.sectionTitle {
+  font-size: 16px;
+  font-weight: 700;
+  color: #1a202c;
+  margin: 24px 0 12px 0;
+  padding-bottom: 6px;
+  border-bottom: 1px solid #e2e8f0;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+}
+
+.sectionTitle:first-of-type {
+  margin-top: 0;
+}
+
+/* 分区内容 */
+.sectionBody {
+  font-size: 14px;
+  color: #4a5568;
+  line-height: 1.75;
+}
+
+.sectionBody h3 {
+  font-size: 15px;
+  font-weight: 600;
+  color: #2d3748;
+  margin: 14px 0 4px 0;
+}
+
+.sectionBody p {
+  margin: 4px 0;
+}
+
+.sectionBody em {
+  color: #718096;
+  font-style: italic;
+}
+
+.sectionBody strong {
+  color: #2d3748;
+  font-weight: 600;
+}
+
+.sectionBody ul {
+  margin: 6px 0;
+  padding-left: 20px;
+}
+
+.sectionBody li {
+  margin: 3px 0;
+  position: relative;
+}
+
+.sectionBody li::marker {
+  color: #4a7cf7;
+}
+
+/* 打印样式 */
+@media print {
+  .resumeWrapper {
+    background: none;
+    padding: 0;
+  }
+
+  .toolbar {
+    display: none;
+  }
+
+  .a4Paper {
+    box-shadow: none;
+    border-radius: 0;
+  }
+}
+
+/* 响应式 - 小屏缩放预览 */
+@media (max-width: 900px) {
+  .a4Paper {
+    width: 100%;
+    min-height: auto;
+    border-radius: 0;
+  }
+
+  .resumeContent {
+    padding: 24px 20px;
+  }
+
+  .headerName {
+    font-size: 24px;
+  }
+}
