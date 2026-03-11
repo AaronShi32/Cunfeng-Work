@@ -13,7 +13,7 @@
   gap: 16px;
   margin-bottom: 24px;
   width: 210mm;
-  padding: 0 44px;
+  padding: 0 40px;
   box-sizing: border-box;
 }
 
@@ -68,11 +68,11 @@
 
 /* 简历内容区域 */
 .resumeContent {
-  padding: 36px 44px;
+  padding: 32px 40px;
   font-family: "Microsoft YaHei", "微软雅黑", "PingFang SC", sans-serif;
-  color: #000;
+  color: #222;
   font-size: 12px;
-  line-height: 1.8;
+  line-height: 1.7;
 }
 
 /* 头部 - 姓名 */
@@ -80,19 +80,24 @@
   font-size: 20px;
   font-weight: 700;
   color: #000;
-  margin: 0 0 6px 0;
-  letter-spacing: 0;
+  margin: 0 0 4px 0;
+  text-align: center;
 }
 
 /* 头部 - 联系方式 */
 .headerContacts {
   font-size: 12px;
-  color: #333;
-  margin: 0 0 16px 0;
+  color: #555;
+  margin: 0 0 12px 0;
+  text-align: center;
+}
+
+.headerContacts p {
+  margin: 0;
 }
 
 .headerContacts a {
-  color: #333;
+  color: #555;
   text-decoration: none;
 }
 
@@ -102,18 +107,18 @@
 
 .divider {
   border: none;
-  border-top: 1.5px solid #000;
-  margin: 0 0 20px 0;
+  border-top: 1.5px solid #333;
+  margin: 0 0 16px 0;
 }
 
 /* 分区标题 */
 .sectionTitle {
-  font-size: 14px;
+  font-size: 13px;
   font-weight: 700;
   color: #000;
-  margin: 20px 0 8px 0;
-  padding-bottom: 4px;
-  border-bottom: 1px solid #ccc;
+  margin: 16px 0 8px 0;
+  padding-bottom: 3px;
+  border-bottom: 1px solid #d0d0d0;
   letter-spacing: 2px;
 }
 
@@ -124,26 +129,28 @@
 /* 分区内容 */
 .sectionBody {
   font-size: 12px;
-  color: #222;
-  line-height: 1.8;
+  color: #333;
+  line-height: 1.7;
 }
 
+/* h3 标题（公司名/学校名）左浮动 */
 .sectionBody h3 {
   float: left;
   font-size: 12px;
   font-weight: 700;
   color: #000;
-  margin: 10px 0 0 0;
+  margin: 8px 0 0 0;
 }
 
-/* 紧跟 h3 后的斜体段落（部门/时间），右对齐 */
+/* h3 后的斜体段落（部门/时间）右对齐 */
 .sectionBody h3 + p {
   overflow: hidden;
   text-align: right;
-  margin: 10px 0 0 0;
+  margin: 8px 0 0 0;
+  color: #555;
 }
 
-/* h3+p 后面的内容清除浮动，另起一行 */
+/* 清除浮动 */
 .sectionBody h3 + p + p,
 .sectionBody h3 + p + ul {
   clear: both;
@@ -156,6 +163,7 @@
 .sectionBody em {
   color: #555;
   font-style: normal;
+  font-size: 12px;
 }
 
 .sectionBody strong {
@@ -164,16 +172,18 @@
 }
 
 .sectionBody ul {
-  margin: 4px 0;
-  padding-left: 18px;
+  margin: 2px 0 8px 0;
+  padding-left: 16px;
 }
 
 .sectionBody li {
-  margin: 2px 0;
+  margin: 1px 0;
+  text-align: justify;
 }
 
 .sectionBody li::marker {
-  color: #000;
+  color: #999;
+  font-size: 10px;
 }
 
 /* 打印样式 */
@@ -194,6 +204,11 @@
 
 /* 响应式 - 小屏 */
 @media (max-width: 900px) {
+  .toolbar {
+    width: 100%;
+    padding: 0 20px;
+  }
+
   .a4Paper {
     width: 100%;
     min-height: auto;
@@ -204,6 +219,6 @@
   }
 
   .headerName {
-    font-size: 20px;
+    font-size: 18px;
   }
 }
