@@ -198,8 +198,38 @@
 
 /* 响应式 */
 @media (max-width: 900px) {
+  .toolbar {
+    padding: 0;
+  }
+
   .paper {
-    padding: 24px 20px;
+    padding: 20px 16px;
+    font-size: 13px;
+  }
+
+  .paper h1 {
+    font-size: 18px;
+  }
+
+  .paper h2 {
+    font-size: 14px;
+    margin: 20px 0 12px 0;
+  }
+
+  .paper h3 {
+    font-size: 13px;
+    margin: 16px 0 4px 0;
+  }
+
+  .paper details summary {
+    font-size: 12px;
+    padding: 8px 12px;
+  }
+
+  .paper details > p,
+  .paper details > ul {
+    padding: 0 12px;
+    font-size: 12px;
   }
 }
 
