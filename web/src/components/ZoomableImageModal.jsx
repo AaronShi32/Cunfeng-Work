@@ -169,6 +169,11 @@ export default function ZoomableImageModal({ imageSrc, imageAlt, isOpen, onClose
         {/* 图片容器 */}
         <div
           style={{
+            width: '100%',
+            height: '100%',
+            display: 'flex',
+            justifyContent: 'center',
+            alignItems: 'center',
             transform: `translate(${position.x}px, ${position.y}px) scale(${zoom})`,
             transformOrigin: 'center center',
             transition: isDragging ? 'none' : 'transform 0.1s ease-out',
