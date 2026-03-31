@@ -1,7 +1,14 @@
 import React from 'react';
-import { PageLayout, LinkButton } from '../components';
+import { PageLayout, LinkButton, TechStackBar } from '../components';
 import layout from '../styles/layout.module.css';
 import anim from '../styles/animation.module.css';
+
+const TECHS = [
+  { name: 'Java', icon: '☕' },
+  { name: 'Distributed System', icon: '⚡' },
+  { name: 'Alibaba Cloud', icon: '☁️' },
+  { name: 'VPC/Network', icon: '🌐' },
+];
 
 const PRODUCT_LINKS = [
   { href: 'https://help.aliyun.com/zh/ecs/user-guide/migrate-an-ecs-instance', icon: '🔄', label: 'ECS 实例迁移指南' },
@@ -71,6 +78,8 @@ export default function InstanceMigration() {
           </div>
         </div>
       </div>
+
+      <TechStackBar techs={TECHS} />
     </PageLayout>
   );
 }

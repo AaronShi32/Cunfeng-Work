@@ -123,7 +123,7 @@ export default function Home() {
       title={<span onClick={handleTitleClick} style={{ cursor: 'default', userSelect: 'none' }}>Cunfeng Shi</span>}
       subtitle="工作项目经历"
     >
-      <div className={layout.cardGrid} style={{ gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))' }}>
+      <div className={layout.cardGrid}>
         <ProjectCard logo={alibabaLogo} logoAlt="Alibaba" logoSize={64} title="Alibaba" to="/alibaba" />
         <ProjectCard logo={microsoftLogo} logoAlt="Microsoft" logoSize={48} title="Microsoft" to="/microsoft" />
       </div>

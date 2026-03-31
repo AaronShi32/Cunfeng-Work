@@ -2,22 +2,22 @@ import React, { useState } from 'react';
 import { PageLayout, ZoomableImageModal } from '../components';
 import layout from '../styles/layout.module.css';
 import anim from '../styles/animation.module.css';
-import asiImage from '../../img/ASI/ASI-2026-01-20-1022.png';
+import hdiImage from '../../img/HDI/HDI-2025-09-04-1233.png';
 
-export default function ASI() {
+export default function HDInsight() {
   const [showModal, setShowModal] = useState(false);
 
   return (
-    <PageLayout title="ASI" subtitle="Azure Service Insights 服务监控与分析报告" backTo="/microsoft">
+    <PageLayout title="HDInsight" subtitle="Azure HDInsight 大数据分析平台" backTo="/microsoft">
       <div className={layout.contentGrid}>
         <div className={`${layout.section} ${anim.animateSection}`}>
           <div className={layout.sectionHeader}>
-            <div className={layout.sectionIcon}>📊</div>
+            <div className={layout.sectionIcon}>🐘</div>
             <h2 className={layout.sectionTitle}>架构图</h2>
           </div>
           <img
-            src={asiImage}
-            alt="ASI Architecture"
+            src={hdiImage}
+            alt="HDInsight Architecture"
             className={layout.archImage}
             onClick={() => setShowModal(true)}
           />
@@ -27,8 +27,8 @@ export default function ASI() {
 
       {showModal && (
         <ZoomableImageModal
-          imageSrc={asiImage}
-          imageAlt="ASI Architecture"
+          imageSrc={hdiImage}
+          imageAlt="HDInsight Architecture"
           isOpen
           onClose={() => setShowModal(false)}
         />

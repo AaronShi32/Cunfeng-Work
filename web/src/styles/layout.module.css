@@ -104,3 +104,22 @@
   color: #1e293b;
   margin: 0 0 12px 0;
 }
+
+.archImage {
+  width: 100%;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: var(--transition-base);
+}
+
+.archImage:hover {
+  transform: scale(1.02);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+}
+
+.archHint {
+  font-size: var(--font-size-xs);
+  color: var(--color-text-muted);
+  margin-top: 12px;
+  text-align: center;
+}
