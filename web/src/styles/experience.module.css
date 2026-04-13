@@ -1,0 +1,132 @@
+.companySection {
+  margin-bottom: 48px;
+}
+
+.companyHeader {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 20px;
+  padding-bottom: 12px;
+  border-bottom: 1.5px solid var(--color-beige);
+}
+
+.companyLogo {
+  flex-shrink: 0;
+  color: var(--color-navy);
+}
+
+.companyName {
+  font-size: 26px;
+  font-weight: 700;
+  color: var(--color-navy);
+  margin: 0;
+  letter-spacing: -0.01em;
+}
+
+.companyRole {
+  font-size: var(--font-size-small);
+  color: var(--color-lavender);
+  letter-spacing: 0.04em;
+}
+
+.projectGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 20px;
+}
+
+.projectCard {
+  background: var(--card-bg);
+  border: 1px solid var(--color-beige);
+  border-radius: var(--card-radius);
+  padding: 24px;
+  box-shadow: var(--card-shadow);
+  transition: var(--transition-base);
+  text-align: left;
+}
+
+.projectCard:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--card-shadow-hover);
+}
+
+.cardHeader {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 8px;
+}
+
+.cardIcon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--color-lavender);
+  flex-shrink: 0;
+  width: 20px;
+  height: 20px;
+}
+
+.cardTitle {
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--color-navy);
+  margin: 0;
+  line-height: 20px;
+}
+
+.cardDesc {
+  font-size: var(--font-size-small);
+  color: var(--color-blue);
+  line-height: 1.65;
+  margin: 0 0 14px 0;
+}
+
+.cardImage {
+  width: 100%;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: var(--transition-base);
+  border: 1px solid var(--color-beige);
+}
+
+.cardImage:hover {
+  transform: scale(1.02);
+  box-shadow: 0 4px 16px rgba(34, 34, 59, 0.12);
+}
+
+.linkRow {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-top: 4px;
+}
+
+.docLink {
+  display: inline-block;
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--color-blue);
+  text-decoration: none;
+  transition: var(--transition-fast);
+}
+
+.docLink:hover {
+  color: var(--color-navy);
+}
+
+@media (max-width: 768px) {
+  .projectGrid {
+    grid-template-columns: 1fr;
+  }
+
+  .companyHeader {
+    flex-direction: column;
+    gap: 4px;
+  }
+
+  .companyName {
+    font-size: 22px;
+  }
+}

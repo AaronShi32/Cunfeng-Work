@@ -1,19 +1,13 @@
 import React from 'react';
-import { Home, Microsoft, Alibaba, ENI, InstanceMigration, ASI, HDInsight, Scout, FCS, FabricNotebook, Resume, Interview } from './pages';
+import { Home, Experience, Resume, Interview, Learn, Links } from './pages';
 
 const routes = [
   { path: '/', element: <Home /> },
-  { path: '/microsoft', element: <Microsoft /> },
-  { path: '/alibaba', element: <Alibaba /> },
-  { path: '/samples', element: <ENI /> },
-  { path: '/instance-migration', element: <InstanceMigration /> },
-  { path: '/asi', element: <ASI /> },
-  { path: '/hdinsight', element: <HDInsight /> },
-  { path: '/scout', element: <Scout /> },
-  { path: '/fcs', element: <FCS /> },
-  { path: '/fabric-notebook', element: <FabricNotebook /> },
+  { path: '/experience', element: <Experience /> },
   { path: '/resume', element: <Resume /> },
   { path: '/interview', element: <Interview /> },
+  { path: '/learn', element: <Learn /> },
+  { path: '/links', element: <Links /> },
 ];
 
 export default routes;

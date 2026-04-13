@@ -4,9 +4,10 @@ import styles from '../styles/siteTabs.module.css';
 
 const TAB_ITEMS = [
   { label: 'Home', path: '/' },
-  { label: 'Projects', path: '/projects' },
+  { label: 'Experience', path: '/experience' },
   { label: 'Resume', path: '/resume' },
   { label: 'Learn', path: '/learn' },
+  { label: 'Links', path: '/links' },
 ];
 
 const PROJECT_PATHS = [
@@ -31,8 +32,12 @@ function getActiveTab(pathname) {
     return '/resume';
   }
 
-  if (PROJECT_PATHS.some((path) => pathname.startsWith(path))) {
-    return '/projects';
+  if (pathname.startsWith('/experience') || PROJECT_PATHS.some((path) => pathname.startsWith(path))) {
+    return '/experience';
+  }
+
+  if (pathname.startsWith('/links')) {
+    return '/links';
   }
 
   if (pathname.startsWith('/learn') || pathname.startsWith('/blog')) {
@@ -48,11 +53,6 @@ export default function SiteTabs() {
 
   return (
     <nav className={styles.nav}>
-      <Link to="/" className={styles.brand}>
-        <span className={styles.brandMark}>CF</span>
-        <span className={styles.brandText}>Cunfeng Shi</span>
-      </Link>
-
       <div className={styles.tabs}>
         {TAB_ITEMS.map((tab) => (
           <Link

@@ -49,7 +49,7 @@
   --section-gap: 32px;
 
   /* Typography */
-  --font-family: 'Roboto Mono', monospace;
+  --font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
   --font-size-hero: 48px;
   --font-size-title: 32px;
   --font-size-heading: 22px;

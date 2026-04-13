@@ -1,12 +1,6 @@
 export { default as Home } from './Home';
-export { default as Microsoft } from './Microsoft';
-export { default as Alibaba } from './Alibaba';
-export { default as ENI } from './ENI';
-export { default as InstanceMigration } from './InstanceMigration';
-export { default as ASI } from './ASI';
-export { default as HDInsight } from './HDInsight';
-export { default as Scout } from './Scout';
-export { default as FCS } from './FCS';
-export { default as FabricNotebook } from './FabricNotebook';
+export { default as Experience } from './Experience';
+export { default as Learn } from './Learn';
+export { default as Links } from './Links';
 export { default as Resume } from '../resume/ResumePage';
 export { default as Interview } from '../resume/InterviewPage';

@@ -31,7 +31,7 @@
   border-radius: 4px;
   cursor: pointer;
   font-size: 12px;
-  font-family: 'Roboto Mono', "Microsoft YaHei", "微软雅黑", monospace;
+  font-family: 'Inter', "Microsoft YaHei", "微软雅黑", sans-serif;
   transition: all 0.2s ease;
 }
 
@@ -48,7 +48,7 @@
   border-radius: 4px;
   cursor: pointer;
   font-size: 12px;
-  font-family: 'Roboto Mono', "Microsoft YaHei", "微软雅黑", monospace;
+  font-family: 'Inter', "Microsoft YaHei", "微软雅黑", sans-serif;
   font-weight: 500;
   transition: all 0.2s ease;
   margin-left: auto;
