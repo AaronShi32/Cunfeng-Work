@@ -1,0 +1,27 @@
+.row {
+  display: flex;
+  justify-content: center;
+  gap: 32px;
+  padding: 40px 0;
+}
+
+.iconLink {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  color: var(--color-navy);
+  background: var(--card-bg);
+  border: 1px solid var(--color-beige);
+  box-shadow: var(--card-shadow);
+  transition: var(--transition-base);
+  text-decoration: none;
+}
+
+.iconLink:hover {
+  transform: translateY(-3px);
+  box-shadow: var(--card-shadow-hover);
+  color: var(--color-blue);
+}

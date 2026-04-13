@@ -1,88 +1,68 @@
 import React, { useState, useRef, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
-import alibabaLogo from '../../img/Others/Alibaba.png';
-import microsoftLogo from '../../img/Others/Microsoft.svg';
-import { PageLayout, ProjectCard, TechStackBar, Footer } from '../components';
-import layout from '../styles/layout.module.css';
+import { PageLayout } from '../components';
+import home from '../styles/home.module.css';
+import anim from '../styles/animation.module.css';
+import homeMd from './data/home.md?raw';
 
-const TECHS = [
-  { name: 'Java/C#/Python', icon: '⚛️' },
-  { name: 'Distributed System', icon: '⚡' },
-  { name: 'AI Agent/MCP', icon: '🗺️' },
-  { name: 'Azure/Alibaba Cloud', icon: '☁️' },
-];
+function parseHomeMd(md) {
+  const lines = md.split('\n');
+  let name = '';
+  let tagline = '';
+  const paragraphs = [];
+  let pastDivider = false;
+
+  for (const line of lines) {
+    if (/^# /.test(line)) {
+      name = line.replace(/^# /, '').trim();
+      continue;
+    }
+    if (/^---\s*$/.test(line)) {
+      pastDivider = true;
+      continue;
+    }
+    if (!pastDivider) {
+      const trimmed = line.trim();
+      if (trimmed && !name) continue;
+      if (trimmed) tagline = trimmed;
+      continue;
+    }
+    const trimmed = line.trim();
+    if (trimmed) paragraphs.push(trimmed);
+  }
+  return { name, tagline, paragraphs };
+}
 
 const TAP_THRESHOLD = 5;
 const TAP_TIMEOUT_MS = 2000;
 const MENU_AUTO_HIDE_MS = 6000;
 
-const overlayStyle = {
-  position: 'fixed',
-  inset: 0,
-  zIndex: 999,
-  background: 'transparent',
-};
-
+const overlayStyle = { position: 'fixed', inset: 0, zIndex: 999, background: 'transparent' };
 const menuStyle = {
-  position: 'fixed',
-  top: '50%',
-  left: '50%',
-  transform: 'translate(-50%, -50%)',
-  zIndex: 1000,
-  background: 'rgba(15, 23, 42, 0.95)',
-  backdropFilter: 'blur(12px)',
-  borderRadius: '16px',
-  padding: '28px 36px',
-  boxShadow: '0 20px 60px rgba(0,0,0,0.5)',
-  border: '1px solid rgba(255,255,255,0.15)',
-  display: 'flex',
-  flexDirection: 'column',
-  gap: '16px',
-  animation: 'fadeIn 0.25s ease-out',
+  position: 'fixed', top: '50%', left: '50%', transform: 'translate(-50%, -50%)',
+  zIndex: 1000, background: 'rgba(34, 34, 59, 0.95)', backdropFilter: 'blur(12px)',
+  borderRadius: '16px', padding: '28px 36px', boxShadow: '0 20px 60px rgba(34, 34, 59, 0.4)',
+  border: '1px solid rgba(154, 140, 152, 0.3)', display: 'flex', flexDirection: 'column',
+  gap: '16px', animation: 'fadeIn 0.25s ease-out',
 };
-
 const menuItemStyle = {
-  display: 'block',
-  padding: '14px 32px',
-  borderRadius: '10px',
-  background: 'rgba(255,255,255,0.08)',
-  color: '#fff',
-  fontSize: '16px',
-  textDecoration: 'none',
-  textAlign: 'center',
-  transition: 'background 0.2s',
-  cursor: 'pointer',
-  border: 'none',
-  fontFamily: 'inherit',
+  display: 'block', padding: '14px 32px', borderRadius: '10px',
+  background: 'rgba(201, 173, 167, 0.15)', color: '#f2e9e4', fontSize: '15px',
+  textDecoration: 'none', textAlign: 'center', transition: 'background 0.2s',
+  cursor: 'pointer', border: 'none', fontFamily: 'inherit',
 };
 
 function HiddenMenu({ onClose }) {
   const navigate = useNavigate();
-
-  const go = (path) => {
-    onClose();
-    navigate(path);
-  };
-
+  const go = (path) => { onClose(); navigate(path); };
   return (
     <>
       <div style={overlayStyle} onClick={onClose} />
       <div style={menuStyle}>
-        <button
-          style={menuItemStyle}
-          onClick={() => go('/resume')}
-          onMouseEnter={(e) => (e.target.style.background = 'rgba(255,255,255,0.18)')}
-          onMouseLeave={(e) => (e.target.style.background = 'rgba(255,255,255,0.08)')}
-        >
-          📄 Resume
-        </button>
-        <button
-          style={menuItemStyle}
-          onClick={() => go('/interview')}
-          onMouseEnter={(e) => (e.target.style.background = 'rgba(255,255,255,0.18)')}
-          onMouseLeave={(e) => (e.target.style.background = 'rgba(255,255,255,0.08)')}
-        >
-          💬 Interview
+        <button style={menuItemStyle} onClick={() => go('/interview')}
+          onMouseEnter={(e) => (e.target.style.background = 'rgba(201, 173, 167, 0.3)')}
+          onMouseLeave={(e) => (e.target.style.background = 'rgba(201, 173, 167, 0.15)')}>
+          Interview
         </button>
       </div>
     </>
@@ -94,20 +74,16 @@ export default function Home() {
   const tapCount = useRef(0);
   const tapTimer = useRef(null);
   const hideTimer = useRef(null);
+  const { name, tagline, paragraphs } = parseHomeMd(homeMd);
 
   const handleTitleClick = useCallback(() => {
     tapCount.current += 1;
-
     clearTimeout(tapTimer.current);
-    tapTimer.current = setTimeout(() => {
-      tapCount.current = 0;
-    }, TAP_TIMEOUT_MS);
-
+    tapTimer.current = setTimeout(() => { tapCount.current = 0; }, TAP_TIMEOUT_MS);
     if (tapCount.current >= TAP_THRESHOLD) {
       tapCount.current = 0;
       clearTimeout(tapTimer.current);
       setMenuVisible(true);
-
       clearTimeout(hideTimer.current);
       hideTimer.current = setTimeout(() => setMenuVisible(false), MENU_AUTO_HIDE_MS);
     }
@@ -119,16 +95,20 @@ export default function Home() {
   }, []);
 
   return (
-    <PageLayout
-      title={<span onClick={handleTitleClick} style={{ cursor: 'default', userSelect: 'none' }}>Cunfeng Shi</span>}
-      subtitle="工作项目经历"
-    >
-      <div className={layout.cardGrid}>
-        <ProjectCard logo={alibabaLogo} logoAlt="Alibaba" logoSize={64} title="Alibaba" to="/alibaba" />
-        <ProjectCard logo={microsoftLogo} logoAlt="Microsoft" logoSize={48} title="Microsoft" to="/microsoft" />
-      </div>
-      <TechStackBar techs={TECHS} />
-      <Footer />
+    <PageLayout>
+      <h1 className={`${home.heroName} ${anim.animateFadeIn}`}>
+        <span onClick={handleTitleClick} style={{ cursor: 'default', userSelect: 'none' }}>{name}</span>
+      </h1>
+      {tagline && (
+        <p className={`${home.heroTagline} ${anim.animateFadeIn}`}>{tagline}</p>
+      )}
+
+      <section className={home.heroPanel}>
+        {paragraphs.map((p, i) => (
+          <p key={i} className={home.heroIntro}>{p}</p>
+        ))}
+      </section>
+
       {menuVisible && <HiddenMenu onClose={closeMenu} />}
     </PageLayout>
   );

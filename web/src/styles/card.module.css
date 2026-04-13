@@ -1,11 +1,13 @@
 .card {
   background: var(--card-bg);
   border-radius: var(--card-radius);
-  padding: var(--card-padding);
+  padding: 28px 24px;
   box-shadow: var(--card-shadow);
+  border: 1px solid var(--color-beige);
   transition: var(--transition-base);
   cursor: pointer;
-  height: 200px;
+  min-height: 170px;
+  height: auto;
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -15,18 +17,18 @@
 }
 
 .card:hover {
-  transform: translateY(-8px);
+  transform: translateY(-2px);
   box-shadow: var(--card-shadow-hover);
 }
 
 .cardIcon {
-  font-size: 48px;
-  margin-bottom: 16px;
+  font-size: 32px;
+  margin-bottom: 14px;
   line-height: 1;
   display: flex;
   justify-content: center;
   align-items: center;
-  height: 48px;
+  height: 32px;
 }
 
 .cardLogo {
@@ -35,9 +37,9 @@
 }
 
 .cardTitle {
-  font-size: var(--font-size-heading);
+  font-size: 20px;
   font-weight: 600;
-  color: var(--color-text-primary);
+  color: var(--color-navy);
   margin: 0 0 8px 0;
 }
 
