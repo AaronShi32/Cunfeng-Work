@@ -1,0 +1,75 @@
+.heroCard {
+  max-width: 660px;
+  margin: 0 auto 28px auto;
+  padding: 28px 24px;
+  border-radius: 20px;
+  background: rgba(255, 255, 255, 0.7);
+  text-align: center;
+  box-shadow: var(--card-shadow);
+  border: 1px solid var(--color-beige);
+}
+
+.heroText {
+  margin: 0;
+  color: var(--color-blue);
+  font-size: 15px;
+  line-height: 1.7;
+}
+
+.actions {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+  margin-top: 18px;
+  align-items: center;
+  justify-content: center;
+}
+
+.secondaryLink {
+  display: inline-flex;
+  align-items: center;
+  padding: 11px 16px;
+  border-radius: 999px;
+  text-decoration: none;
+  color: var(--color-blue);
+  border: 1px solid var(--color-beige);
+  background: rgba(255, 255, 255, 0.6);
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.topicGrid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 18px;
+  margin-bottom: 20px;
+}
+
+.topicCard {
+  background: rgba(255, 255, 255, 0.7);
+  border-radius: 18px;
+  padding: 20px;
+  text-align: center;
+  box-shadow: var(--card-shadow);
+  border: 1px solid var(--color-beige);
+}
+
+.topicTitle {
+  margin: 0 0 8px 0;
+  color: var(--color-navy);
+  font-size: 16px;
+  font-weight: 600;
+}
+
+.topicDescription {
+  margin: 0;
+  color: var(--color-blue);
+  line-height: 1.65;
+  font-size: 13px;
+}
+
+@media (max-width: 768px) {
+  .topicGrid {
+    grid-template-columns: 1fr;
+  }
+}

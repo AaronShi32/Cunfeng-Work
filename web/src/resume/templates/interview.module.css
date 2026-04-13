@@ -4,7 +4,13 @@
   align-items: center;
   padding: 40px 20px;
   min-height: 100vh;
-  background: #f0f0f0;
+  background: #f2e9e4;
+}
+
+.topNav {
+  width: 100%;
+  max-width: 1100px;
+  margin-bottom: 18px;
 }
 
 .toolbar {
@@ -18,20 +24,20 @@
 }
 
 .backButton {
-  background: #fff;
-  border: 1px solid #d0d0d0;
-  color: #333;
+  background: rgba(255, 255, 255, 0.7);
+  border: 1px solid #c9ada7;
+  color: #22223b;
   padding: 8px 20px;
   border-radius: 4px;
   cursor: pointer;
   font-size: 12px;
-  font-family: "Microsoft YaHei", "微软雅黑", sans-serif;
+  font-family: 'Roboto Mono', "Microsoft YaHei", "微软雅黑", monospace;
   transition: all 0.2s ease;
 }
 
 .backButton:hover {
-  background: #f5f5f5;
-  border-color: #999;
+  background: rgba(255, 255, 255, 0.9);
+  border-color: #9a8c98;
 }
 
 /* 内容容器 */
