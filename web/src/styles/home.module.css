@@ -1,3 +1,21 @@
+.content {
+  max-width: 680px;
+  margin: 0 auto;
+  text-align: left;
+}
+
+.paragraph {
+  font-size: 15px;
+  line-height: 1.85;
+  color: var(--color-blue);
+  margin: 0 0 16px 0;
+  text-align: justify;
+}
+
+.paragraph:last-child {
+  margin-bottom: 0;
+}
+
 .heroName {
   font-size: var(--font-size-hero);
   font-weight: 700;

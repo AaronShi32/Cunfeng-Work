@@ -1,5 +1,6 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
+import { SiteTabs } from '../components';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 import rehypeRaw from 'rehype-raw';
@@ -11,6 +12,10 @@ export default function InterviewPage() {
 
   return (
     <div className={styles.wrapper}>
+      <div className={styles.topNav}>
+        <SiteTabs />
+      </div>
+
       <div className={styles.toolbar}>
         <button className={styles.backButton} onClick={() => navigate('/')}>
           ← 返回

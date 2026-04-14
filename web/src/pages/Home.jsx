@@ -7,30 +7,14 @@ import homeMd from './data/home.md?raw';
 
 function parseHomeMd(md) {
   const lines = md.split('\n');
-  let name = '';
-  let tagline = '';
   const paragraphs = [];
-  let pastDivider = false;
 
   for (const line of lines) {
-    if (/^# /.test(line)) {
-      name = line.replace(/^# /, '').trim();
-      continue;
-    }
-    if (/^---\s*$/.test(line)) {
-      pastDivider = true;
-      continue;
-    }
-    if (!pastDivider) {
-      const trimmed = line.trim();
-      if (trimmed && !name) continue;
-      if (trimmed) tagline = trimmed;
-      continue;
-    }
+    if (/^#/.test(line) || /^---\s*$/.test(line)) continue;
     const trimmed = line.trim();
     if (trimmed) paragraphs.push(trimmed);
   }
-  return { name, tagline, paragraphs };
+  return { paragraphs };
 }
 
 const TAP_THRESHOLD = 5;
@@ -74,7 +58,7 @@ export default function Home() {
   const tapCount = useRef(0);
   const tapTimer = useRef(null);
   const hideTimer = useRef(null);
-  const { name, tagline, paragraphs } = parseHomeMd(homeMd);
+  const { paragraphs } = parseHomeMd(homeMd);
 
   const handleTitleClick = useCallback(() => {
     tapCount.current += 1;
@@ -96,18 +80,11 @@ export default function Home() {
 
   return (
     <PageLayout>
-      <h1 className={`${home.heroName} ${anim.animateFadeIn}`}>
-        <span onClick={handleTitleClick} style={{ cursor: 'default', userSelect: 'none' }}>{name}</span>
-      </h1>
-      {tagline && (
-        <p className={`${home.heroTagline} ${anim.animateFadeIn}`}>{tagline}</p>
-      )}
-
-      <section className={home.heroPanel}>
+      <div className={home.content}>
         {paragraphs.map((p, i) => (
-          <p key={i} className={home.heroIntro}>{p}</p>
+          <p key={i} className={home.paragraph}>{p}</p>
         ))}
-      </section>
+      </div>
 
       {menuVisible && <HiddenMenu onClose={closeMenu} />}
     </PageLayout>

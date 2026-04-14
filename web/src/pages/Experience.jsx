@@ -51,7 +51,7 @@ const MS_PROJECTS = [
   { key: 'hdi', icon: <IconDatabase />, title: 'HDInsight', desc: 'Azure HDInsight 大数据分析平台', image: hdiImage },
   { key: 'asi', icon: <IconBarChart />, title: 'ASI', desc: 'Azure Service Insights 服务监控与分析报告', image: asiImage },
   { key: 'scout', icon: <IconSearch />, title: 'Scout', desc: 'AI-AzureData 智能分析引擎', image: scoutImage },
-  { key: 'fcs', icon: <IconBox />, title: 'FCS', desc: 'Microsoft Fabric 容器服务管理平台', image: fcsImage },
+  { key: 'fcs', icon: <IconBox />, title: 'Fabric Container Service', desc: 'Microsoft Fabric 容器服务管理平台', image: fcsImage },
   { key: 'notebook', icon: <IconFileText />, title: 'Fabric Notebook', desc: 'Microsoft Fabric Notebook 服务', image: notebookImage },
 ];
 
