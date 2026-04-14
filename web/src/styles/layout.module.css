@@ -1,7 +1,7 @@
 .pageDark {
   font-family: var(--font-family);
   min-height: 100vh;
-  background: var(--color-shell);
+  background: #fafafa;
   padding: var(--page-padding);
 }
 
