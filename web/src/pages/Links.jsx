@@ -24,7 +24,7 @@ const BlogIcon = () => (
 const LINKS = [
   { icon: <GitHubIcon />, href: 'https://github.com/AaronShi32' },
   { icon: <LinkedInIcon />, href: 'https://www.linkedin.com/in/cfshi' },
-  { icon: <BlogIcon />, href: '/blog/index.html', internal: true },
+  { icon: <BlogIcon />, href: `${import.meta.env.BASE_URL}blog/index.html`, internal: true },
 ];
 
 export default function Links() {

@@ -18,7 +18,7 @@ No automated test framework is configured.
 
 ## Architecture
 
-This is a **React 19 + Vite 6 SPA** (personal portfolio) deployed to **Azure Static Web Apps**.
+This is a **React 19 + Vite 6 SPA** (personal portfolio) deployed to **GitHub Pages** (project site at `/Cunfeng-Work/`).
 
 **Entry flow**: `index.html` → `src/main.jsx` (loads global CSS, renders App in StrictMode) → `src/App.jsx` (react-router-dom v6) → `src/routes.jsx` (centralized route table — add new pages here).
 
@@ -29,7 +29,7 @@ This is a **React 19 + Vite 6 SPA** (personal portfolio) deployed to **Azure Sta
 - `/interview` — Interview prep Q&A
 - `/learn` — Placeholder
 - `/links` — Social links
-- `/blog/*` — Static blog served outside SPA (excluded from fallback rewrite in `staticwebapp.config.json`)
+- `/blog/*` — Static blog served outside SPA (GitHub Pages serves these as static files)
 
 **Component hierarchy**: `App` → `PageLayout` (shell with `SiteTabs` navigation + optional back button) → page content.
 
@@ -48,6 +48,8 @@ This is a **React 19 + Vite 6 SPA** (personal portfolio) deployed to **Azure Sta
 
 ## Deployment
 
-- CI: GitHub Actions (`.github/workflows/`) → Azure Static Web Apps
+- CI: GitHub Actions (`.github/workflows/deploy-pages.yml`) → GitHub Pages
 - Build artifact: `web/dist/`
-- SPA fallback rewrites to `/index.html`, except `/blog/*` (static content served directly)
+- Base path: `/Cunfeng-Work/` in production (configured in `vite.config.js`, dev server stays at `/`)
+- SPA fallback: `404.html` (copy of `index.html`, created in CI) handles client-side routes
+- Static blog under `/blog/*` is served directly; blog HTML paths are rewritten by `sed` in CI to add the base prefix

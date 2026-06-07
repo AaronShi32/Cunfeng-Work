@@ -23,7 +23,7 @@ const linksWrapStyle = {
 
 export default function Footer() {
   const links = [
-    { href: '/blog/index.html', label: 'Blog' },
+    { href: `${import.meta.env.BASE_URL}blog/index.html`, label: 'Blog' },
     { href: 'https://www.linkedin.com/in/cfshi', label: 'LinkedIn', external: true },
     { href: 'https://github.com/AaronShi32', label: 'GitHub', external: true },
   ];
