@@ -40,6 +40,37 @@
   border-color: #9a8c98;
 }
 
+/* 文档切换 Tab */
+.docTabs {
+  display: flex;
+  gap: 4px;
+  margin-left: 12px;
+}
+
+.docTab {
+  background: transparent;
+  border: 1px solid transparent;
+  color: #666;
+  padding: 7px 16px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 12px;
+  font-family: 'Inter', "Microsoft YaHei", "微软雅黑", sans-serif;
+  transition: all 0.2s ease;
+}
+
+.docTab:hover {
+  color: #22223b;
+  background: rgba(255, 255, 255, 0.6);
+}
+
+.docTabActive {
+  color: #22223b;
+  background: rgba(255, 255, 255, 0.85);
+  border-color: #c9ada7;
+  font-weight: 600;
+}
+
 /* 内容容器 */
 .paper {
   width: 100%;
