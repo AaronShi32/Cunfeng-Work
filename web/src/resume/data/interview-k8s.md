@@ -193,7 +193,42 @@ Deployment 默认使用 `RollingUpdate` 策略，通过两个参数控制：
 
 ---
 
-### 4. 如何排查 Pod 一直处于 Pending 状态？
+### 4. Service 与 Ingress 的区别和协作关系？
+
+<details>
+<summary>查看回答</summary>
+
+**核心定位不同**：Service 解决服务发现和四层负载均衡，Ingress 解决统一入口和七层路由。
+
+| 对比项 | Service | Ingress |
+|--------|---------|---------|
+| 工作层级 | L4（传输层） | L7（应用层） |
+| 关注内容 | IP、Port | Host、Path、Header |
+| 负载均衡 | 有（kube-proxy） | 有（Ingress Controller） |
+| 路由能力 | 无 | 有（基于域名和 URL 路径） |
+| TCP 支持 | 支持 | 主要 HTTP/HTTPS |
+| 是否直接对外 | 可选（ClusterIP 不对外，LB 对外） | 通常是（统一流量入口） |
+| 主要作用 | 为 Pod 提供稳定访问入口 | 统一流量入口、域名管理、HTTPS 卸载 |
+
+**生产环境典型流量路径**：
+
+```
+Client → Ingress（L7 路由）→ Service（L4 负载均衡）→ Pod
+```
+
+- **Ingress** 根据 Host / Path 规则把请求分发到对应的 Service。
+- **Service** 通过 Label Selector 自动发现后端 Pod，做四层转发。
+- **Ingress Controller**（如 Nginx Ingress、Traefik、ALB Ingress）是 Ingress 规则的实际执行者，本身也是一个 Deployment + Service（通常是 LoadBalancer 类型）。
+
+**为什么需要两层？**
+- Service 单独使用时，每个服务对外暴露都需要一个独立的 LoadBalancer（云上意味着独立的公网 IP 和费用）。
+- Ingress 将多个 Service 收拢到一个入口，通过域名和路径区分，共享一个 LB，既省成本又方便管理 HTTPS 证书和灰度策略。
+
+</details>
+
+---
+
+### 5. 如何排查 Pod 一直处于 Pending 状态？
 
 <details>
 <summary>查看回答</summary>
@@ -212,7 +247,7 @@ Deployment 默认使用 `RollingUpdate` 策略，通过两个参数控制：
 
 ---
 
-### 5. etcd 在 K8s 中的角色和运维要点？
+### 6. etcd 在 K8s 中的角色和运维要点？
 
 <details>
 <summary>查看回答</summary>
@@ -232,7 +267,7 @@ etcd 是 K8s 的唯一数据源（single source of truth），所有集群状态
 
 ---
 
-### 6. K8s 网络模型的核心要求是什么？
+### 7. K8s 网络模型的核心要求是什么？
 
 <details>
 <summary>查看回答</summary>
@@ -252,7 +287,7 @@ CNI 插件负责实现这些要求。常见方案：
 
 ---
 
-### 7. RBAC 权限模型怎么理解？
+### 8. RBAC 权限模型怎么理解？
 
 <details>
 <summary>查看回答</summary>
@@ -274,7 +309,7 @@ RBAC 的四个核心对象：
 
 ---
 
-### 8. HPA 的工作原理和调优经验？
+### 9. HPA 的工作原理和调优经验？
 
 <details>
 <summary>查看回答</summary>
@@ -296,7 +331,7 @@ HPA 工作流程：
 
 ---
 
-### 9. 如何设计容器化应用的健康检查？
+### 10. 如何设计容器化应用的健康检查？
 
 <details>
 <summary>查看回答</summary>
@@ -316,7 +351,7 @@ K8s 提供三种探针：
 
 ---
 
-### 10. Helm 和 Kustomize 各自的适用场景？
+### 11. Helm 和 Kustomize 各自的适用场景？
 
 <details>
 <summary>查看回答</summary>
