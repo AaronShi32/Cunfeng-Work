@@ -165,17 +165,29 @@ Deployment 默认使用 `RollingUpdate` 策略，通过两个参数控制：
 
 ---
 
-### 3. K8s 的 Service 如何实现负载均衡？
+### 3. Service 四种类型及适用场景？
 
 <details>
 <summary>查看回答</summary>
 
-kube-proxy 是核心组件，有三种模式：
+| 类型 | 分配的地址 | 可访问范围 | 典型场景 |
+|------|-----------|-----------|---------|
+| **ClusterIP** | 集群内虚拟 IP | 仅集群内部 | 微服务间调用（默认类型） |
+| **NodePort** | ClusterIP + 每个节点的固定端口（30000-32767） | 集群外通过 `<NodeIP>:<NodePort>` 访问 | 开发测试、无云 LB 环境 |
+| **LoadBalancer** | ClusterIP + NodePort + 云厂商 LB 的外部 IP | 公网 / VPC 外部 | 生产对外暴露服务（自动创建 ALB / SLB） |
+| **ExternalName** | 无 IP，返回 CNAME DNS 记录 | DNS 级别转发 | 集群内访问外部服务（如 RDS 域名），做服务别名 |
+
+**层层递进关系**：`ClusterIP` 是基础 → `NodePort` 在其上加节点端口 → `LoadBalancer` 在其上再加云负载均衡器。三者是包含关系，不是替代关系。`ExternalName` 则完全独立，不经过 kube-proxy，只做 DNS 映射。
+
+**kube-proxy 实现机制**（ClusterIP / NodePort / LoadBalancer 共用）：
 - **iptables 模式**（默认）：为每个 Service 创建 iptables 规则，随机选择后端 Pod。
-- **IPVS 模式**：使用 Linux IPVS 实现负载均衡，支持更多算法（rr / lc / sh 等），大规模集群下性能更好。
+- **IPVS 模式**：使用 Linux IPVS，支持更多调度算法（rr / lc / sh 等），大规模集群下性能更好。
 - **userspace 模式**（已弃用）：kube-proxy 自身做代理转发。
 
-Service 通过 Label Selector 匹配后端 Pod，Endpoints Controller 自动维护 Endpoints 对象。K8s 1.21+ 推荐使用 EndpointSlice 替代 Endpoints，支持更大规模。
+**面试加分点**：
+- Service 通过 Label Selector 匹配后端 Pod，Endpoints Controller 自动维护 Endpoints 对象；K8s 1.21+ 推荐 EndpointSlice 支持更大规模。
+- `Headless Service`（`clusterIP: None`）不分配虚拟 IP，DNS 直接返回 Pod IP 列表，是 StatefulSet 实现稳定网络标识的基础。
+- 生产中通常 LoadBalancer + Ingress 组合使用：LB 做 L4 入口，Ingress Controller 做 L7 路由（Host / Path），避免为每个服务都创建一个 LB。
 
 </details>
 
