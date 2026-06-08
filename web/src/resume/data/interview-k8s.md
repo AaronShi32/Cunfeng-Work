@@ -374,6 +374,28 @@ K8s 提供三种探针：
 
 ---
 
+### 12. ConfigMap 与 Secret 的区别？
+
+<details>
+<summary>查看回答</summary>
+
+| 对比项 | ConfigMap | Secret |
+|--------|-----------|--------|
+| 用途 | 普通配置 | 敏感配置 |
+| 数据类型 | 明文 | Base64 编码 |
+| 默认存储 | etcd | etcd |
+| 默认加密 | 否 | 否（仅编码） |
+| 环境变量注入 | 支持 | 支持 |
+| Volume 挂载 | 支持 | 支持 |
+| TLS 证书 | 不适合 | 支持 |
+| 数据库密码 | 不推荐 | 推荐 |
+
+ConfigMap 用于存储非敏感配置，例如应用参数、日志级别和服务地址；Secret 用于存储敏感信息，例如密码、Token 和证书。两者都存储在 etcd 中，都可以通过环境变量或 Volume 挂载到 Pod。需要注意的是，Kubernetes Secret 默认只是 Base64 编码而非真正加密，生产环境通常会结合 etcd Encryption、KMS 或 Vault 等方案提升安全性。
+
+</details>
+
+---
+
 ## 最值得主打的 K8s 面试亮点
 
 1. **AKS + ACI 混合架构决策**：体现对容器编排平台选型的深度思考，不是"会用 K8s"而是"知道何时不用 K8s"。
