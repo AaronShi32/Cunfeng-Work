@@ -6,11 +6,13 @@ import remarkGfm from 'remark-gfm';
 import rehypeRaw from 'rehype-raw';
 import interviewMd from './data/interview-zh.md?raw';
 import k8sMd from './data/interview-k8s.md?raw';
+import projectMd from './data/interview-project.md?raw';
 import styles from './templates/interview.module.css';
 
 const DOC_TABS = [
   { key: 'general', label: '综合面试', md: interviewMd },
   { key: 'k8s', label: 'K8s / 容器', md: k8sMd },
+  { key: 'project', label: '项目专题', md: projectMd },
 ];
 
 export default function InterviewPage() {
