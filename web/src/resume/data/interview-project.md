@@ -301,3 +301,62 @@ Telemetry 的目标不是“有 dashboard”，而是支撑：
 ### 一句话总结
 
 > AKS 赢在能力和控制力，ACI 赢在轻量和交付效率；FCS 的选型特点不是强行统一基础设施，而是按 workload 特征选择最合适的承载底座。
+
+## FCS：ClusterHealth 为什么不用 ACI readiness，而是自己实现
+
+### 核心结论
+
+**答：** 因为 FCS 要判断的不是“某个容器 probe 是否通过”，而是 **整个 container group / node 能不能被平台视为 Ready**。  
+ACI 的 `readinessProbe` 解决的是 workload 局部健康问题；FCS 的 ClusterHealth 解决的是平台级 readiness gate，需要统一收敛成自己的 `NodeHealthState`，并支撑编排、扩缩容、发布治理和故障恢复。
+
+### 为什么不直接用 ACI readinessProbe
+
+| 原因 | 解释 |
+| --- | --- |
+| **判定对象不同** | ACI readiness 更偏单容器是否可接流量；FCS 要的是整个 container group / node 是否 ready。 |
+| **需要统一平台状态** | FCS 后续流程依赖 DB 里的 `Node.Health`，所以必须统一映射成 `Ready / Failed / Unknown`。 |
+| **需要组合判断** | 除了应用 HTTP probe，还要看 sidecar、collectd、fluent-bit、heartbeat、服务状态等多种信号。 |
+| **要和编排闭环打通** | readiness 结果要参与 cluster 创建完成判定、超时失败、后续排障和 auto healing。 |
+
+### 实现通路怎么讲
+
+| 阶段 | 通路 | 作用 |
+| --- | --- | --- |
+| **1** | workload / sidecar 自检 | Manifest 里可以有 `readinessProbe` / `livenessProbe`，这是局部健康信号。 |
+| **2** | `bundle-collectd-healthcheck` monitor container | 汇总进程检查、HTTP 检查、服务检查，生成统一健康结果。 |
+| **3** | monitor 主动发 heartbeat 到 RP | 通过 `FCS_ENDPOINT`、`FCS_HEART_BEAT_API_PORT`、token 调 FCS heartbeat API。 |
+| **4** | RP 收到 heartbeat 后发 Service Bus | 让 heartbeat API 保持轻量，后续异步处理。 |
+| **5** | HeartbeatProcessor 写 Redis 历史并更新 DB | Redis 存 heartbeat history，DB 更新 `Node.Health`。 |
+| **6** | Cluster create/update 轮询 DB | `WaitForContainerGroupsToBeHealthyActivity` 先查 DB，作为第一 readiness 来源。 |
+| **7** | DB 超时后 fallback 到 ACI exec | 在 monitor container 里执行 `cat fcs-healthcheck`，直接读健康结果并回写 DB。 |
+| **8** | 仍失败则拉 ARM instanceView 和 logs | 用于排障，不是主 readiness gate。 |
+
+### monitor container 做了什么
+
+**答：** 它不是单纯的 sidecar，而是 FCS 自己的健康汇总器。  
+典型配置里会定义：
+
+- `health_monitor_container_name = bundle-collectd-healthcheck`
+- `health_monitor_container_exec_command = cat fcs-healthcheck`
+- `response_key = status`
+- `Healthy -> Ready`
+- `Unhealthy -> Failed`
+
+它内部会做三类检查：
+
+1. **进程检查**：比如 `fcs-healthcheck-monitor`、`collectd`、`fluent-bit` 等  
+2. **HTTP 检查**：比如业务容器 `/health`  
+3. **服务状态落盘 + heartbeat 上报**：把结果写到 `fcs-healthcheck`，并主动发 heartbeat 给 RP
+
+### 面试时推荐回答
+
+**提问：** 为什么 FCS 不直接依赖 ACI 的 readinessProbe？
+
+**回答：**  
+因为 ACI readinessProbe 只能说明单个容器局部是否 ready，但 FCS 需要的是平台级的 cluster/node readiness。  
+所以我们没有直接拿 ACI probe 做最终判定，而是自己做了一层 ClusterHealth：在集群里放一个 monitor container，汇总应用探针、进程和 sidecar 状态，再主动上报 heartbeat 到 RP。RP 侧把 heartbeat 经过 Service Bus、Redis、DB 收敛成 `Node.Health`，编排层再以 DB 为第一信号源判断 cluster 是否 ready。  
+如果 DB 没及时收敛，再 fallback 到 ACI 里 exec health monitor command 直接查健康文件。这样既保留了 workload 自检能力，又让平台有统一的 readiness 语义和恢复能力。
+
+### 一句话总结
+
+> FCS 不是不用 readiness，而是**没有把 ACI 原生 readinessProbe 当成最终真相**；它在上层又做了一套 **monitor + heartbeat + DB NodeHealth + exec fallback** 的平台级 ClusterHealth 模型。
