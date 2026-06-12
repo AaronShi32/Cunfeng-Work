@@ -360,3 +360,70 @@ ACI 的 `readinessProbe` 解决的是 workload 局部健康问题；FCS 的 Clus
 ### 一句话总结
 
 > FCS 不是不用 readiness，而是**没有把 ACI 原生 readinessProbe 当成最终真相**；它在上层又做了一套 **monitor + heartbeat + DB NodeHealth + exec fallback** 的平台级 ClusterHealth 模型。
+
+## FCS：Helm 部署链路怎么讲
+
+### 核心结论
+
+**答：** FCS 不是在 RP 里直接执行 `helm install`，而是走 **Flux `HelmRelease`** 模型：  
+FCS 先渲染 manifest 里的 `HelmRelease` 模板，再把它作为 K8s CR 写进 AKS，后续由集群里的 **flux `helm-controller`** 真正去拉 chart 并安装。FCS 自己负责的是 **模板生成、资源下发、状态轮询和失败收敛**。
+
+### 整体流程
+
+| 阶段 | 动作 | 作用 |
+| --- | --- | --- |
+| **1** | 创建 AKS / node pool，准备 kubeconfig、image pull secret、证书等运行时参数 | 为 Helm 部署准备上下文 |
+| **2** | 先部署 `k8sResources` | 先把 namespace、secret、CRD、`HelmRepository`、`helm-controller` / `source-controller` 等前置资源装好 |
+| **3** | 渲染 `HelmRelease` | 用 manifest + `TemplatePropertyBundle` + request overrides 生成最终 HelmRelease |
+| **4** | 把 `HelmRelease` upsert 到 AKS | FCS 写的是 K8s CR，不是直接跑 helm CLI |
+| **5** | Flux `helm-controller` reconcile | 由集群内 controller 去 ACR OCI repo 拉 chart 并安装 |
+| **6** | FCS 轮询 `HelmRelease.status` | 判断 `IsStatusUpToDate()` 和 `IsReady()`，作为部署完成条件 |
+| **7** | 失败时抓 K8s events | 提取 unready services，统一作为异常上抛 |
+
+### Helm Chart 和 HelmRelease 在哪里
+
+| 对象 | 在哪里 | 说明 |
+| --- | --- | --- |
+| **HelmRelease 模板** | Manifest repo：`manifests/*/resources/helm/HelmRelease/*.tpl` | 定义 chart 名、version、values、sourceRef |
+| **HelmRepository 模板** | Manifest repo：`DefaultService/FcsPlatform/resources/k8s/HelmRepository/0_0_1.tpl` | 指向 `oci://<imageRegistry>/helm` |
+| **真正的 Helm Chart** | ACR OCI registry | 不在 FCS repo / manifest repo 里，实际由 Flux 从 ACR 拉取 |
+
+典型例子：
+
+- 平台级 release：`FcsPlatform/resources/helm/HelmRelease/fcsplatform_0_0_1.tpl`
+- Geneva release：`FcsPlatform/resources/helm/HelmRelease/geneva_0_0_12.tpl`
+- workload release：`ContainerService/Sample/resources/helm/HelmRelease/sample_0_0_1.tpl`
+
+### flux `helm-controller` 在哪里
+
+**答：** 它也是 FCS 平台资源的一部分，不是 workload chart 自带的。  
+定义在 Manifest repo：
+
+- `DefaultService/FcsPlatform/resources/k8s/Deployment/helm-controller/0_0_1.tpl`
+- `DefaultService/FcsPlatform/resources/k8s/ServiceAccount/helm-controller/0_0_1.tpl`
+
+它会在 **cluster pool 创建阶段**，作为 `FcsPlatform` 的 `k8sResources` 被 FCS 先部署进 AKS。  
+所以后续所有 workload 的 `HelmRelease`，本质上都是交给这套预先装好的 Flux controller 去 reconcile。
+
+### 为什么要这么设计
+
+| 设计点 | 原因 |
+| --- | --- |
+| **不用 helm CLI，改用 HelmRelease** | 更符合控制面 / 数据面分离，部署状态可落到 K8s CR，恢复性更好 |
+| **Chart 不放在 repo，放 ACR OCI** | 方便版本化、发版和多环境复用 |
+| **FCS 只写 CR，不直接管 Pod** | 降低控制面复杂度，把实际安装职责交给集群内 controller |
+| **FCS 自己轮询 HelmRelease** | 统一把部署完成、失败、超时语义收敛到编排层 |
+
+### 面试时推荐回答
+
+**提问：** FCS 这里 Helm 是怎么部署的？
+
+**回答：**  
+FCS 这里不是控制面直接执行 `helm install`，而是采用 Flux 的 `HelmRelease` 模型。  
+在 cluster pool 创建阶段，FCS 先把 `helm-controller`、`source-controller`、`HelmRepository` 这些前置平台资源装进 AKS；等 cluster 创建时，再根据 manifest 渲染 workload 对应的 `HelmRelease`，把它写进集群。  
+之后由集群内的 flux `helm-controller` 去 ACR OCI registry 拉真正的 chart 并安装，而 FCS 自己只轮询 `HelmRelease.status`，看它是不是 up-to-date 且 ready。  
+这样部署链路更符合控制面 / 数据面分层，也更容易做失败恢复和状态收敛。
+
+### 一句话总结
+
+> FCS 的 Helm 部署本质上是 **“FCS 渲染并下发 HelmRelease，Flux controller 在集群内拉 chart 并安装，FCS 再轮询 HelmRelease 状态做收敛”**；`HelmRelease` 在 Manifest repo，真正的 chart 在 ACR OCI。
