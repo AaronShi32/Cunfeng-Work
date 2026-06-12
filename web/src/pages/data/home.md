@@ -5,3 +5,13 @@
 此前在阿里云基础产品事业部担任技术专家（P7），负责弹性计算 ECS 核心模块研发。主导弹性网卡 API 重构，接口耗时下降 30%；优化百万级查询性能，响应时间从 300ms 降至 3ms。从零构建跨可用区实例迁移能力，突破私网 IP 不变的业界难题，保障约 60 万台实例平稳迁移。
 
 技术栈覆盖 Java、C#、Python，熟悉分布式系统中间件原理，具备阿里云与 Azure 双平台认证经验。
+
+---
+
+I'm Shi Cunfeng, a Senior Software Engineer at Microsoft with over 10 years of experience in cloud infrastructure and platform development.
+
+I've worked at two major cloud companies — Microsoft and Alibaba Cloud. At Microsoft, I work on the Fabric and HDInsight container infrastructure platform. I designed the control plane architecture for workload lifecycle management on ACI, which helped reduce compute costs by about 80% through the VM-to-container migration. I also built the observability and DevOps system to keep service availability above 99%.
+
+Before that, at Alibaba Cloud, I spent nearly 7 years on the ECS platform — the equivalent of AWS EC2. I was responsible for the Elastic Network Interface system, cross-AZ instance migration, and large-scale network migration of 600,000+ instances. I also optimized API performance, cutting P90 latency by about 30%.
+
+My core strengths are in distributed systems, container orchestration, control plane design, and stability engineering.
