@@ -8,6 +8,7 @@ import interviewMd from './data/interview-zh.md?raw';
 import k8sMd from './data/interview-k8s.md?raw';
 import projectMd from './data/interview-project.md?raw';
 import baguMd from './data/interview-bagu.md?raw';
+import internationalMd from './data/interview-international.md?raw';
 import styles from './templates/interview.module.css';
 
 const DOC_TABS = [
@@ -15,6 +16,7 @@ const DOC_TABS = [
   { key: 'k8s', label: 'K8s / 容器', md: k8sMd },
   { key: 'project', label: '项目专题', md: projectMd },
   { key: 'bagu', label: '八股文', md: baguMd },
+  { key: 'international', label: '出海专题', md: internationalMd },
 ];
 
 export default function InterviewPage() {
