@@ -16,7 +16,7 @@ const DOC_TABS = [
   { key: 'k8s', label: 'K8s / 容器', md: k8sMd },
   { key: 'project', label: '项目专题', md: projectMd },
   { key: 'bagu', label: '八股文', md: baguMd },
-  { key: 'international', label: '出海专题', md: internationalMd },
+  { key: 'international', label: '竞品分析', md: internationalMd },
 ];
 
 export default function InterviewPage() {

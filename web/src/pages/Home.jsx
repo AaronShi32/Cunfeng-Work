@@ -7,14 +7,18 @@ import homeMd from './data/home.md?raw';
 
 function parseHomeMd(md) {
   const lines = md.split('\n');
-  const paragraphs = [];
+  const parts = []; // { type: 'text' | 'divider', text?: string }
 
   for (const line of lines) {
-    if (/^#/.test(line) || /^---\s*$/.test(line)) continue;
+    if (/^#/.test(line)) continue;
+    if (/^---\s*$/.test(line)) {
+      parts.push({ type: 'divider' });
+      continue;
+    }
     const trimmed = line.trim();
-    if (trimmed) paragraphs.push(trimmed);
+    if (trimmed) parts.push({ type: 'text', text: trimmed });
   }
-  return { paragraphs };
+  return { parts };
 }
 
 const TAP_THRESHOLD = 5;
@@ -58,7 +62,7 @@ export default function Home() {
   const tapCount = useRef(0);
   const tapTimer = useRef(null);
   const hideTimer = useRef(null);
-  const { paragraphs } = parseHomeMd(homeMd);
+  const { parts } = parseHomeMd(homeMd);
 
   const handleTitleClick = useCallback(() => {
     tapCount.current += 1;
@@ -81,9 +85,11 @@ export default function Home() {
   return (
     <PageLayout>
       <div className={home.content}>
-        {paragraphs.map((p, i) => (
-          <p key={i} className={home.paragraph}>{p}</p>
-        ))}
+        {parts.map((part, i) =>
+          part.type === 'divider'
+            ? <hr key={i} className={home.divider} />
+            : <p key={i} className={home.paragraph}>{part.text}</p>
+        )}
       </div>
 
       {menuVisible && <HiddenMenu onClose={closeMenu} />}
