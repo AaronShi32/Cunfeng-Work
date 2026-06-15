@@ -883,3 +883,31 @@ MVCC 读：
 **面试建议回答**：隔离性有四个级别，是一致性与并发性能的 trade-off。脏读只在最低级别 READ UNCOMMITTED 才出现，因为它允许读未提交数据。MySQL InnoDB 默认 REPEATABLE READ，通过 MVCC 在事务开始时生成 Read View 快照，整个事务看到一致的数据版本，解决了脏读和不可重复读，配合间隙锁基本解决幻读，且读写互不阻塞，不需要串行化的性能代价。
 
 </details>
+
+---
+
+## 缓存
+
+### 26. Memcached 和 Redis 的技术选型对比？
+
+<details>
+<summary>查看回答</summary>
+
+| 对比项 | Memcached | Redis |
+|---|---|---|
+| **数据结构** | 只有 String | String / Hash / List / Set / ZSet / Stream 等 |
+| **持久化** | ❌ 不支持，重启丢失 | ✅ RDB 快照 + AOF 日志 |
+| **线程模型** | 多线程 | 单线程命令执行（6.0+ IO 多线程） |
+| **集群** | 无原生集群（客户端一致性哈希） | 原生 Redis Cluster（16384 slots） |
+| **主从复制** | ❌ | ✅ 异步复制 + Sentinel 故障转移 |
+| **事务 / Lua** | ❌ | ✅ MULTI/EXEC + Lua 原子脚本 |
+| **发布订阅** | ❌ | ✅ Pub/Sub + Stream |
+| **最大 value** | 1MB | 512MB |
+| **性能** | 简单 KV 略快（多线程优势） | 10w+ QPS，复杂操作更优 |
+| **适用场景** | 纯 KV 缓存、Session、HTML 片段 | 几乎所有场景 + 分布式锁 / 排行榜 / 消息队列 |
+
+**Memcached 是纯缓存，Redis 是缓存 + 数据结构服务器 + 轻量消息队列。** 实际项目中 95% 以上选 Redis。
+
+**面试建议回答**：Memcached 只支持 String，无持久化、无复制、无集群，是纯粹的多线程内存 KV 缓存；Redis 支持丰富数据结构、RDB/AOF 持久化、主从 + Sentinel 高可用、原生 Cluster 分片，功能远超缓存范畴。Memcached 在简单 KV 场景多线程性能略优，但 Redis 单线程也能 10w+ QPS 且功能完胜。除非纯 KV 且不在乎数据丢失，否则选 Redis。
+
+</details>
