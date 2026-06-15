@@ -45,6 +45,13 @@
   display: flex;
   gap: 4px;
   margin-left: 12px;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+}
+
+.docTabs::-webkit-scrollbar {
+  display: none;
 }
 
 .docTab {
@@ -57,6 +64,8 @@
   font-size: 12px;
   font-family: 'Inter', "Microsoft YaHei", "微软雅黑", sans-serif;
   transition: all 0.2s ease;
+  white-space: nowrap;
+  flex-shrink: 0;
 }
 
 .docTab:hover {
@@ -153,6 +162,46 @@
 .paper em {
   color: #555;
   font-style: normal;
+}
+
+/* 代码块 */
+.paper pre {
+  background: #f6f8fa;
+  border: 1px solid #e5e5e5;
+  border-radius: 4px;
+  padding: 14px 16px;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  font-size: 12px;
+  line-height: 1.5;
+  margin: 10px 0;
+}
+
+.paper code {
+  font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, monospace;
+  font-size: 12px;
+}
+
+.paper :not(pre) > code {
+  background: #f0f0f0;
+  padding: 1px 5px;
+  border-radius: 3px;
+  font-size: 11px;
+}
+
+/* 引用块 */
+.paper blockquote {
+  margin: 10px 0;
+  padding: 10px 16px;
+  border-left: 3px solid #c9ada7;
+  background: #faf8f7;
+  border-radius: 0 4px 4px 0;
+  color: #444;
+  font-size: 12px;
+}
+
+.paper blockquote p {
+  margin: 4px 0;
 }
 
 /* 表格 */
@@ -274,6 +323,16 @@
 @media (max-width: 900px) {
   .toolbar {
     padding: 0;
+    flex-wrap: nowrap;
+  }
+
+  .docTabs {
+    margin-left: 8px;
+  }
+
+  .docTab {
+    padding: 6px 12px;
+    font-size: 11px;
   }
 
   .paper {
@@ -293,6 +352,16 @@
   .paper h3 {
     font-size: 13px;
     margin: 16px 0 4px 0;
+  }
+
+  .paper pre {
+    padding: 10px 12px;
+    font-size: 11px;
+  }
+
+  .paper blockquote {
+    padding: 8px 12px;
+    font-size: 11px;
   }
 
   .paper details summary {

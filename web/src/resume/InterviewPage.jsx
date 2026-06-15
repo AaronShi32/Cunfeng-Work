@@ -13,7 +13,7 @@ import styles from './templates/interview.module.css';
 
 const DOC_TABS = [
   { key: 'general', label: '综合面试', md: interviewMd },
-  { key: 'k8s', label: 'K8s / 容器', md: k8sMd },
+  { key: 'k8s', label: 'K8s', md: k8sMd },
   { key: 'project', label: '项目专题', md: projectMd },
   { key: 'bagu', label: '八股文', md: baguMd },
   { key: 'international', label: '竞品分析', md: internationalMd },
