@@ -793,3 +793,93 @@ kill -HUP <pid>   # 通常用于让守护进程重新加载配置（如 Nginx）
 **面试建议回答**：核心区别三点——InnoDB 支持事务和行锁，MyISAM 不支持事务且只有表锁；InnoDB 用聚簇索引（数据和主键存一起），MyISAM 索引和数据分离；InnoDB 有 redo log 保证崩溃恢复，MyISAM 没有。MySQL 5.5 后默认 InnoDB，生产环境基本只用 InnoDB。
 
 </details>
+
+---
+
+### 24. MySQL 的日志体系？
+
+<details>
+<summary>查看回答</summary>
+
+**常见日志一览**：
+
+| 日志 | 层级 | 作用 |
+|---|---|---|
+| **redo log** | InnoDB 引擎层 | 保证事务**持久性**（crash-safe） |
+| **undo log** | InnoDB 引擎层 | 保证事务**原子性**（回滚）+ MVCC 多版本读 |
+| **binlog** | Server 层 | 主从复制、数据恢复（归档） |
+| **slow query log** | Server 层 | 记录慢查询，用于性能优化 |
+| **general log** | Server 层 | 记录所有 SQL（调试用，生产不开） |
+| **error log** | Server 层 | MySQL 启动/关闭/运行错误 |
+
+**redo log —— 保证持久性**：
+
+```
+事务提交时：
+  1. 修改 Buffer Pool 中的内存页（脏页）
+  2. 写 redo log 到磁盘（WAL：Write-Ahead Logging）
+  3. 返回"提交成功"
+
+崩溃恢复时：
+  → 用 redo log 重放已提交事务的修改，恢复脏页数据
+```
+
+**为什么不直接刷脏页到磁盘？** 因为数据页是 16KB，分散在磁盘各处，直接刷是 **随机 IO**，极慢。而 redo log 是顺序追加写，只记录"哪个页的哪个偏移改了什么值"，体积小、**顺序 IO**，快几个数量级。先写 redo log 再择机刷脏页，就是 **WAL（Write-Ahead Logging）** 策略——用顺序写换随机写，大幅提升吞吐。
+
+**undo log —— 保证原子性**：
+
+```
+事务执行中：
+  每次修改前，先把旧值写入 undo log
+
+事务回滚时：
+  → 读 undo log，把数据还原到修改前的状态
+
+MVCC 读：
+  → 通过 undo log 版本链，找到事务开始时的数据快照
+```
+
+**binlog vs redo log**：
+
+| 对比项 | binlog | redo log |
+|---|---|---|
+| 所属层级 | Server 层（所有引擎通用） | InnoDB 引擎层 |
+| 记录内容 | 逻辑日志（SQL 语句或行变更） | 物理日志（"页X偏移Y改成Z"） |
+| 写入方式 | 追加写，文件写满换新文件 | 循环写，固定大小空间循环覆盖 |
+| 用途 | 主从复制、数据恢复 | 崩溃恢复（crash-safe） |
+| 事务提交 | 一次性写入 | 事务执行中持续写入 |
+
+**两阶段提交**：为了保证 binlog 和 redo log 一致，InnoDB 用两阶段提交——先 redo log prepare，再写 binlog，最后 redo log commit。崩溃恢复时以 binlog 为准判断事务是否完成。
+
+**慢查询日志**：记录执行时间超过 `long_query_time`（默认 10s）的 SQL，用 `mysqldumpslow` 分析，是 SQL 性能优化的第一步。
+
+**面试建议回答**：MySQL 核心三个日志——redo log 保证持久性，采用 WAL 策略先顺序写日志再择机刷脏页，避免随机 IO；undo log 保证原子性，记录旧值用于回滚，同时支撑 MVCC 多版本读；binlog 在 Server 层记录逻辑变更，用于主从复制和数据恢复。redo log 和 binlog 通过两阶段提交保证一致性。慢查询日志用于定位性能瓶颈 SQL。
+
+</details>
+
+---
+
+### 25. 事务隔离级别与脏读 / 不可重复读 / 幻读？
+
+<details>
+<summary>查看回答</summary>
+
+隔离性不是"有或没有"，而是 **隔离到什么程度**——四个级别是一致性和并发性能的 trade-off：
+
+| 隔离级别 | 脏读 | 不可重复读 | 幻读 | 实现机制 |
+|---|---|---|---|---|
+| **READ UNCOMMITTED** | ✅ 会 | ✅ 会 | ✅ 会 | 直接读最新数据，无限制 |
+| **READ COMMITTED** | ❌ | ✅ 会 | ✅ 会 | MVCC，每次 SELECT 新建 Read View |
+| **REPEATABLE READ**（InnoDB 默认） | ❌ | ❌ | ⚠️ 间隙锁基本解决 | MVCC，事务开始时建 Read View，全程复用 |
+| **SERIALIZABLE** | ❌ | ❌ | ❌ | 读加共享锁，写加排他锁，退化串行 |
+
+**三种问题**：
+- **脏读**：读到其他事务 **未提交** 的数据，对方回滚后你读的就是脏数据
+- **不可重复读**：同一事务内两次读同一行，结果不同（中间被其他事务 **修改并提交**）
+- **幻读**：同一事务内两次范围查询，结果行数不同（中间被其他事务 **插入新行并提交**）
+
+**为什么不直接用 SERIALIZABLE？** 所有事务串行执行，并发度极低、吞吐骤降、大量锁竞争。REPEATABLE READ + MVCC 已经能在高并发下保证读写互不阻塞，绝大多数场景够用。
+
+**面试建议回答**：隔离性有四个级别，是一致性与并发性能的 trade-off。脏读只在最低级别 READ UNCOMMITTED 才出现，因为它允许读未提交数据。MySQL InnoDB 默认 REPEATABLE READ，通过 MVCC 在事务开始时生成 Read View 快照，整个事务看到一致的数据版本，解决了脏读和不可重复读，配合间隙锁基本解决幻读，且读写互不阻塞，不需要串行化的性能代价。
+
+</details>
