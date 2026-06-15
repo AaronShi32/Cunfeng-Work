@@ -40,6 +40,17 @@
   border-color: #9a8c98;
 }
 
+.backButtonActive {
+  background: #4a4e69;
+  color: #f2e9e4;
+  border-color: #4a4e69;
+}
+
+.backButtonActive:hover {
+  background: #22223b;
+  border-color: #22223b;
+}
+
 .downloadButton {
   background: #4a4e69;
   border: none;
