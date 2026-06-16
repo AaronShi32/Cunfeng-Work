@@ -984,3 +984,39 @@ MVCC 读：
 **面试建议回答**：WebSocket 和 SSE 都是持久连接，区别是 WebSocket 全双工（双向），SSE 半双工（服务端单向推），SSE 直接复用 HTTP 更轻量。AI Chat 用 SSE 而不用 WebSocket，是因为用户只需要收流式 token，不需要在连接上持续回传数据，成本更低、实现更简单。短/长轮询本质都是客户端主动拉，延迟高或并发连接多，一般只在兼容性要求高或场景简单时用。
 
 </details>
+
+---
+
+## 设计模式
+
+### 30. 常见设计模式在 Java 和 Spring 中的应用？
+
+<details>
+<summary>查看回答</summary>
+
+| 设计模式 | 分类 | Java 中的应用 | Spring 中的应用 |
+|---|---|---|---|
+| **单例模式** | 创建型 | `Runtime.getRuntime()`、`System` | Spring Bean 默认 `singleton` scope |
+| **工厂方法模式** | 创建型 | `Calendar.getInstance()`、`NumberFormat.getInstance()` | `BeanFactory`、`FactoryBean` |
+| **抽象工厂模式** | 创建型 | `DocumentBuilderFactory` | `ApplicationContext`（ClassPath / FileSystem / Web 不同实现） |
+| **建造者模式** | 创建型 | `StringBuilder`、`Stream.Builder` | `BeanDefinitionBuilder`、`MockMvcRequestBuilders` |
+| **原型模式** | 创建型 | `Object.clone()`、`Cloneable` | Spring Bean `prototype` scope，每次 `getBean()` 创建新实例 |
+| **适配器模式** | 结构型 | `Arrays.asList()`、`InputStreamReader`（字节流→字符流） | `HandlerAdapter`（统一适配各种 Controller 到 DispatcherServlet） |
+| **装饰器模式** | 结构型 | `BufferedInputStream` 包装 `FileInputStream` | `BeanPostProcessor` 动态增强 Bean、`HttpServletRequestWrapper` |
+| **代理模式** | 结构型 | `java.lang.reflect.Proxy`（JDK 动态代理） | AOP 核心实现（JDK 动态代理 / CGLIB），`@Transactional`、`@Cacheable` |
+| **外观模式** | 结构型 | `javax.faces.context.FacesContext` | `JdbcTemplate`、`RedisTemplate`（封装底层复杂操作） |
+| **享元模式** | 结构型 | `Integer.valueOf(-128~127)` 缓存、`String.intern()` | Spring Bean `singleton` 共享同一实例 |
+| **桥接模式** | 结构型 | `JDBC`（Driver 接口 + 各厂商实现分离） | `PlatformTransactionManager` 抽象与具体事务实现解耦 |
+| **模板方法模式** | 行为型 | `AbstractList`、`HttpServlet.service()` | `JdbcTemplate.execute()`、`AbstractApplicationContext.refresh()` |
+| **策略模式** | 行为型 | `Comparator`、`Runnable` | `HandlerMapping` 路由策略、`ResourceLoader` 加载策略 |
+| **观察者模式** | 行为型 | `EventListener`、`java.util.Observable` | `ApplicationEvent` + `@EventListener` 事件机制 |
+| **责任链模式** | 行为型 | `javax.servlet.Filter` 链 | Spring Security `FilterChain`、Spring MVC `HandlerInterceptor` |
+| **命令模式** | 行为型 | `Runnable`/`Callable` | Spring Batch `Tasklet`、`@Scheduled` 任务封装 |
+| **中介者模式** | 行为型 | `ExecutorService`（协调线程） | `DispatcherServlet`（统一协调 Handler/View/Resolver） |
+
+**面试建议回答（高频三个）**：
+- **代理模式**是 Spring AOP 的基础，`@Transactional`、`@Cacheable` 都靠代理在方法前后织入逻辑，底层用 JDK 动态代理（接口）或 CGLIB（类继承）
+- **模板方法模式**体现在 `JdbcTemplate`、`RestTemplate`——定义好执行骨架，变化的部分（SQL、回调）由调用方传入
+- **观察者模式**体现在 Spring 事件机制——`ApplicationEvent` + `@EventListener`，发布者和订阅者完全解耦，模块间通信不需要直接依赖
+
+</details>
