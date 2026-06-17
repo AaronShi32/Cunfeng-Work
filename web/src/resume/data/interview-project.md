@@ -428,6 +428,83 @@ FCS 这里不是控制面直接执行 `helm install`，而是采用 Flux 的 `He
 
 > FCS 的 Helm 部署本质上是 **”FCS 渲染并下发 HelmRelease，Flux controller 在集群内拉 chart 并安装，FCS 再轮询 HelmRelease 状态做收敛”**；`HelmRelease` 在 Manifest repo，真正的 chart 在 ACR OCI。
 
+## FCS：技术难点 - 记一次分页故障
+
+### 背景
+
+这是一次很典型的 **基础设施变更触发应用链路故障**。  
+当时我们把 Cosmos DB 里几个高流量容器（`Nodes` / `Clusters` / `ClusterPools`）的 RU 上限从 **10k 提到 15k**。扩容后，Cosmos DB 在底层新增了 **physical partition**，数据发生了重新分布。
+
+这个变化把一个原本被掩盖的问题暴露出来：`ListNodes` 按设计本来应该是 **single-partition query**，但实现上实际上还是 **cross-partition query**。
+
+### 故障现象
+
+扩容后，`ListNodes` 出现了一个很隐蔽的分页边界情况：
+
+- **当前页为空**
+- **但 continuation token 非空**
+
+我们的查询逻辑看到这一页没数据，就直接返回给上游，没有继续消费 continuation token。  
+于是上游把这个结果误判成“**没有节点**”。
+
+这个错误结果继续往上游传导：
+
+1. `ListNodes` 错误返回空结果  
+2. `TokenService` 误判 FCS Cluster Node IP 校验失败  
+3. `Pubsub agent -> Pubsub service` 调用全部失败  
+4. 最终影响 **所有 PYNB session startup**
+
+### 技术难点
+
+真正难的地方不是接口报错，而是它表面上 **返回成功**，只是**语义错了**。  
+从现象上看，问题暴露在 session startup failure；但真正根因需要一层层往下追：
+
+- 从上游 session 启动失败，追到 `TokenService`
+- 再追到 `ListNodes`
+- 最后追到底层 Cosmos DB 的分页行为，以及扩容后 **physical partition** 变化
+
+这个故障的本质，是两个隐藏假设同时被打破了：
+
+1. **误把 cross-partition query 当成稳定的 single-partition query 在用**  
+2. **误把 empty page 当成 query finished，没有结合 continuation token 一起判断**
+
+### 修复思路
+
+#### 1. 短期止血
+
+先修正底层分页逻辑：**只要 continuation token 还存在，就必须继续翻页**，不能因为当前页为空就提前返回。  
+这个修复对应 **2025-06-17 commit `26997ddc0`**。
+
+#### 2. 长期治理
+
+把 `ListNodes` 改成真正的 **partition-scoped query**，避免 cross-partition query 带来的正确性风险和性能风险。
+
+### 面试时怎么讲亮点
+
+这个案例不是普通的分页 bug，而是一个 **容量扩展触发的分布式系统边界问题**。
+
+扩容本身没有错，但它改变了底层 **physical partition** 分布，暴露了应用层对查询行为的错误假设。  
+这个故事能体现三点：
+
+1. **你理解数据库分区模型，而不只是会用 SDK**  
+2. **你知道分页语义不能只看“当前页有没有数据”，还要结合 continuation token**  
+3. **你能从链路级故障现象，一层层定位到存储层根因**
+
+### 可能的 follow-up 问题
+
+**Q：你刚才提到 RU 扩容和 physical partition 变化，能解释一下 logical partition、physical partition、cross-partition query 之间的关系吗？**
+
+**答：**  
+Cosmos DB 对业务暴露的是 **logical partition**，由 partition key 决定；底层真正承载吞吐和数据的是 **physical partition**。  
+当 RU 扩容到一定规模后，Cosmos DB 可能新增 physical partition，并把一部分 logical partitions 重新映射过去。
+
+如果查询被 partition key 精确限定，那它就是 **single-partition query**；如果没有限定，就会变成 **cross-partition query**，需要跨多个 physical partitions 聚合结果。  
+这样在扩容或数据重分布后，就更容易暴露出分页、部分结果、`empty page + non-empty token` 这类边界情况。
+
+### 一句话总结
+
+> 这次事故的关键经验不是“修了一个分页 bug”，而是**不能依赖某个规模下看起来没问题的 cross-partition query 行为**；应该从设计上把查询收敛到正确的 partition scope。
+
 ---
 
 ## 竞品分析：数据仓库 → 数据湖 → 湖仓一体
