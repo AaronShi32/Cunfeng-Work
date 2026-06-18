@@ -507,52 +507,6 @@ Cosmos DB 对业务暴露的是 **logical partition**，由 partition key 决定
 
 ---
 
-## 竞品分析：数据仓库 → 数据湖 → 湖仓一体
-
-### 演进脉络
-
-```
-1990s 数据仓库 ──→ 2010s 数据湖 ──→ 2020s 湖仓一体
-结构化 + SQL 分析    所有数据 + 存下再说    两者融合 + 既要又要
-```
-
-### 三者对比
-
-| 对比项 | 数据仓库 | 数据湖 | 湖仓一体 |
-|---|---|---|---|
-| 数据类型 | 结构化 | 所有类型 | 所有类型 |
-| Schema | Write 时定义 | Read 时定义 | 灵活（支持 Schema Evolution） |
-| ACID 事务 | ✅ | ❌ | ✅ |
-| 查询性能 | 高 | 低 | 中高（索引+统计加速） |
-| 存储成本 | 高（专有格式） | 低（对象存储） | 低（对象存储） |
-| UPDATE/DELETE | ✅ | ❌ | ✅ |
-| 适合场景 | BI 报表、SQL 分析 | ML、原始数据归档 | 统一分析 + ML + 流批一体 |
-| 代表产品 | Teradata、Redshift、Synapse | HDFS、S3、ADLS | **Databricks**、**Microsoft Fabric** |
-
-### 核心思路
-
-- **数据仓库**的痛点：只能存结构化数据、建模周期长、存储计算耦合扩展贵
-- **数据湖**的痛点：缺乏 ACID 事务、无索引查询慢、数据质量失控变成”数据沼泽”
-- **湖仓一体**的解法：在数据湖的廉价对象存储之上，加一层 **开放表格式**（Delta Lake / Iceberg / Hudi），补齐事务、Schema 管理和查询加速
-
-### 开放表格式对比
-
-| 技术 | 主导方 | 特点 |
-|---|---|---|
-| **Delta Lake** | Databricks | Spark 生态深度集成，**Microsoft Fabric 底层即 Delta** |
-| **Apache Iceberg** | Netflix → Apache | 引擎无关（Spark / Flink / Trino），社区增长最快 |
-| **Apache Hudi** | Uber → Apache | 擅长增量更新和流式入湖 |
-
-### 与 FCS 项目的关联
-
-Microsoft Fabric 是微软的湖仓一体产品，底层用 OneLake（基于 ADLS）+ Delta Lake 格式，上层统一 Spark / SQL / Power BI。FCS 容器管控平台承载的正是 Fabric 里 Notebook（Spark）工作负载的调度和生命周期管理——是湖仓一体架构中 **计算层的基础设施**。
-
-### 面试建议回答
-
-> 数据仓库解决结构化数据分析，Schema on Write，查询快但只能存结构化数据。数据湖解决海量多类型数据存储，Schema on Read，灵活低成本但缺事务和管理，容易变成数据沼泽。湖仓一体融合两者——在数据湖的廉价存储上通过 Delta Lake / Iceberg 等开放表格式补齐 ACID 事务和查询加速。Microsoft Fabric 就是典型的湖仓一体产品，我做的 FCS 平台是其计算层基础设施，负责 Spark Notebook 工作负载的容器化调度和生命周期管理。
-
----
-
 ## DurableTask.AzureStorage 面试专题
 
 ### 一、技术选型

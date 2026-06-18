@@ -9,6 +9,7 @@ import k8sMd from './data/interview-k8s.md?raw';
 import projectMd from './data/interview-project.md?raw';
 import baguMd from './data/interview-bagu.md?raw';
 import internationalMd from './data/interview-international.md?raw';
+import tencentMd from './data/interview-tencent.md?raw';
 import styles from './templates/interview.module.css';
 
 const DOC_TABS = [
@@ -17,6 +18,7 @@ const DOC_TABS = [
   { key: 'project', label: '项目专题', md: projectMd },
   { key: 'bagu', label: '八股文', md: baguMd },
   { key: 'international', label: '竞品分析', md: internationalMd },
+  { key: 'tencent', label: '腾讯总监面', md: tencentMd },
 ];
 
 export default function InterviewPage() {
