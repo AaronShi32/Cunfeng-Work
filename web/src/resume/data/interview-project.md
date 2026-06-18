@@ -1,5 +1,9 @@
 # 项目专题面试题
 
+> 结合 Microsoft FCS / Scout / Hilo 项目经验的实战问答，含架构设计、技术选型与难点拆解。
+
+---
+
 ## Hilo
 
 ### 为什么选择轮询 CR status，而不是 Watch 或 operator 回调？
