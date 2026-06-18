@@ -7,7 +7,7 @@ import exp from '../styles/experience.module.css';
 import hdiImage from '../../img/HDI/HDI-2025-09-04-1233.png';
 import asiImage from '../../img/ASI/ASI-2026-01-20-1022.png';
 import scoutImage from '../../img/Scout/Scout-2026-01-20-1022.png';
-import fcsImage from '../../img/FCS/FCS-2026-01-20-1331.png';
+
 import notebookImage from '../../img/Fabric/Notebook-RetriableSession-2025-09-04-1233.png';
 
 /* ── SVG Icons (monochrome, currentColor) ── */
@@ -51,7 +51,7 @@ const MS_PROJECTS = [
   { key: 'hdi', icon: <IconDatabase />, title: 'HDInsight', desc: 'Azure HDInsight 大数据分析平台', image: hdiImage },
   { key: 'asi', icon: <IconBarChart />, title: 'ASI', desc: 'Azure Service Insights 服务监控与分析报告', image: asiImage },
   { key: 'scout', icon: <IconSearch />, title: 'Scout', desc: 'AI-AzureData 智能分析引擎', image: scoutImage },
-  { key: 'fcs', icon: <IconBox />, title: 'Fabric Container Service', desc: 'Microsoft Fabric 容器服务管理平台', image: fcsImage },
+  { key: 'fcs', icon: <IconBox />, title: 'Fabric Container Service', desc: 'Microsoft Fabric 容器服务管理平台', image: null },
   { key: 'notebook', icon: <IconFileText />, title: 'Fabric Notebook', desc: 'Microsoft Fabric Notebook 服务', image: notebookImage },
 ];
 
