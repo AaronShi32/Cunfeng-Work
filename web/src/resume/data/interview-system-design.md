@@ -421,3 +421,88 @@ graph TD
 - **退票**：订单状态 confirmed → refunding → refunded，同步释放 Redis 座位锁并通知支付退款
 
 </details>
+
+---
+
+## 7. Design a Rate Limiter for a PubSub System
+
+<details>
+<summary>High-Level 架构图</summary>
+
+```mermaid
+graph TD
+    P1[Publisher A] & P2[Publisher B] -->|publish| IL
+
+    subgraph Broker节点
+        IL[Ingress Limiter\nToken Bucket per publisher/topic]
+        IL -->|通过| Topic[Topic Partition]
+        IL -->|超限| Reject[429 / 反压]
+
+        Topic --> EL[Egress Limiter\nLeaky Bucket per subscription]
+        EL -->|平滑投递| Push[Push to Subscriber]
+        EL -->|超限缓冲| Buf[消息缓冲队列]
+    end
+
+    IL & EL <-->|周期同步 50ms| Redis[(Redis\n全局令牌桶\nLua原子扣减)]
+    Redis <-->|同步| Broker2[Broker 节点 2]
+    Redis <-->|同步| Broker3[Broker 节点 3]
+
+    RuleSvc[Rate Limit Rule Service\n规则配置+动态下发] -->|推送规则| IL & EL
+    RuleSvc --> RuleDB[(MySQL\n限流规则)]
+
+    Push --> S1[Subscriber A]
+    Buf -->|恢复后投递| Push
+```
+
+</details>
+
+<details>
+<summary>概述用例和约束</summary>
+
+- 核心用例：限制 Publisher 发布速率（防洪）、限制 Subscriber 接收速率（防压垮消费者）、保护 Broker 自身
+- 限流粒度：per publisher / per topic / per subscription 三级
+- 约束：限流判决低延迟（< 1ms）、集群多节点间总量一致、规则动态生效无需重启
+- 不需要：消息内容过滤、计费扣费（简化版）
+
+</details>
+
+<details>
+<summary>设计核心组件</summary>
+
+**两个执行点：Ingress vs Egress**
+
+| 位置 | 执行点 | 超限行为 | 算法 |
+|---|---|---|---|
+| Publisher → Broker | Ingress Limiter | 拒绝 429 / 反压 | Token Bucket（允许突发） |
+| Broker → Subscriber | Egress Limiter | 缓冲降速投递 | Leaky Bucket（平滑输出） |
+
+**为什么 Ingress 用 Token Bucket、Egress 用 Leaky Bucket**：
+- Publisher 有合理突发需求（批量写入），Token Bucket 允许 burst = 2× rate，不误杀
+- Subscriber 处理能力固定，Leaky Bucket 以恒定速率投递，保护慢消费者
+
+**分布式两层限流**：
+- **L1 本地**：每个 Broker 内存令牌桶（Guava RateLimiter），热路径无网络开销
+- **L2 全局**：Redis Lua 原子扣减，每 50ms 同步一次全局令牌到本地
+- 同步公式：`local_tokens = min(burst, global_remaining / broker_count)`
+- Redis 不可用时降级为纯本地限流，各节点独立限速，避免全放行
+
+**限流规则存储与下发**：
+- 规则存 MySQL：`(resource_type, resource_id, rate, burst, window)`
+- 变更后通过配置中心（或 MQ）推送到各 Broker，秒级生效，无需重启
+
+**Sliding Window Quota（日/月配额）**：
+- Redis ZSet 存请求时间戳，按窗口统计用量
+- 适合计费场景：超日配额降速而非拒绝，保留基础投递能力
+
+</details>
+
+<details>
+<summary>扩展这个设计</summary>
+
+- **优先级队列**：VIP Publisher 超限后进优先缓冲队列而非直接拒绝
+- **自适应限流**：监控 Broker CPU/内存，动态收紧阈值（AIMD 算法：加性增、乘性减）
+- **Subscriber 背压传播**：Subscriber 消费慢 → Egress 积压 → 反压到 Ingress → 通知 Publisher 降速
+- **多租户隔离**：不同 tenant 的 topic 使用独立令牌桶，互不干扰
+- **可观测性**：限流命中率、拒绝 QPS、令牌等待时间打点，触发告警
+
+</details>
