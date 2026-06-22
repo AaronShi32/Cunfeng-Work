@@ -126,6 +126,51 @@ graph TD
 
 </details>
 
+<details>
+<summary>深挖问题</summary>
+
+**Q1：DB 轮询压力暴增怎么办？消息队列广播如何保证事务性？**
+
+DB 轮询压力：
+- 单独维护轻量的 `config_change_log` 表，只写变更事件
+- 每个 Server 记录上次拉取的最大 ID，只查 `WHERE id > last_id`，追加读，无全表扫
+- 轮询打到只读从库，写主库不受影响（Apollo 生产方案，1s 一轮询）
+
+消息队列事务性三种方案：
+
+| 方案 | 原理 | 特点 |
+|---|---|---|
+| Transactional Outbox | DB 事务里同时写配置表 + outbox 表，relay 进程读 outbox 投 MQ | 最通用，不依赖特定 MQ |
+| CDC (Debezium) | 监听 MySQL binlog，变更自动发 Kafka | 不侵入业务代码 |
+| RocketMQ 事务消息 | 先发 half message，DB 写成功 commit，失败 rollback | 依赖 RocketMQ |
+
+> 配置中心场景其实最简单：写 DB 成功就够了，MQ 投递失败重试即可——消费是幂等的，只要最终一致。
+
+---
+
+**Q2：Long Polling 下 Client 要和每个 Server 保持长连接吗？会频繁超时重连吗？**
+
+- Client 只连接一个 Server（LB 分配），不需要连所有 Server
+- Long Polling 是普通 HTTP 请求，超时后 Client 立刻发下一个，**复用同一条 TCP 连接**（Keep-Alive），无重新握手开销
+- 30s 超时 → 立即续发，每个 Client 约 2 req/min，1 万 Client = 333 req/s，完全可接受
+- 真正的问题是：Server 收到变更只能唤醒连到**自己**的那批 Client，连到其他 Server 的 Client 需要通过 Server 间通知（DB 轮询 or MQ）来触发
+
+---
+
+**Q3：多个 ConfigServer 是主从关系还是无主关系？Client 如何选择？**
+
+| 方案 | 代表 | 特点 |
+|---|---|---|
+| 无主（Stateless） | Apollo / Nacos | Server 无状态，各自独立轮询 DB，DB 是唯一数据源，水平扩容简单 |
+| 有主（Leader-based） | etcd / Consul | Raft 选主，强一致，复杂度高，适合 k8s 场景 |
+
+配置中心推荐**无主方案**：
+- 配置变更频率低，秒级最终一致够用，不需要强一致
+- Server 之间根本不通信，加机器直接扩容
+- Client 通过 LB 或 Meta Server 拿到 Server 列表，随机选一个；一台挂了，自动重试其他节点
+
+</details>
+
 ---
 
 ## 3. 设计一个 RPC 框架（类 Dubbo）
