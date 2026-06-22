@@ -10,6 +10,7 @@ import projectMd from './data/interview-project.md?raw';
 import baguMd from './data/interview-bagu.md?raw';
 import internationalMd from './data/interview-international.md?raw';
 import tencentMd from './data/interview-tencent.md?raw';
+import systemDesignMd from './data/interview-system-design.md?raw';
 import styles from './templates/interview.module.css';
 
 const DOC_TABS = [
@@ -19,6 +20,7 @@ const DOC_TABS = [
   { key: 'bagu', label: '八股文', md: baguMd },
   { key: 'international', label: '竞品分析', md: internationalMd },
   { key: 'tencent', label: '腾讯总监面', md: tencentMd },
+  { key: 'system-design', label: '系统设计', md: systemDesignMd },
 ];
 
 export default function InterviewPage() {
