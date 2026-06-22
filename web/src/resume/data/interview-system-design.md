@@ -349,3 +349,75 @@ graph TD
 - 可观测性：任务执行耗时、失败率、积压量实时监控
 
 </details>
+
+---
+
+## 6. Design a Movie Theater Ticketing System
+
+<details>
+<summary>High-Level 架构图</summary>
+
+```mermaid
+graph TD
+    Client[Web/Mobile] --> GW[API Gateway]
+
+    GW --> MovieSvc[Movie Service\n影片/场次/座位图]
+    GW --> BookingSvc[Booking Service\n选座/下单]
+
+    MovieSvc --> RCache[(Redis\n场次+座位图缓存)]
+    MovieSvc --> RDB[(MySQL\n影片/影院/场次)]
+
+    BookingSvc -->|SETNX 占座 TTL=10min| SeatLock[(Redis\n座位锁)]
+    BookingSvc --> OrderDB[(MySQL\n订单表)]
+    BookingSvc --> PaySvc[Payment Service\n第三方支付]
+    PaySvc -->|支付回调| BookingSvc
+    BookingSvc -->|确认/释放| SeatLock
+
+    BookingSvc --> MQ[消息队列]
+    MQ --> NotifySvc[Notification Service\n短信/邮件]
+    MQ --> ExpireJob[Seat Release Job\n超时订单清理]
+```
+
+</details>
+
+<details>
+<summary>概述用例和约束</summary>
+
+- 核心用例：浏览影片和场次、查看座位图、选座锁定、下单支付、出票确认
+- 约束：同一座位不能卖给两个人、支付与占座原子联动、热门场次开票瞬间高并发
+- 不需要：内容播放、会员积分、复杂促销（简化版）
+
+</details>
+
+<details>
+<summary>设计核心组件</summary>
+
+**座位并发冲突**是核心难点，选座流程：
+
+1. 用户选座 → `Redis SETNX seat:{showtime_id}:{seat_id} {user_id} EX 600`（TTL 10 分钟）
+2. 锁定成功 → 创建 pending 订单写 MySQL
+3. 发起支付 → 第三方回调成功 → 订单状态改 confirmed，MySQL 持久化座位状态
+4. 超时未支付 → Redis TTL 到期自动释放锁，后台 Job 清理 pending 订单
+
+**为什么不用 DB 行锁**：`SELECT FOR UPDATE` 串行化粒度粗，高并发下数据库连接池耗尽；Redis SETNX 是 O(1) 原子操作，吞吐高 10 倍以上。
+
+**数据模型核心表**：
+- `movie` / `theater` / `screen`：影片/影院/放映厅基础信息
+- `showtime`：场次，关联 movie + screen + 开始时间
+- `seat`：座位静态信息（行号/列号/类型）
+- `order`：订单表，状态机 `pending → confirmed / cancelled`
+
+**支付回调幂等**：订单状态机保证重复回调安全，confirmed 状态不可逆。
+
+</details>
+
+<details>
+<summary>扩展这个设计</summary>
+
+- **热门场次开票**：前置虚拟等候室（排队队列），匀速放行，防止瞬间流量击穿
+- **读扩展**：场次/座位图缓存 Redis（TTL 30s），配置变更后主动 invalidate
+- **写扩展**：按 `theater_id` 分库分表，同一影院并发天然收敛到同一分片
+- **超卖兜底**：DB 层对 `(showtime_id, seat_id)` 加唯一索引，Redis 失效时最后一道防线
+- **退票**：订单状态 confirmed → refunding → refunded，同步释放 Redis 座位锁并通知支付退款
+
+</details>
