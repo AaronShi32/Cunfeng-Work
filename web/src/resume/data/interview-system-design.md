@@ -3,20 +3,44 @@
 ## 1. 设计一个分布式消息队列（类 Kafka）
 
 <details>
+<summary>High-Level 架构图</summary>
+
+```mermaid
+graph TD
+    P1[Producer A] & P2[Producer B] -->|写入| B1
+    P1 & P2 -->|写入| B2
+
+    subgraph Broker集群
+        B1[Broker 1\nLeader: P0,P2]
+        B2[Broker 2\nLeader: P1]
+        B3[Broker 3\nFollower副本]
+    end
+
+    B1 <-->|Replication| B3
+    B2 <-->|Replication| B3
+
+    ZK[ZooKeeper / KRaft\n元数据 & Leader选举]
+    B1 & B2 & B3 --- ZK
+
+    B1 & B2 -->|拉取| CG1
+    B1 & B2 -->|拉取| CG2
+
+    subgraph Consumer Group A
+        CG1[Consumer 1\nPartition 0,2]
+    end
+    subgraph Consumer Group B
+        CG2[Consumer 2\nPartition 0,1,2]
+    end
+```
+
+</details>
+
+<details>
 <summary>概述用例和约束</summary>
 
 - 核心用例：生产者发消息、消费者订阅消费、消息持久化、消息回放
 - 约束：高吞吐（百万 TPS）、低延迟、消息不丢失（至少一次投递）、水平扩展
 - 不需要：复杂查询、事务消息（简化版）
-
-</details>
-
-<details>
-<summary>High-Level 设计</summary>
-
-- Topic → Partition 分片，每个 Partition 是一个有序日志文件
-- Producer → Broker 集群 → Consumer Group
-- ZooKeeper / KRaft 负责元数据和 Leader 选举
 
 </details>
 
@@ -46,20 +70,39 @@
 ## 2. 设计一个分布式配置中心（类 Nacos/Apollo）
 
 <details>
+<summary>High-Level 架构图</summary>
+
+```mermaid
+graph TD
+    Admin[运维控制台] -->|发布配置| DB[(MySQL\n配置快照+历史)]
+
+    DB -->|变更事件轮询| S1 & S2 & S3
+
+    subgraph Server集群 无状态
+        S1[Config Server 1]
+        S2[Config Server 2]
+        S3[Config Server 3]
+    end
+
+    LB[Nginx 负载均衡] --> S1 & S2 & S3
+
+    S1 & S2 & S3 -->|Long Polling 推送| C1 & C2 & C3
+
+    subgraph 业务应用
+        C1[Client A\n本地缓存]
+        C2[Client B\n本地缓存]
+        C3[Client C\n本地缓存]
+    end
+```
+
+</details>
+
+<details>
 <summary>概述用例和约束</summary>
 
 - 核心用例：发布配置、客户端实时拉取/推送、灰度发布、版本回滚
 - 约束：高可用、配置变更秒级生效、支持千万级客户端长连接
 - 不需要：强事务、复杂权限（简化版）
-
-</details>
-
-<details>
-<summary>High-Level 设计</summary>
-
-- 客户端 Long Polling 拉取配置变更（hold 30s）
-- 配置存 MySQL，变更事件推给各 Server 节点，节点再通知客户端
-- Server 集群无状态，前置 Nginx 负载均衡
 
 </details>
 
@@ -88,20 +131,37 @@
 ## 3. 设计一个 RPC 框架（类 Dubbo）
 
 <details>
+<summary>High-Level 架构图</summary>
+
+```mermaid
+graph TD
+    subgraph Consumer端
+        App[业务代码] -->|调用接口| Proxy[动态代理]
+        Proxy -->|序列化| Codec[编解码层]
+        Codec -->|Netty NIO| Transport[传输层]
+        LB[负载均衡\n轮询/一致哈希] --> Transport
+    end
+
+    Registry[注册中心\nZooKeeper/Nacos] -->|地址列表推送| LB
+    Transport -->|网络请求| Transport2
+
+    subgraph Provider端
+        Transport2[传输层\nNetty NIO] -->|反序列化| Codec2[编解码层]
+        Codec2 -->|反射调用| Invoker[服务实现]
+        Invoker -->|返回结果| Codec2
+    end
+
+    Invoker -->|注册| Registry
+```
+
+</details>
+
+<details>
 <summary>概述用例和约束</summary>
 
 - 核心用例：服务注册/发现、远程方法调用、负载均衡、熔断降级
 - 约束：调用透明（像本地调用）、低延迟、高可用
 - 不需要：跨语言（Java only 简化版）
-
-</details>
-
-<details>
-<summary>High-Level 设计</summary>
-
-- Consumer 通过动态代理拦截调用 → 序列化 → 网络传输 → Provider 反射调用
-- 注册中心（ZooKeeper/Nacos）存储服务地址列表
-- Consumer 本地缓存地址列表，注册中心变更时推送更新
 
 </details>
 
@@ -131,20 +191,35 @@
 ## 4. 设计一个分布式限流系统
 
 <details>
+<summary>High-Level 架构图</summary>
+
+```mermaid
+graph TD
+    Req[请求] --> GW[API Gateway\n限流拦截器]
+
+    GW -->|读取规则| RC[规则中心\n配置中心下发]
+    GW -->|原子计数| Redis[(Redis集群\nLua脚本)]
+
+    Redis -->|未超限| GW
+    Redis -->|超限| Reject[返回 429]
+    GW -->|通过| Backend[后端服务]
+
+    subgraph 降级兜底
+        Local[本地令牌桶\nGuava RateLimiter]
+    end
+
+    Redis -->|不可用| Local
+    Local --> Backend
+```
+
+</details>
+
+<details>
 <summary>概述用例和约束</summary>
 
 - 核心用例：对接口/用户/IP 按 QPS 限流，超限返回 429
 - 约束：低延迟（限流判断 < 1ms）、集群限流总量准确、高可用
 - 不需要：复杂业务规则、按流量大小限流
-
-</details>
-
-<details>
-<summary>High-Level 设计</summary>
-
-- 单机：令牌桶（Guava RateLimiter）
-- 集群：Redis + Lua 脚本原子计数，滑动窗口或令牌桶
-- 限流规则动态下发（配置中心），无需重启
 
 </details>
 
@@ -173,20 +248,39 @@
 ## 5. 设计一个分布式任务调度系统（类 XXL-Job）
 
 <details>
+<summary>High-Level 架构图</summary>
+
+```mermaid
+graph TD
+    subgraph 调度中心集群
+        S1[Scheduler 1] -->|竞争分布式锁| DB
+        S2[Scheduler 2] -->|竞争分布式锁| DB
+        DB[(MySQL\n任务表+执行日志)]
+        TW[时间轮\n内存触发] --> S1
+    end
+
+    S1 -->|HTTP下发任务| E1 & E2 & E3
+
+    subgraph 执行器集群
+        E1[Executor 1]
+        E2[Executor 2]
+        E3[Executor 3]
+    end
+
+    E1 & E2 & E3 -->|心跳注册| S1
+    E1 & E2 & E3 -->|回报执行结果| DB
+
+    Admin[管理控制台] -->|配置任务/查看日志| DB
+```
+
+</details>
+
+<details>
 <summary>概述用例和约束</summary>
 
 - 核心用例：定时触发任务、任务分片、失败重试、执行日志查看
 - 约束：调度精度秒级、任务不重复执行、执行器水平扩展
 - 不需要：实时流任务、DAG 依赖（简化版）
-
-</details>
-
-<details>
-<summary>High-Level 设计</summary>
-
-- 调度中心（Scheduler）：扫描 DB 中到期任务，下发给执行器
-- 执行器（Executor）：注册到调度中心，接收任务并执行，回报结果
-- DB 做分布式锁，防止多 Scheduler 重复触发同一任务
 
 </details>
 

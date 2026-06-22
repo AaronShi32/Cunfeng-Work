@@ -1,9 +1,25 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { SiteTabs } from '../components';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 import rehypeRaw from 'rehype-raw';
+import mermaid from 'mermaid';
+
+mermaid.initialize({ startOnLoad: false, theme: 'neutral' });
+
+function MermaidBlock({ code }) {
+  const ref = useRef(null);
+  useEffect(() => {
+    if (ref.current) {
+      const id = `mermaid-${Math.random().toString(36).slice(2)}`;
+      mermaid.render(id, code).then(({ svg }) => {
+        if (ref.current) ref.current.innerHTML = svg;
+      });
+    }
+  }, [code]);
+  return <div ref={ref} style={{ overflowX: 'auto', margin: '1rem 0' }} />;
+}
 import interviewMd from './data/interview-zh.md?raw';
 import k8sMd from './data/interview-k8s.md?raw';
 import projectMd from './data/interview-project.md?raw';
@@ -53,7 +69,18 @@ export default function InterviewPage() {
       </div>
 
       <div className={styles.paper}>
-        <ReactMarkdown remarkPlugins={[remarkGfm]} rehypePlugins={[rehypeRaw]}>
+        <ReactMarkdown
+          remarkPlugins={[remarkGfm]}
+          rehypePlugins={[rehypeRaw]}
+          components={{
+            code({ className, children }) {
+              if (className === 'language-mermaid') {
+                return <MermaidBlock code={String(children).trim()} />;
+              }
+              return <code className={className}>{children}</code>;
+            },
+          }}
+        >
           {currentMd}
         </ReactMarkdown>
       </div>
