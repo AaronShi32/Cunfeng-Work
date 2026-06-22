@@ -657,140 +657,52 @@ Cosmos DB 对业务暴露的是 **logical partition**，由 partition key 决定
 
 ## DurableTask (DTF)
 
-### AzureStorage 面试专题
+### 1. 技术原理
 
-#### 一、技术选型
+**Q1：DurableTaskFramework 的核心工作原理是什么？**
 
-**Q1：你们为什么选择 DurableTask.AzureStorage，而不是其他工作流引擎（如 Temporal、Quartz、Hangfire）？**
+**答：** 我会把 DTF 理解成一个 **基于 Event Sourcing 的分布式工作流引擎**。  
+它把 Orchestrator 当成“流程定义者”，把每一步真实执行放到 Activity 里；每次流程推进，不是靠进程内存保存状态，而是把状态变化持久化下来，后续再通过 replay 恢复执行上下文。
 
-> 考察点：对比选型能力，能否说清楚 Azure 生态锁定与业务收益的权衡
+#### 可以怎么展开
 
-参考思路：
-- 已在 Azure 生态（ACI、ASI）中，Azure Storage 零额外基础设施成本
-- DurableTask 原生支持 C#，与微软内部研发栈对齐
-- 对比 Temporal：功能对等，但 Temporal 需要独立部署服务端，运维成本更高
-- 对比 DB-based 方案（如 Quartz + SQL）：Azure Storage Queue 天然支持分布式消费，无单点
-- Hilo 作业提交量适中，AzureStorage 后端够用，且与 Azure 托管服务天然契合
+1. **Orchestrator 负责流程编排，不做实际 IO**  
+   它定义先做什么、后做什么、失败怎么处理，但真正访问外部系统的是 Activity。
+2. **状态靠历史事件恢复**  
+   每次被唤醒时，框架会根据已持久化的历史事件 replay，恢复出当前执行到哪一步。
+3. **天然支持长流程和失败恢复**  
+   进程重启、机器切换、消息重投后，流程仍然可以从历史状态继续推进，而不是从头再来。
+4. **代码必须是确定性的**  
+   因为 Orchestrator 会被重复 replay，所以不能直接写 `DateTime.Now`、随机数、`Guid.NewGuid()` 这类非确定性逻辑。
 
----
+#### 一句话总结
 
-**Q2：DurableTask.AzureStorage 相比 DurableTask.SqlServer / Netherite 后端有什么取舍？**
-
-> 考察点：对框架多后端架构的理解
-
-| 后端 | 吞吐 | 运维成本 | 适合场景 |
-|---|---|---|---|
-| **AzureStorage** | 中（~2000 msg/s per queue） | 低，托管服务无需维护 | 中等并发、Azure 原生 |
-| **SqlServer** | 高，查询更灵活 | 中，需维护 DB | 高并发、需复杂查询 |
-| **Netherite**（EventHubs+FASTER） | 超高 | 高，架构复杂 | 大规模工厂场景 |
-
-Hilo 作业并发量适中，AzureStorage 后端成本和复杂度最低，是合理选择。
+> DTF 的核心不是“异步任务调度”，而是**把工作流状态外置持久化，再通过 replay 驱动可靠恢复**。
 
 ---
 
-#### 二、工作原理
+### 2. 选型的 Tradeoff（SQL vs Storage Account）
 
-**Q3：DurableTask.AzureStorage 的底层存储结构是什么？各用到了哪些 Azure Storage 资源？**
+**Q2：DurableTaskFramework 为什么选 Storage Account 后端，而不是 SQL 后端？Tradeoff 是什么？**
 
-> 考察点：对框架内部机制的掌握深度
+**答：** 这个问题本质上不是“哪个更先进”，而是 **吞吐、运维复杂度、成本、可观测性、业务规模** 的权衡。  
+如果业务规模中等、在 Azure 生态内、希望尽量少维护基础设施，Storage Account 往往更合适；如果追求更强查询能力、更高吞吐或更复杂的实例管理能力，SQL 会更有优势。
 
-| 资源 | 用途 |
-|---|---|
-| **Control Queue**（Storage Queue） | 每个 TaskHub 有 4 个（可扩至 16），按 partition 分发 Orchestration 事件（调度、继续、终止等） |
-| **Work-Item Queue**（Storage Queue） | Activity Task 分发队列，Worker 竞争消费 |
-| **History Table**（Table Storage） | 存储每个 Orchestration Instance 的完整事件历史，支持 replay |
-| **Instances Table**（Table Storage） | Orchestration 实例的状态快照（running / completed / failed） |
-| **Blob Storage** | 大消息（>64KB）通过 Blob 存储，Queue 只存引用 |
+#### 我会怎么对比
 
----
+| 维度 | Storage Account | SQL |
+| --- | --- | --- |
+| **运维成本** | 低，Azure 托管，几乎零额外基础设施 | 中，需维护数据库容量、连接、索引和高可用 |
+| **成本结构** | 更轻，适合中等规模 workflow | 更高，但换来更强能力 |
+| **吞吐和查询能力** | 够用，但查询和分析能力偏弱 | 更强，适合更复杂的实例检索和管理 |
+| **扩展方式** | 更偏消息队列和表存储模型 | 更偏数据库模型，管理和观测更集中 |
+| **适合场景** | Azure 原生、中等并发、追求简单稳定 | 高并发、复杂查询、对状态管理要求更高 |
 
-**Q4：Orchestrator 的 "replay" 机制是什么？为什么 Orchestrator 代码必须是确定性的？**
+#### 在项目里我会怎么回答
 
-> 考察点：对 Event Sourcing / 重放机制的理解，这是 DurableTask 核心概念
+如果像 Hilo 这类场景，工作流量级是中等规模，而且整套系统本来就在 Azure 生态里，那我会优先选 Storage Account，因为它的**综合成本最低，接入最轻，可靠性也够用**。  
+但如果未来工作流数量和并发明显上升，或者我们需要对实例做更复杂的检索、排查和运营管理，那 SQL 后端会更有吸引力。
 
-参考思路：
-- Orchestrator 不是持续运行的进程，每次被唤醒都从头重放 History Table 里的历史事件来恢复状态
-- 非确定性操作（如 `DateTime.Now`、`Guid.NewGuid()`、随机数）在重放时结果不同，会导致状态不一致
-- 框架提供确定性替代 API：`context.CurrentUtcDateTime`、`context.NewGuid()`
-- **实际影响**：Hilo 中作业状态流转（提交→运行→完成）每个节点都是一个 Activity，Orchestrator 只做流转控制，不做 IO 操作
+#### 一句话总结
 
----
-
-**Q5：Worker 如何保证 Activity 不重复执行？消息可见性超时（Visibility Timeout）起什么作用？**
-
-> 考察点：分布式幂等与 at-least-once delivery 的处理
-
-参考思路：
-- Storage Queue 默认 at-least-once delivery，Worker 取到消息后有 Visibility Timeout（默认 5min）
-- 如果 Worker 在 timeout 内未完成（crash / 超时），消息重新变可见，被其他 Worker 重试
-- 框架通过 History Table 记录已完成的 Activity，重放时跳过已完成任务，实现框架层幂等
-- **业务侧**也需保证 Activity 幂等，如 Flink Job 提交时先查状态再创建，避免重复创建
-
----
-
-#### 三、异常处理
-
-**Q6：Orchestrator 调用 Activity 失败时，框架的重试机制是如何工作的？生产中怎么配置？**
-
-> 考察点：重试策略设计，结合业务场景
-
-参考思路：
-- 框架提供 `RetryOptions`：`maxNumberOfAttempts`、`firstRetryInterval`、`backoffCoefficient`、`maxRetryInterval`
-- Activity 抛出异常 → 框架记录失败事件 → 按 RetryOptions 延迟后重新入 Work-Item Queue
-- 超过最大次数后抛出 `TaskFailedException`，由 Orchestrator 的 `try/catch` 处理
-- **Hilo 场景**：Flink Job 提交偶有 API timeout，配置 3 次重试 + 指数退避，避免误判失败
-
----
-
-**Q7：如果一个 Orchestrator 实例卡在 "Running" 状态无法完成，你怎么排查和处理？**
-
-> 考察点：线上问题排查能力
-
-参考思路：
-1. 查 **Instances Table**：确认实例状态和 `lastUpdatedTime`
-2. 查 **History Table**：看最后一个事件，判断卡在哪个 Activity
-3. 常见原因：Activity Worker 宕机（消息重新排队后会恢复）；Activity 内部死锁；Control Queue 消费积压
-4. 处理手段：
-   - `TerminateAsync` 强制终止
-   - `RewindAsync` 回滚到上一个成功点（需要 Rewind 支持）
-   - `PurgeInstanceHistoryAsync` 清理历史
-5. 监控：扫描 Instances Table 中超时的 Running 实例，接入告警
-
----
-
-**Q8：跨 Activity 的补偿事务（Saga 模式）你们怎么实现的？**
-
-> 考察点：分布式事务设计能力
-
-参考思路：
-- DurableTask 不内置 Saga，需手动实现
-- 模式：在 Orchestrator 中 `try/catch`，捕获失败后依次调用补偿 Activity（逆序执行）
-- **Hilo 场景**：Flink Job 创建失败时，需回滚已分配的资源（清理 AKS Pod、释放 Storage 等）
-- **注意**：补偿 Activity 本身也需要幂等，且补偿失败需有降级策略（人工介入 / 告警）
-
----
-
-#### 四、性能与规模
-
-**Q9：DurableTask.AzureStorage 在高并发场景下的瓶颈在哪？如何应对？**
-
-> 考察点：性能调优经验
-
-| 瓶颈 | 原因 | 应对方案 |
-|---|---|---|
-| Control Queue 吞吐上限 | 默认 4 个 partition | 增大 `partitionCount`（最多 16） |
-| History Table 写放大 | 每个事件写一行，大量小 IO | 批量写、控制 Orchestration 步骤数量 |
-| Work-Item Queue 并发 | 单队列消费并发有限 | 多 Worker 实例水平扩展 |
-| 瞬时 burst | 大批量作业同时提交 | 限流 / 批处理，避免瞬时打满 queue |
-
----
-
-**Q10：TaskHub 的 partition 设计有什么作用？多 Worker 实例如何协调？**
-
-> 考察点：分布式协调机制
-
-参考思路：
-- Control Queue 按 partition 分发，每个 partition 对应一组 Orchestration Instance
-- Worker 通过 **Blob Lease** 竞争 partition 的"租约"，持有租约才能消费对应 partition 的消息
-- Worker 扩缩容时，租约会自动重新分配（类似 Kafka Consumer Group 的 rebalance）
-- **保证**：同一 Orchestration Instance 的事件始终由同一 Worker 处理，避免并发冲突
+> Storage 赢在**轻量和托管成本低**，SQL 赢在**能力上限和查询管理能力更强**；选型关键看业务规模和治理诉求。
