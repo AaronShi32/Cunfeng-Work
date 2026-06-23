@@ -39,13 +39,13 @@ const MD_COMPONENTS = {
 };
 
 const SYSTEM_DESIGN_META = [
-  { tags: ['Partition', 'Replication', 'ISR', 'Consumer Group'] },
-  { tags: ['Long Polling', 'DB 轮询', '无主集群', 'Outbox'] },
-  { tags: ['动态代理', 'Netty', '负载均衡', '熔断'] },
-  { tags: ['令牌桶', 'Redis Lua', '滑动窗口', '两层限流'] },
-  { tags: ['时间轮', '分布式锁', '任务分片', '失败重试'] },
-  { tags: ['Redis SETNX', '状态机', '选座并发', '支付幂等'] },
-  { tags: ['Token Bucket', 'Leaky Bucket', 'Ingress/Egress', '背压传播'] },
+  { title: '消息队列',     tags: ['Partition', 'Replication', 'ISR', 'Consumer Group'] },
+  { title: '分布式配置中心', tags: ['Long Polling', 'DB 轮询', '无主集群', 'Outbox'] },
+  { title: 'RPC 框架',    tags: ['动态代理', 'Netty', '负载均衡', '熔断'] },
+  { title: '分布式限流',   tags: ['令牌桶', 'Redis Lua', '滑动窗口', '两层限流'] },
+  { title: '任务调度',     tags: ['时间轮', '分布式锁', '任务分片', '失败重试'] },
+  { title: '电影院票务',   tags: ['Redis SETNX', '状态机', '选座并发', '支付幂等'] },
+  { title: 'PubSub 限流', tags: ['Token Bucket', 'Leaky Bucket', 'Ingress/Egress', '背压传播'] },
 ];
 
 function parseSystemDesignSections(md) {
@@ -70,6 +70,16 @@ function SystemDesignGrid({ md }) {
     };
   }, [openSection]);
 
+  const MODAL_COMPONENTS = {
+    ...MD_COMPONENTS,
+    details({ children }) {
+      return <div className={styles.sdSection}>{children}</div>;
+    },
+    summary({ children }) {
+      return <h3 className={styles.sdSectionTitle}>{children}</h3>;
+    },
+  };
+
   return (
     <>
       <div className={styles.sdGrid}>
@@ -78,11 +88,11 @@ function SystemDesignGrid({ md }) {
           const title = titleMatch ? titleMatch[1] : `题目 ${i + 1}`;
           const meta = SYSTEM_DESIGN_META[i] || { tags: [] };
           return (
-            <div key={i} className={styles.sdCard} onClick={() => setOpenSection(section)}>
+            <div key={i} className={styles.sdCard} onClick={() => setOpenSection({ section, meta: SYSTEM_DESIGN_META[i] || { title: `题目 ${i + 1}`, tags: [] } })}>
               <div className={styles.sdCardNum}>{i + 1}</div>
-              <h3 className={styles.sdCardTitle}>{title}</h3>
+              <h3 className={styles.sdCardTitle}>{(SYSTEM_DESIGN_META[i] || {}).title || title}</h3>
               <div className={styles.sdCardTags}>
-                {meta.tags.map(tag => (
+                {(SYSTEM_DESIGN_META[i]?.tags || []).map(tag => (
                   <span key={tag} className={styles.sdTag}>{tag}</span>
                 ))}
               </div>
@@ -101,9 +111,9 @@ function SystemDesignGrid({ md }) {
               <ReactMarkdown
                 remarkPlugins={[remarkGfm]}
                 rehypePlugins={[rehypeRaw]}
-                components={MD_COMPONENTS}
+                components={MODAL_COMPONENTS}
               >
-                {openSection}
+                {openSection.section}
               </ReactMarkdown>
             </div>
           </div>
