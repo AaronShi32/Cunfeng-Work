@@ -12,6 +12,7 @@ import baguMd from './data/interview-bagu.md?raw';
 import internationalMd from './data/interview-international.md?raw';
 import tencentMd from './data/interview-tencent.md?raw';
 import systemDesignMd from './data/interview-system-design.md?raw';
+import xiaomaMd from './data/interview-xiaoma.md?raw';
 import styles from './templates/interview.module.css';
 
 mermaid.initialize({ startOnLoad: false, theme: 'neutral' });
@@ -148,6 +149,7 @@ const DOC_TABS = [
   { key: 'general', label: '技术难点', md: interviewMd },
   { key: 'k8s', label: 'K8s', md: k8sMd },
   { key: 'project', label: '项目专题', md: projectMd },
+  { key: 'xiaoma', label: '面经', md: xiaomaMd },
   { key: 'bagu', label: '八股文', md: baguMd },
   { key: 'international', label: '竞品分析', md: internationalMd },
   { key: 'tencent', label: '腾讯总监面', md: tencentMd },

@@ -1020,3 +1020,46 @@ MVCC 读：
 - **观察者模式**体现在 Spring 事件机制——`ApplicationEvent` + `@EventListener`，发布者和订阅者完全解耦，模块间通信不需要直接依赖
 
 </details>
+
+---
+
+## 分布式工作流
+
+### 31. DurableTaskFramework 的核心工作原理是什么？
+
+<details>
+<summary>查看回答</summary>
+
+**一句话：** DTF 本质上是一个 **基于 Event Sourcing 的分布式工作流引擎**。  
+它把流程控制放在 Orchestrator，把真实副作用放在 Activity，然后通过持久化历史事件 + replay 的方式实现长流程恢复。
+
+```text
+Orchestrator 启动
+    │
+    ├─ 调度 Activity A
+    ├─ 记录事件到 History
+    ├─ 进程退出 / Worker 切换 / 等待外部结果
+    │
+    └─ 下次被唤醒时
+         重新读取 History
+         replay 恢复状态
+         从上次进度继续往下执行
+```
+
+**核心点有四个：**
+
+1. **Orchestrator 只负责编排，不直接做 IO**  
+   它定义流程顺序、重试、分支和补偿；真正访问外部系统的是 Activity。
+
+2. **状态不靠内存保存，而靠历史事件恢复**  
+   每次流程继续时，框架会 replay 之前的执行历史，恢复出当前上下文。
+
+3. **天然支持长流程和故障恢复**  
+   即使 Worker 挂了、消息重投了、实例迁移了，流程也能从历史状态继续推进。
+
+4. **Orchestrator 代码必须是确定性的**  
+   因为会被重复 replay，所以不能直接写 `DateTime.Now`、随机数、`Guid.NewGuid()` 这类非确定性逻辑；要用框架提供的确定性 API。
+
+**面试建议回答：** DTF 的关键不是“异步执行任务”，而是“把工作流状态持久化下来，再通过 replay 恢复执行上下文”。Orchestrator 负责流程控制，Activity 负责真实副作用，这样系统才能在长流程、失败重试和 Worker 切换下保持可靠。
+
+</details>
