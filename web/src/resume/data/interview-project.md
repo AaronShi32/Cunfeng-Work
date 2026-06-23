@@ -706,3 +706,66 @@ Cosmos DB 对业务暴露的是 **logical partition**，由 partition key 决定
 #### 一句话总结
 
 > Storage 赢在**轻量和托管成本低**，SQL 赢在**能力上限和查询管理能力更强**；选型关键看业务规模和治理诉求。
+
+---
+
+### 3. FCS 有什么技术难点（工作流引擎执行唯一性）
+
+**Q：FCS 里你觉得最有挑战性的技术难点是什么？**
+
+**答：** 我会说是**工作流引擎的"执行唯一性"保障**，这个问题分两层，框架层和业务层，缺一不可。
+
+---
+
+#### 背景
+
+FCS 使用 DurableTask Framework（DTF）做工作流编排，每个 Worker 负责若干个 Partition（控制队列）。  
+我们按 Worker 数量配置 Partition 数量，正常情况下一个 Worker 持有一个 Partition。  
+问题是：**Worker 会挂、会扩容**，这时候同一个 Orchestration（工作流实例）可能被多个 Worker 捡到，执行重复副作用。
+
+---
+
+#### 第一层：框架层 — Azure Blob Lease 保证"谁来调度"
+
+**Azure Blob Lease 是什么：**  
+Blob Lease 是 Azure Storage 原生提供的分布式互斥锁能力。  
+对一个 Blob 对象申请租约后，同一时刻只有一个持有者；持有者必须在 TTL 到期前续租（默认 15 秒，每 10 秒续一次），如果 Worker 宕机停止续租，TTL 到期后锁自动释放，其他 Worker 可以竞争接管。  
+这个能力由 Azure Storage 在存储层保证，不依赖外部协调服务。
+
+**DTF 怎么用 Blob Lease：**
+
+DTF 的 `SafePartitionManager` 把每个 Partition 绑定到一个 Blob 上，Worker 持有 Blob Lease 才能消费对应的控制队列。
+
+- **Worker 宕机**：续租中断 → Lease 约 15 秒后自动过期 → 其他 Worker 竞争 Lease 接管该 Partition
+- **扩容**：`LeaseCollectionBalancer` 检测到 Lease 分布不均 → 触发 Rebalance → 新 Worker 抢占多余 Partition → 原持有者收到 `LeaseLostException` → 立即停止消费
+
+**结论：** 框架层通过 Blob Lease 保证同一时刻一个 Partition 只有一个 Worker 在调度，解决了"谁来执行"的互斥问题。
+
+---
+
+#### 第二层：业务层 — 幂等设计防止"副作用重复产生"
+
+框架保证的是"最多一个 Worker 持有 Partition"，但 DTF 是 at-least-once 语义：  
+Activity 可能在崩溃、重试、Replay 过程中被多次触发，真正的业务逻辑（比如创建 AKS 节点、调用外部 API）必须自己保证幂等。
+
+**我们的三级防护：**
+
+```csharp
+// ① Check-then-Act + OrchestrationInstanceId 作为幂等键
+var existing = await db.GetByIdempotencyKey(ctx.OrchestrationInstance.InstanceId);
+if (existing != null) return existing;
+return await downstream.CreateResource(req, idempotencyKey: instanceId);
+
+// ② DB 唯一约束兜底（Check-then-Act 有竞态窗口时触发）
+// UNIQUE INDEX (orchestration_instance_id, resource_type)
+// catch DuplicateKeyException → 当作幂等成功处理
+
+// ③ Redis 分布式锁（对不支持幂等键的外部 API 按需加）
+await using var _ = await redisLock.AcquireAsync(lockKey, ttl: 60s);
+```
+
+---
+
+#### 一句话收尾
+
+> 框架层（Blob Lease）防"谁来调度"，业务层（幂等三级防护）防"副作用被重复产生"；两层缺一不可，这才是 FCS 工作流可靠性的完整答案。
