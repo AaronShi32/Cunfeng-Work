@@ -54,6 +54,16 @@ function parseSystemDesignSections(md) {
     .filter(s => /^## \d+\./.test(s.trim()));
 }
 
+function parseDetailBlocks(sectionMd) {
+  const blocks = [];
+  const re = /<details>\s*<summary>([\s\S]*?)<\/summary>([\s\S]*?)<\/details>/g;
+  let m;
+  while ((m = re.exec(sectionMd)) !== null) {
+    blocks.push({ summary: m[1].trim(), content: m[2].trim() });
+  }
+  return blocks;
+}
+
 function SystemDesignGrid({ md }) {
   const [openSection, setOpenSection] = useState(null);
   const sections = parseSystemDesignSections(md);
@@ -86,7 +96,6 @@ function SystemDesignGrid({ md }) {
         {sections.map((section, i) => {
           const titleMatch = section.match(/^## \d+\. (.+)/m);
           const title = titleMatch ? titleMatch[1] : `题目 ${i + 1}`;
-          const meta = SYSTEM_DESIGN_META[i] || { tags: [] };
           return (
             <div key={i} className={styles.sdCard} onClick={() => setOpenSection({ section, meta: SYSTEM_DESIGN_META[i] || { title: `题目 ${i + 1}`, tags: [] } })}>
               <div className={styles.sdCardNum}>{i + 1}</div>
@@ -105,16 +114,27 @@ function SystemDesignGrid({ md }) {
         <div className={styles.sdModal} onClick={() => setOpenSection(null)}>
           <div className={styles.sdModalContent} onClick={e => e.stopPropagation()}>
             <div className={styles.sdModalHeader}>
+              <span className={styles.sdModalTitle}>{openSection.meta.title}</span>
               <button className={styles.sdModalClose} onClick={() => setOpenSection(null)}>✕</button>
             </div>
-            <div className={styles.paper}>
-              <ReactMarkdown
-                remarkPlugins={[remarkGfm]}
-                rehypePlugins={[rehypeRaw]}
-                components={MODAL_COMPONENTS}
-              >
-                {openSection.section}
-              </ReactMarkdown>
+            <div className={styles.sdStepsRow}>
+              {parseDetailBlocks(openSection.section).map((block, i) => (
+                <div key={i} className={styles.sdStepCol}>
+                  <div className={styles.sdStepHeader}>
+                    <span className={styles.sdStepNum}>{i + 1}</span>
+                    <span className={styles.sdStepLabel}>{block.summary}</span>
+                  </div>
+                  <div className={styles.sdStepBody}>
+                    <ReactMarkdown
+                      remarkPlugins={[remarkGfm]}
+                      rehypePlugins={[rehypeRaw]}
+                      components={MD_COMPONENTS}
+                    >
+                      {block.content}
+                    </ReactMarkdown>
+                  </div>
+                </div>
+              ))}
             </div>
           </div>
         </div>
