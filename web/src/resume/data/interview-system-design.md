@@ -506,3 +506,35 @@ graph TD
 - **可观测性**：限流命中率、拒绝 QPS、令牌等待时间打点，触发告警
 
 </details>
+
+<details>
+<summary>深挖问题</summary>
+
+**Q1：Rule Service 如何把规则推送到各 Broker？**
+
+三种方案：
+
+| 方案 | 原理 | 特点 |
+|---|---|---|
+| Pull 轮询 | Broker 定期调 Rule Service API 拉规则 | 实现简单，变更最多延迟 30s |
+| Long Polling | Broker 挂起请求，有变更立即返回 | 秒级生效，Rule Service 需维护连接状态 |
+| MQ 广播 | 写 DB 后发消息到 control-plane topic，所有 Broker 订阅 | 解耦彻底，天然多播 |
+
+推荐 **Pull + Push 结合**：Broker 启动时全量拉一次规则（冷启动兜底），之后增量靠 MQ 消息驱动——复用系统内部专用的 `__rate_limit_rules` topic，与业务消息隔离。
+
+---
+
+**Q2：Push to Subscriber 这一步到底是拉还是推？**
+
+名字叫 Push，但主流实现是 **Pull**。
+
+| 模型 | 代表 | 原理 | 优点 | 缺点 |
+|---|---|---|---|---|
+| Pull | Kafka | Subscriber 主动 fetch：`partition=0, offset=100` | 自控消费速度，天然背压；批量拉取吞吐高 | 无消息时空轮询（用 Long Polling 解决） |
+| Push | Google Pub/Sub、RabbitMQ | Broker 主动 POST 到 Subscriber 的 HTTP Endpoint | 延迟低，Subscriber 无需维持长连接 | Subscriber 慢时容易被打垮，Broker 需维护重试状态 |
+
+**对限流的影响**：
+- Pull 场景：限制 Subscriber fetch 的响应速率（漏桶平滑返回）
+- Push 场景：Egress Limiter 控制推送 QPS，超限消息缓冲在 Broker 侧——Push 场景下 Egress Limiter 更关键，因为 Subscriber 没有主动的背压手段，全靠 Broker 自律
+
+</details>
