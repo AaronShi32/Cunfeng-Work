@@ -538,3 +538,100 @@ graph TD
 - Push 场景：Egress Limiter 控制推送 QPS，超限消息缓冲在 Broker 侧——Push 场景下 Egress Limiter 更关键，因为 Subscriber 没有主动的背压手段，全靠 Broker 自律
 
 </details>
+
+---
+
+## 8. 设计一个大规模节点监控系统（类 Coupang Health Monitor）
+
+<details>
+<summary>High-Level 架构图</summary>
+
+```mermaid
+graph TD
+    N1[Node 1] & N2[Node 2] & N3[...1M Nodes] -->|Push 心跳 10s| LB[负载均衡]
+
+    LB --> R1[Receiver 1] & R2[Receiver 2] & R3[Receiver N]
+
+    R1 & R2 & R3 -->|写入| Kafka[(Kafka\npartition by node_id)]
+    R1 & R2 & R3 -->|ZADD score=now+15s| Redis[(Redis ZSet\n心跳超时检测)]
+
+    Kafka -->|流处理| Flink[Flink\n状态异常检测]
+    Kafka -->|写入| TSDB[(InfluxDB\n时序存储)]
+
+    Timer[定时扫描 5s\nZRANGEBYSCORE] -->|读| Redis
+    Timer -->|超时节点| AC
+
+    Flink -->|状态异常| AC[Alert Correlator\n聚合去重抑制]
+    AC -->|触发告警| AM[Alert Manager]
+    AM -->|创建工单| Ticket[PagerDuty / Jira]
+    AM -->|通知| Notify[短信 / 邮件]
+
+    TSDB --> Dash[Grafana Dashboard]
+```
+
+</details>
+
+<details>
+<summary>概述用例和约束</summary>
+
+- 核心用例：百万节点 Push 心跳（10s/次）、检测超时未上报和状态异常、报警触发工单
+- 数量估算：1,000,000 节点 × 1次/10s = **100,000 QPS** 写入；每条 ~200B → 吞吐 20 MB/s
+- 时效约束：异常发现到报警 **< 30s**；误报容忍：连续 miss 2 次（20s）才升级
+- 不需要：日志采集、链路追踪、计费（简化版）
+
+</details>
+
+<details>
+<summary>设计核心组件</summary>
+
+**Push vs Pull**
+
+推荐节点主动 Push：Pull 需要 10 万次/s 并发探测，连接管理复杂；Push 下 Receiver 无状态，水平扩展简单。节点进程崩溃时不会 Push，正好由超时检测覆盖。
+
+---
+
+**超时未上报检测——Redis ZSet 时间轮**
+
+```
+收到心跳：  ZADD heartbeat_zset <now + 15s> <node_id>
+每 5s 扫描：ZRANGEBYSCORE heartbeat_zset 0 <now>
+            → 返回的 node_id = 超时节点 → miss_count++
+收到心跳：  miss_count 重置为 0
+miss_count ≥ 2 → 触发告警
+```
+
+- 100 万节点存 ZSet 内存约 **100MB**，完全可行
+- `ZRANGEBYSCORE` 是 O(log N + M)，5s 一次极轻
+- 心跳到来即 ZADD 更新 score，天然重置 timer
+
+---
+
+**状态异常检测——Flink 流处理**
+
+- Kafka 按 `node_id` 分 partition，保证同一节点消息有序
+- Flink 滚动窗口（30s）统计：CPU > 90%、OOM 标记、响应码异常
+- 窗口内异常比例超阈值 → 发送告警事件到 Alert Correlator
+
+---
+
+**报警聚合与抑制**
+
+| 策略 | 说明 |
+|---|---|
+| 连续 miss ≥ 2 | 避免单次网络抖动误报 |
+| 同 rack/cluster 聚合 | 大规模故障合并为一条告警 |
+| Region 级抑制 | Region 告警触发后屏蔽该 Region 内 node 级告警 |
+| 5 分钟去重 | 同一节点重复告警合并 |
+
+</details>
+
+<details>
+<summary>扩展这个设计</summary>
+
+- **Receiver 扩容**：无状态，LB 后直接加机器，Kafka partition 同步扩
+- **Redis 高可用**：主从 + Sentinel，或 Redis Cluster 按 node_id 分片，单分片压力降至 1/N
+- **历史查询**：InfluxDB 按 node_id + time 索引，支持任意时间段健康趋势查询
+- **自监控（Watchdog）**：独立部署一套轻量监控，专门 watch 这套监控系统的 Receiver / Flink / Redis 存活
+- **心跳协议优化**：UDP 替代 HTTP，丢包率 < 1% 可接受（10s 下次还会来），单机 Receiver 吞吐提升 3-5 倍
+
+</details>

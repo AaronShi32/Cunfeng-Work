@@ -46,6 +46,7 @@ const SYSTEM_DESIGN_META = [
   { title: '任务调度',     tags: ['时间轮', '分布式锁', '任务分片', '失败重试'] },
   { title: '电影院票务',   tags: ['Redis SETNX', '状态机', '选座并发', '支付幂等'] },
   { title: 'PubSub 限流', tags: ['Token Bucket', 'Leaky Bucket', 'Ingress/Egress', '背压传播'] },
+  { title: '节点监控系统', tags: ['100K QPS', 'Redis ZSet', 'Flink', '告警聚合'] },
 ];
 
 function parseSystemDesignSections(md) {
