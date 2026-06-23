@@ -409,10 +409,11 @@
 
 /* ── 系统设计 卡片网格 ── */
 .sdGrid {
-  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
-  gap: 20px;
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  gap: 16px;
   width: 100%;
-  max-width: 1100px;
+  max-width: 1400px;
   box-sizing: border-box;
 }
 
@@ -679,6 +680,11 @@
 }
 
 @media (max-width: 768px) {
+  .sdGrid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 12px;
+  }
+
   .sdModal {
     padding: 0;
     align-items: flex-end;
