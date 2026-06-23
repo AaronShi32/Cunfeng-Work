@@ -207,23 +207,6 @@ flowchart TD
     M --> P[必要时再查 ARM instanceView / logs 排障]
 ```
 
-#### monitor container 做了什么
-
-**答：** 它不是单纯的 sidecar，而是 FCS 自己的健康汇总器。  
-典型配置里会定义：
-
-- `health_monitor_container_name = bundle-collectd-healthcheck`
-- `health_monitor_container_exec_command = cat fcs-healthcheck`
-- `response_key = status`
-- `Healthy -> Ready`
-- `Unhealthy -> Failed`
-
-它内部会做三类检查：
-
-1. **进程检查**：比如 `fcs-healthcheck-monitor`、`collectd`、`fluent-bit` 等  
-2. **HTTP 检查**：比如业务容器 `/health`  
-3. **服务状态落盘 + heartbeat 上报**：把结果写到 `fcs-healthcheck`，并主动发 heartbeat 给 RP
-
 #### 面试时推荐回答
 
 **提问：** Cluster Health 这套技术实现是怎么做的？
