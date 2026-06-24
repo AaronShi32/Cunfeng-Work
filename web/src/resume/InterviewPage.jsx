@@ -16,6 +16,114 @@ import styles from './templates/interview.module.css';
 
 mermaid.initialize({ startOnLoad: false, theme: 'neutral' });
 
+// 把标题文本转成锚点 id（GitHub 风格，保留中文）
+function baseSlug(text) {
+  return String(text)
+    .trim()
+    .toLowerCase()
+    .replace(/\s+/g, '-')
+    .replace(/[^\w\u4e00-\u9fff-]/g, '');
+}
+
+// 去掉标题里的 markdown 行内语法，使其与渲染后的纯文本一致
+function cleanHeadingText(raw) {
+  return String(raw)
+    .replace(/`([^`]*)`/g, '$1')
+    .replace(/\[([^\]]+)\]\([^)]*\)/g, '$1')
+    .replace(/[*_]/g, '')
+    .trim();
+}
+
+// 生成带去重后缀的 slugger（与 rehype 插件保持同样的处理顺序）
+function createSlugger() {
+  const seen = new Map();
+  return (text) => {
+    const slug = baseSlug(text) || 'section';
+    if (seen.has(slug)) {
+      const n = seen.get(slug) + 1;
+      seen.set(slug, n);
+      return `${slug}-${n}`;
+    }
+    seen.set(slug, 0);
+    return slug;
+  };
+}
+
+function hastText(node) {
+  if (node.type === 'text') return node.value || '';
+  if (node.children) return node.children.map(hastText).join('');
+  return '';
+}
+
+// 内联 rehype 插件：给每个标题加上与目录一致的 id
+function rehypeHeadingIds() {
+  return (tree) => {
+    const slug = createSlugger();
+    const walk = (node) => {
+      if (node.type === 'element' && /^h[1-6]$/.test(node.tagName)) {
+        const id = slug(hastText(node));
+        node.properties = node.properties || {};
+        if (!node.properties.id) node.properties.id = id;
+      }
+      if (node.children) node.children.forEach(walk);
+    };
+    walk(tree);
+  };
+}
+
+// 从 markdown 解析出 h2 / h3 标题，生成目录条目
+function buildToc(md) {
+  const slug = createSlugger();
+  const items = [];
+  md.split('\n').forEach((line) => {
+    const m = /^(#{1,6})\s+(.*)$/.exec(line);
+    if (!m) return;
+    const level = m[1].length;
+    const text = cleanHeadingText(m[2]);
+    // 标题 id 必须按文档顺序对所有标题取 slug，才能与正文一致
+    const id = slug(text);
+    if (level === 2 || level === 3) {
+      if (text === '目录') return;
+      items.push({ level, text, id });
+    }
+  });
+  return items;
+}
+
+function DocToc({ md }) {
+  const items = buildToc(md);
+  if (items.length === 0) return null;
+
+  const handleClick = (e, id) => {
+    e.preventDefault();
+    const el = document.getElementById(id);
+    if (el) {
+      el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      if (window.history?.replaceState) {
+        window.history.replaceState(null, '', `#${id}`);
+      }
+    }
+  };
+
+  return (
+    <nav className={styles.toc} aria-label="目录">
+      <div className={styles.tocTitle}>目录</div>
+      <ul className={styles.tocList}>
+        {items.map((item) => (
+          <li
+            key={item.id}
+            className={item.level === 3 ? styles.tocItemSub : styles.tocItem}
+          >
+            <a href={`#${item.id}`} onClick={(e) => handleClick(e, item.id)}>
+              {item.text}
+            </a>
+          </li>
+        ))}
+      </ul>
+    </nav>
+  );
+}
+
 function MermaidBlock({ code }) {
   const ref = useRef(null);
   useEffect(() => {
@@ -187,14 +295,17 @@ export default function InterviewPage() {
       {isSystemDesign ? (
         <SystemDesignGrid md={currentMd} />
       ) : (
-        <div className={styles.paper}>
-          <ReactMarkdown
-            remarkPlugins={[remarkGfm]}
-            rehypePlugins={[rehypeRaw]}
-            components={MD_COMPONENTS}
-          >
-            {currentMd}
-          </ReactMarkdown>
+        <div className={styles.docBody}>
+          <DocToc key={activeDoc} md={currentMd} />
+          <div className={styles.paper}>
+            <ReactMarkdown
+              remarkPlugins={[remarkGfm]}
+              rehypePlugins={[rehypeRaw, rehypeHeadingIds]}
+              components={MD_COMPONENTS}
+            >
+              {currentMd}
+            </ReactMarkdown>
+          </div>
         </div>
       )}
     </div>

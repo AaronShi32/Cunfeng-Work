@@ -2,14 +2,6 @@
 
 ---
 
-## 目录
-
-1. Azure HDInsight — 我在做的产品
-2. Microsoft Fabric — 微软的战略方向
-3. 竞品全景：EMR / Fabric / Databricks
-
----
-
 ## 一、Azure HDInsight — 我在做的产品
 
 ### 1.1 产品定位

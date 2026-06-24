@@ -4,14 +4,6 @@
 
 ---
 
-## 目录
-
-1. [Hilo](#hilo)
-2. [Scout](#scout)
-3. [FCS](#fcs)
-
----
-
 ## Hilo
 
 ### Polling CR status 还是 Watch？一次 Hilo 的技术选型 trade-off
