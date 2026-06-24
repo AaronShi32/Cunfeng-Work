@@ -56,17 +56,6 @@
 4. **Knowledge 层**：`Resources/` 和 `Analyzers/` 存放 schema、TSG、调查模式。  
 5. **数据执行层**：外部 Kusto MCP / Fabric RTI MCP 负责真实查询，Scout 负责“怎么查”和“怎么分析”。
 
-### `main.py` 主要做了什么？
-
-**答：** `main.py` 本质上是 Scout 的 MCP 服务入口，主要做六件事：
-
-1. **启动 MCP Server**：通过 `stdio_server()` 等待宿主连接。  
-2. **加载配置**：读取 server 名称、personas 目录、Kusto 配置、日志级别等。  
-3. **动态加载 persona**：扫描 `Personas/*.md`，提取 name、description、parameters、instructions。  
-4. **动态加载资源**：扫描 `Resources/` 和 `Analyzers/`，注册成可读资源。  
-5. **暴露 MCP 能力**：实现 `list_tools`、`list_resources`、`read_resource`、`call_tool`。  
-6. **处理 persona 调用**：校验参数、识别 persona 中引用的 `scout://resources/...`，自动加载知识并返回完整上下文。
-
 ### LLM 什么时候知道该调用哪个 MCP？
 
 **答：** 不是 Scout 内部硬编码决定的，而是 **MCP host 初始化时做能力发现**。
