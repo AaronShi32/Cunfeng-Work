@@ -12,6 +12,7 @@ import baguMd from './data/interview-bagu.md?raw';
 import internationalMd from './data/interview-international.md?raw';
 import systemDesignMd from './data/interview-system-design.md?raw';
 import xiaomaMd from './data/interview-xiaoma.md?raw';
+import companyMd from './data/interview-company.md?raw';
 import styles from './templates/interview.module.css';
 
 mermaid.initialize({ startOnLoad: false, theme: 'neutral' });
@@ -260,6 +261,7 @@ const DOC_TABS = [
   { key: 'bagu', label: '八股文', md: baguMd },
   { key: 'international', label: '竞品分析', md: internationalMd },
   { key: 'system-design', label: '系统设计', md: systemDesignMd },
+  { key: 'company', label: '公司调研', md: companyMd },
 ];
 
 export default function InterviewPage() {
