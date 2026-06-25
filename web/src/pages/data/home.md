@@ -8,16 +8,6 @@
 
 ---
 
-I'm Shi Cunfeng, a Senior Software Engineer at Microsoft with over 10 years of experience in cloud infrastructure and platform development.
-
-I've worked at two major cloud companies — Microsoft and Alibaba Cloud. At Microsoft, I work on the Fabric and HDInsight container infrastructure platform. I designed the control plane architecture for workload lifecycle management on ACI, which helped reduce compute costs by about 80% through the VM-to-container migration. I also built the observability and DevOps system to keep service availability above 99%.
-
-Before that, at Alibaba Cloud, I spent nearly 7 years on the ECS platform — the equivalent of AWS EC2. I was responsible for the Elastic Network Interface system, cross-AZ instance migration, and large-scale network migration of 600,000+ instances. I also optimized API performance, cutting P90 latency by about 30%.
-
-My core strengths are in distributed systems, container orchestration, control plane design, and stability engineering.
-
----
-
 Hi, thanks for taking the time today. Let me give you a quick intro about myself.
 
 I'm Shi Cunfeng, and I've been working in cloud infrastructure for about 10 years. Right now I'm a Senior Software Engineer at Microsoft, where I build the container platform behind Microsoft Fabric and HDInsight — the control plane that runs workloads on AKS and ACI. We moved a lot of workloads from VMs to containers, which cut compute costs by around 80 percent.
