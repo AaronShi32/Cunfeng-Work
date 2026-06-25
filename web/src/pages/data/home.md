@@ -15,3 +15,13 @@ I've worked at two major cloud companies — Microsoft and Alibaba Cloud. At Mic
 Before that, at Alibaba Cloud, I spent nearly 7 years on the ECS platform — the equivalent of AWS EC2. I was responsible for the Elastic Network Interface system, cross-AZ instance migration, and large-scale network migration of 600,000+ instances. I also optimized API performance, cutting P90 latency by about 30%.
 
 My core strengths are in distributed systems, container orchestration, control plane design, and stability engineering.
+
+---
+
+Hi, thanks for taking the time today. Let me give you a quick intro about myself.
+
+I'm Shi Cunfeng, and I've been working in cloud infrastructure for about 10 years. Right now I'm a Senior Software Engineer at Microsoft, where I build the container platform behind Microsoft Fabric and HDInsight — the control plane that runs workloads on AKS and ACI. We moved a lot of workloads from VMs to containers, which cut compute costs by around 80 percent.
+
+Before that, I spent almost 7 years at Alibaba Cloud on the ECS team — kind of their version of AWS EC2 — mostly working on networking and large-scale instance migration, including moving over 600,000 instances across availability zones with their IPs unchanged.
+
+That's a quick overview of me. I'm happy to talk about any of these in more detail — where would you like to start?
