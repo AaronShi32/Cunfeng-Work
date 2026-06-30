@@ -30,6 +30,58 @@
   letter-spacing: 0.04em;
 }
 
+/* ── Team group divider (浅浅的转组分隔提示) ── */
+.groupDivider {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: 0 0 14px;
+}
+
+.groupDividerSpaced {
+  margin-top: 28px;
+}
+
+.groupLabel {
+  font-size: var(--font-size-small);
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  color: var(--color-blue);
+  white-space: nowrap;
+}
+
+.groupLine {
+  flex: 1;
+  height: 1px;
+  background: linear-gradient(to right, var(--color-beige), transparent);
+  opacity: 0.6;
+}
+
+.groupState {
+  font-size: var(--font-size-xs);
+  font-weight: 500;
+  letter-spacing: 0.04em;
+  color: var(--color-lavender);
+  white-space: nowrap;
+}
+
+.groupStateCurrent {
+  color: var(--color-blue);
+  font-weight: 600;
+}
+
+.groupPlaceholder {
+  font-size: var(--font-size-small);
+  color: var(--color-lavender);
+  margin: 0;
+  padding: 18px 20px;
+  border: 1px dashed var(--color-beige);
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.35);
+  text-align: center;
+  letter-spacing: 0.02em;
+}
+
 .projectGrid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));

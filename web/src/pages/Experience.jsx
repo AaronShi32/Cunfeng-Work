@@ -90,6 +90,12 @@ export default function Experience() {
           <h2 className={exp.companyName}>Microsoft</h2>
         </div>
 
+        <div className={exp.groupDivider}>
+          <span className={exp.groupLabel}>C+AI · Azure Data</span>
+          <span className={exp.groupLine} />
+          <span className={exp.groupState}>原团队</span>
+        </div>
+
         <div className={exp.projectGrid}>
           {MS_PROJECTS.map((p) => (
             <div key={p.key} className={`${exp.projectCard} ${anim.animateCard}`}>
@@ -109,6 +115,13 @@ export default function Experience() {
             </div>
           ))}
         </div>
+
+        <div className={`${exp.groupDivider} ${exp.groupDividerSpaced}`}>
+          <span className={exp.groupLabel}>E+D · M365</span>
+          <span className={exp.groupLine} />
+          <span className={`${exp.groupState} ${exp.groupStateCurrent}`}>现团队</span>
+        </div>
+        <p className={exp.groupPlaceholder}>新组项目筹备中 · 敬请期待</p>
       </section>
 
       {/* Alibaba */}
