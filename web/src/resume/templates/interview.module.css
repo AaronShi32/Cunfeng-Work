@@ -123,6 +123,12 @@
   padding: 0;
 }
 
+.tocSubList {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
 .tocItem,
 .tocItemSub {
   margin: 2px 0;

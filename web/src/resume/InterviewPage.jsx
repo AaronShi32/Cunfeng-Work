@@ -93,9 +93,22 @@ function buildToc(md) {
 
 function DocToc({ md }) {
   const items = buildToc(md);
-  // 只保留问题（h2），用数字编号
-  const questions = items.filter((item) => item.level === 2);
-  if (questions.length === 0) return null;
+  if (items.length === 0) return null;
+
+  // 构建二级目录：h2 作为分组标题，h3 中以数字开头的作为问题条目
+  const sections = [];
+  let current = null;
+  items.forEach((item) => {
+    if (item.level === 2) {
+      current = { ...item, children: [] };
+      sections.push(current);
+    } else if (item.level === 3 && current && /^\d+\./.test(item.text)) {
+      current.children.push(item);
+    }
+  });
+
+  // 如果没有任何 h3 问题条目，回退展示所有 h2
+  const hasQuestions = sections.some((s) => s.children.length > 0);
 
   const handleClick = (e, id) => {
     e.preventDefault();
@@ -112,13 +125,32 @@ function DocToc({ md }) {
     <nav className={styles.toc} aria-label="目录">
       <div className={styles.tocTitle}>目录</div>
       <ul className={styles.tocList}>
-        {questions.map((item, idx) => (
-          <li key={item.id} className={styles.tocItem}>
-            <a href={`#${item.id}`} onClick={(e) => handleClick(e, item.id)}>
-              {idx + 1}. {item.text}
-            </a>
-          </li>
-        ))}
+        {hasQuestions
+          ? sections.map((section) => (
+              <li key={section.id} className={styles.tocItem}>
+                <a href={`#${section.id}`} onClick={(e) => handleClick(e, section.id)}>
+                  {section.text}
+                </a>
+                {section.children.length > 0 && (
+                  <ul className={styles.tocSubList}>
+                    {section.children.map((q) => (
+                      <li key={q.id} className={styles.tocItemSub}>
+                        <a href={`#${q.id}`} onClick={(e) => handleClick(e, q.id)}>
+                          {q.text}
+                        </a>
+                      </li>
+                    ))}
+                  </ul>
+                )}
+              </li>
+            ))
+          : sections.map((item, idx) => (
+              <li key={item.id} className={styles.tocItem}>
+                <a href={`#${item.id}`} onClick={(e) => handleClick(e, item.id)}>
+                  {idx + 1}. {item.text}
+                </a>
+              </li>
+            ))}
       </ul>
     </nav>
   );
