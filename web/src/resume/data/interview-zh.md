@@ -1,6 +1,6 @@
 # 技术难点
 
-## 1. HDI 网络模型：Inbound / Outbound / ESP / BYO VNet
+## HDI 网络模型：Inbound / Outbound / ESP / BYO VNet
 
 > 体现 PaaS 如何通过网络流量管控和灵活部署拓扑，满足不同企业客户的合规与安全要求。
 
@@ -52,7 +52,7 @@ HDI 的网络管控分四个维度：Inbound 控管理服务的入站访问（NS
 
 ---
 
-## 2. FCS 启动速度优化：ACI → Image Cache → Pool
+## FCS 启动速度优化：ACI → Image Cache → Pool
 
 > 从 10 分钟级冷启动到分钟内就绪，三代优化方案的演进路径。
 
@@ -106,7 +106,7 @@ FCS 的启动优化经历了三代：从 ACI 冷拉镜像（10 分钟），到 I
 
 ---
 
-## 3. Scout Agent 诊断稳定性
+## Scout Agent 诊断稳定性
 
 > 让 AI 诊断工具在生产环境中真正可信、可用，而不是只能演示。
 
