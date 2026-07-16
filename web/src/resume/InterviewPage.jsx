@@ -102,7 +102,7 @@ function DocToc({ md }) {
     if (item.level === 2) {
       current = { ...item, children: [] };
       sections.push(current);
-    } else if (item.level === 3 && current && /^\d+\./.test(item.text)) {
+    } else if (item.level === 3 && current && /^(\d+\.|[一二三四五六七八九十]+[、.])/.test(item.text)) {
       current.children.push(item);
     }
   });
