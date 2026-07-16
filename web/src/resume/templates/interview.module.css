@@ -647,26 +647,23 @@
   color: #22223b;
 }
 
-/* 横向步骤行 — 各列等宽，整体横向滚动兜底 */
-.sdStepsRow {
+/* 横向步骤行 — 改为纵向从上到下展示 */
+.sdStepsCol {
   display: flex;
+  flex-direction: column;
   flex: 1;
-  overflow-x: auto;
-  overflow-y: hidden;
+  overflow-y: auto;
   -webkit-overflow-scrolling: touch;
 }
 
-.sdStepCol {
-  flex: 1 0 240px;
+.sdStepRow {
   display: flex;
   flex-direction: column;
-  border-right: 1px solid #f0ebe8;
-  min-width: 0;
-  overflow: hidden;
+  border-bottom: 1px solid #f0ebe8;
 }
 
-.sdStepCol:last-child {
-  border-right: none;
+.sdStepRow:last-child {
+  border-bottom: none;
 }
 
 .sdStepHeader {
@@ -798,12 +795,7 @@
     max-height: 90vh;
   }
 
-  .sdStepsRow {
-    overflow-x: auto;
-    overflow-y: hidden;
-  }
-
-  .sdStepCol {
-    flex: 0 0 80vw;
+  .sdStepsCol {
+    overflow-y: auto;
   }
 }

@@ -93,7 +93,9 @@ function buildToc(md) {
 
 function DocToc({ md }) {
   const items = buildToc(md);
-  if (items.length === 0) return null;
+  // 只保留问题（h2），用数字编号
+  const questions = items.filter((item) => item.level === 2);
+  if (questions.length === 0) return null;
 
   const handleClick = (e, id) => {
     e.preventDefault();
@@ -110,13 +112,10 @@ function DocToc({ md }) {
     <nav className={styles.toc} aria-label="目录">
       <div className={styles.tocTitle}>目录</div>
       <ul className={styles.tocList}>
-        {items.map((item) => (
-          <li
-            key={item.id}
-            className={item.level === 3 ? styles.tocItemSub : styles.tocItem}
-          >
+        {questions.map((item, idx) => (
+          <li key={item.id} className={styles.tocItem}>
             <a href={`#${item.id}`} onClick={(e) => handleClick(e, item.id)}>
-              {item.text}
+              {idx + 1}. {item.text}
             </a>
           </li>
         ))}
@@ -227,9 +226,9 @@ function SystemDesignGrid({ md }) {
               <span className={styles.sdModalTitle}>{openSection.meta.title}</span>
               <button className={styles.sdModalClose} onClick={() => setOpenSection(null)}>✕</button>
             </div>
-            <div className={styles.sdStepsRow}>
+            <div className={styles.sdStepsCol}>
               {parseDetailBlocks(openSection.section).map((block, i) => (
-                <div key={i} className={styles.sdStepCol}>
+                <div key={i} className={styles.sdStepRow}>
                   <div className={styles.sdStepHeader}>
                     <span className={styles.sdStepNum}>{i + 1}</span>
                     <span className={styles.sdStepLabel}>{block.summary}</span>
