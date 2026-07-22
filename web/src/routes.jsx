@@ -6,6 +6,7 @@ const routes = [
   { path: '/experience', element: <Experience /> },
   { path: '/resume', element: <Resume /> },
   { path: '/interview', element: <Interview /> },
+  { path: '/shangan', element: <Interview defaultDoc="shangan" /> },
   { path: '/learn', element: <Learn /> },
   { path: '/links', element: <Links /> },
 ];

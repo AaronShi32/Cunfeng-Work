@@ -13,6 +13,7 @@ import internationalMd from './data/interview-international.md?raw';
 import systemDesignMd from './data/interview-system-design.md?raw';
 import xiaomaMd from './data/interview-xiaoma.md?raw';
 import companyMd from './data/interview-company.md?raw';
+import shanganMd from './data/interview-shangan.md?raw';
 import styles from './templates/interview.module.css';
 
 mermaid.initialize({ startOnLoad: false, theme: 'neutral' });
@@ -293,11 +294,12 @@ const DOC_TABS = [
   { key: 'international', label: '竞品分析', md: internationalMd },
   { key: 'system-design', label: '系统设计', md: systemDesignMd },
   { key: 'company', label: '公司调研', md: companyMd },
+  { key: 'shangan', label: '自然资源部信息中心', md: shanganMd },
 ];
 
-export default function InterviewPage() {
+export default function InterviewPage({ defaultDoc = 'general' }) {
   const navigate = useNavigate();
-  const [activeDoc, setActiveDoc] = useState('general');
+  const [activeDoc, setActiveDoc] = useState(defaultDoc);
 
   const currentMd = DOC_TABS.find((t) => t.key === activeDoc)?.md ?? interviewMd;
   const isSystemDesign = activeDoc === 'system-design';
