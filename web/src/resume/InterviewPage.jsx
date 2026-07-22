@@ -294,14 +294,18 @@ const DOC_TABS = [
   { key: 'international', label: '竞品分析', md: internationalMd },
   { key: 'system-design', label: '系统设计', md: systemDesignMd },
   { key: 'company', label: '公司调研', md: companyMd },
+];
+
+// 自然资源部信息中心专属 tab（后续可继续在此扩展）
+export const SHANGAN_TABS = [
   { key: 'shangan', label: '自然资源部信息中心', md: shanganMd },
 ];
 
-export default function InterviewPage({ defaultDoc = 'general' }) {
+export default function InterviewPage({ tabs = DOC_TABS }) {
   const navigate = useNavigate();
-  const [activeDoc, setActiveDoc] = useState(defaultDoc);
+  const [activeDoc, setActiveDoc] = useState(tabs[0]?.key ?? 'general');
 
-  const currentMd = DOC_TABS.find((t) => t.key === activeDoc)?.md ?? interviewMd;
+  const currentMd = tabs.find((t) => t.key === activeDoc)?.md ?? tabs[0]?.md;
   const isSystemDesign = activeDoc === 'system-design';
 
   return (
@@ -315,7 +319,7 @@ export default function InterviewPage({ defaultDoc = 'general' }) {
           ← 返回
         </button>
         <div className={styles.docTabs}>
-          {DOC_TABS.map((tab) => (
+          {tabs.map((tab) => (
             <button
               key={tab.key}
               className={`${styles.docTab} ${activeDoc === tab.key ? styles.docTabActive : ''}`}
