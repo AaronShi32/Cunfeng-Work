@@ -1,7 +1,257 @@
-/* Learn page – placeholder */
-.placeholder {
-  text-align: center;
+.workspace {
+  display: grid;
+  grid-template-columns: 220px minmax(0, 1fr);
+  gap: 24px;
+  align-items: start;
+  text-align: left;
+}
+
+.library {
+  position: sticky;
+  top: 24px;
+  padding: 18px;
+  border: 1px solid var(--color-beige);
+  border-radius: 14px;
+  background: rgba(255, 255, 255, 0.65);
+  box-shadow: var(--card-shadow);
+}
+
+.libraryHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 14px;
+  color: var(--color-navy);
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.noteCount {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 22px;
+  height: 22px;
+  border-radius: 999px;
+  background: var(--color-shell);
+  color: var(--color-blue);
+  font-size: 11px;
+}
+
+.noteList {
+  display: grid;
+  gap: 8px;
+}
+
+.noteButton {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  width: 100%;
+  padding: 13px;
+  border: 1px solid transparent;
+  border-radius: 10px;
+  background: transparent;
+  color: var(--color-blue);
+  font-family: inherit;
+  text-align: left;
+  cursor: pointer;
+  transition: var(--transition-fast);
+}
+
+.noteButton:hover {
+  background: rgba(242, 233, 228, 0.6);
+}
+
+.noteButton:focus-visible {
+  outline: 2px solid var(--color-blue);
+  outline-offset: 2px;
+}
+
+.noteButtonActive {
+  border-color: var(--color-beige);
+  background: var(--color-shell);
+}
+
+.noteButton strong {
+  color: var(--color-navy);
+  font-size: 13px;
+  line-height: 1.45;
+}
+
+.noteCategory {
   color: var(--color-lavender);
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.noteDetail {
+  color: var(--color-lavender);
+  font-size: 10px;
+}
+
+.article {
+  overflow: hidden;
+  border: 1px solid var(--color-beige);
+  border-radius: 16px;
+  background: #fff;
+  box-shadow: var(--card-shadow);
+}
+
+.articleHeader {
+  padding: 34px 40px 30px;
+  border-bottom: 1px solid var(--color-shell);
+  background: linear-gradient(135deg, rgba(242, 233, 228, 0.7), rgba(255, 255, 255, 0.95));
+}
+
+.articleHeader > span {
+  color: var(--color-lavender);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.articleHeader h2 {
+  margin: 8px 0 10px;
+  color: var(--color-navy);
+  font-size: 28px;
+  letter-spacing: -0.025em;
+}
+
+.articleHeader p {
+  margin: 0;
+  color: var(--color-blue);
+  font-size: 14px;
+  line-height: 1.7;
+}
+
+.markdown {
+  padding: 34px 40px 44px;
+  color: var(--color-blue);
+  font-size: 14px;
+  line-height: 1.8;
+}
+
+.markdown h2 {
+  margin: 40px 0 18px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid var(--color-shell);
+  color: var(--color-navy);
+  font-size: 21px;
+}
+
+.markdown h2:first-child {
+  margin-top: 0;
+}
+
+.markdown h3 {
+  margin: 28px 0 10px;
+  color: var(--color-navy);
   font-size: 16px;
-  padding: 120px 24px;
+  line-height: 1.55;
+}
+
+.markdown p {
+  margin: 10px 0;
+}
+
+.markdown ul,
+.markdown ol {
+  margin: 10px 0;
+  padding-left: 24px;
+}
+
+.markdown li {
+  margin: 6px 0;
+}
+
+.markdown strong {
+  color: var(--color-navy);
+}
+
+.markdown a {
+  color: var(--color-blue);
+  text-decoration-color: var(--color-beige);
+  text-underline-offset: 3px;
+}
+
+.markdown hr {
+  margin: 34px 0;
+  border: 0;
+  border-top: 1px solid var(--color-shell);
+}
+
+.markdown blockquote {
+  margin: 18px 0;
+  padding: 12px 18px;
+  border-left: 3px solid var(--color-beige);
+  background: #faf8f7;
+}
+
+.markdown pre {
+  overflow-x: auto;
+  padding: 16px;
+  border-radius: 8px;
+  background: var(--color-navy);
+  color: var(--color-shell);
+  font-size: 12px;
+  line-height: 1.6;
+}
+
+.markdown code {
+  font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, monospace;
+}
+
+.markdown :not(pre) > code {
+  padding: 2px 5px;
+  border-radius: 4px;
+  background: var(--color-shell);
+  color: var(--color-navy);
+  font-size: 0.9em;
+}
+
+.markdown table {
+  display: block;
+  width: 100%;
+  overflow-x: auto;
+  border-collapse: collapse;
+}
+
+.markdown th,
+.markdown td {
+  padding: 9px 12px;
+  border: 1px solid var(--color-shell);
+  text-align: left;
+}
+
+.markdown th {
+  background: #faf8f7;
+  color: var(--color-navy);
+}
+
+@media (max-width: 768px) {
+  .workspace {
+    grid-template-columns: 1fr;
+  }
+
+  .library {
+    position: static;
+  }
+
+  .noteList {
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  }
+
+  .articleHeader,
+  .markdown {
+    padding-right: 24px;
+    padding-left: 24px;
+  }
+
+  .articleHeader h2 {
+    font-size: 23px;
+  }
 }

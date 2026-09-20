@@ -6,37 +6,45 @@ Run all commands from `web/`:
 
 ```bash
 npm install        # install dependencies
-npm run dev        # start the Vite dev server
+npm run dev        # Vite dev server at http://localhost:5173
 npm run build      # production build -> web/dist/
 npm run lint       # ESLint across the app
 npm run preview    # preview the production build locally
 ```
 
-There is currently **no automated test framework configured**, so there is no full-suite or single-test command to run.
+No automated test framework is configured.
 
-## High-level architecture
+## Architecture
 
-This repository is a **personal portfolio SPA** built with **React 19 + Vite** and deployed to **Azure Static Web Apps**.
+This repository is a personal portfolio SPA built with React 19 and Vite 6.
 
-- `src/main.jsx` is the bootstrap entry: it loads global CSS (`theme.css`, `index.css`, `@xyflow/react` styles) and renders `App` in `React.StrictMode`.
-- `src/App.jsx` wires `react-router-dom` v6 to the centralized route table in `src/routes.jsx`. New top-level pages should be added there.
-- `src/pages/` contains one route component per experience/project area. Both `src/pages/index.js` and `src/components/index.js` are barrel files and are the preferred import surface.
-- Shared UI is composed from reusable primitives: `PageLayout` for the page shell, `ProjectCard` for navigation cards, `TechStackBar`/`Footer` for repeated sections, and `ZoomableImageModal` for architecture diagram lightboxes.
-- `src/resume/` is a small content pipeline: Markdown files in `data/` are imported with `?raw`, parsed by `utils/parseResume.js`, and rendered by the resume template components. Update the Markdown content before changing the template.
-- `public/blog/` is served as static content outside the SPA router. `staticwebapp.config.json` keeps `/blog/*` excluded from the `/index.html` fallback rewrite.
+- Entry flow: `index.html` -> `src/main.jsx` -> `src/App.jsx` -> `src/routes.jsx`.
+- `src/routes.jsx` is the centralized route table. Add new top-level pages there.
+- Routes: `/`, `/experience`, `/resume`, `/interview`, `/learn`, and `/links`.
+- `App` uses `BrowserRouter` with `import.meta.env.BASE_URL`, which supports the GitHub Pages project base path.
+- `src/pages/` contains route-level experiences and project pages.
+- `src/components/` contains shared UI such as `PageLayout`, `ProjectCard`, `SiteTabs`, `TechStackBar`, `Footer`, and `ZoomableImageModal`.
+- `src/pages/index.js` and `src/components/index.js` are the preferred import surfaces.
+- Learning notes are Markdown files in `src/pages/data/` registered in `src/pages/Learn.jsx`.
+- Resume and interview content flows from `src/resume/data/*.md` through `src/resume/utils/parseResume.js` into the template components. PDF export lives in `src/resume/utils/exportPdf.js`.
+- `public/blog/` is static content served outside the SPA routes.
 
-## Key conventions
+## Conventions
 
-- **JSX + ES modules only**: this app is plain React JSX, not TypeScript.
-- **Prefer barrel imports**: import from `../components` or `../pages` instead of reaching into individual component files unless necessary.
-- **Data-driven page composition**: pages like `Home.jsx` and `Microsoft.jsx` define `PROJECTS` / `TECHS` arrays near the top of the file and map them into cards or badges.
-- **Chinese UI copy is intentional**: labels such as `返回`, `工作项目经历`, and project descriptions should stay consistent with the current Chinese-first presentation.
-- **ProjectCard descriptions allow small HTML snippets**: many descriptions use `<br/>` inside strings and rely on `dangerouslySetInnerHTML` in `ProjectCard`. Preserve that pattern when editing card text.
-- **Asset usage is import-based**: local images and diagrams are imported as modules from `img/` so Vite can bundle them correctly.
-- **Resume/interview content is content-first**: edit `src/resume/data/*.md` for resume wording rather than hardcoding content into JSX.
-- **Home page has a hidden navigation affordance**: tapping the title 5 times within 2 seconds reveals links to `/resume` and `/interview`.
+- Use JSX and ES modules; do not introduce TypeScript.
+- Prefer barrel imports from `../components` or `../pages`.
+- Keep page composition data-driven: define project and technology arrays near the top of the page and map them into components.
+- Preserve the Chinese-first UI copy.
+- Keep `<br/>` snippets in `ProjectCard` descriptions; the component intentionally renders them as HTML.
+- Import local images and diagrams as modules from `img/` so Vite bundles them.
+- Edit `src/resume/data/*.md` for resume or interview wording instead of hardcoding content in JSX.
+- Use the existing CSS Modules pattern for component-scoped styles; global variables belong in `src/styles/theme.css`.
+- Preserve the hidden Home navigation: tapping the title five times within two seconds reveals `/resume` and `/interview`.
 
 ## Deployment
 
-- The production artifact is `web/dist/`.
-- Azure Static Web Apps handles SPA fallback to `/index.html`, with `/blog/*` excluded so the static blog remains directly reachable.
+- GitHub Actions workflow: `.github/workflows/deploy-pages.yml`.
+- Production artifact: `web/dist/`.
+- Production base path: `/Cunfeng-Work/`; development remains at `/`.
+- The workflow copies `index.html` to `404.html` for SPA fallback.
+- Static blog files remain under `/blog/*`; the workflow rewrites their absolute paths for the GitHub Pages project site.

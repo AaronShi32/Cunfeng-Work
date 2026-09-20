@@ -4,9 +4,9 @@ Personal portfolio showcasing my professional experience in cloud infrastructure
 
 ## Live Demo
 
-🌐 **[View Portfolio](https://purple-wave-05139c403.2.azurestaticapps.net)**
+🌐 **[View Portfolio](https://aaronshi32.github.io/Cunfeng-Work/)**
 
-📝 **[Blog (2016-2018)](https://purple-wave-05139c403.2.azurestaticapps.net/blog/index.html)**
+📝 **[Blog (2016-2018)](https://aaronshi32.github.io/Cunfeng-Work/blog/index.html)**
 
 ## Overview
 
