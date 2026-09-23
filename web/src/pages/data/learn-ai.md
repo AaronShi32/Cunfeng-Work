@@ -25,3 +25,12 @@
 期间 Agent 还会完成上下文压缩，权限管理，错误恢复等任务（Harness）
 
 ### Q3: Agent 如何选择执行哪个工具
+
+Agent 只负责打包注册工具，LLM 专做意图决策，描述定方向，兜底看反馈，反复出错必是 Prompt 的锅
+
+ToolRegistry(名称，描述，参数) -> Agent 把对话历史 + 全量工具定义传给 LLM -> LLM 返回 tool_calls (Function Calling 协议) -> Agent 负责调用工具 -> 工具结果回填给对话历史再传给 LLM -> LLM 生成最新的结果返回给用户
+
+工具报错 -> LLM 在收到回填结果的时候会判断重试或者其他 Action
+如果工具一直报错 -> 工具定义有歧义，需要优化 Prompt
+
+### Q4: ReAct 和 COT 区别是什么
