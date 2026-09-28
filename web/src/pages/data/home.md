@@ -8,14 +8,8 @@
 
 ---
 
-Hi, thanks for taking the time today. Let me give you a quick intro about myself.
-
-I'm Shi Cunfeng, and I've been working in cloud infrastructure for about 10 years. Right now I'm a Senior Software Engineer at Microsoft, where I build the container platform behind Microsoft Fabric and HDInsight — the control plane that runs workloads on AKS and ACI. We moved a lot of workloads from VMs to containers, which cut compute costs by around 80 percent.
+I'm Cunfeng, and I've been working in cloud infrastructure for about 10 years. Right now I'm a Senior Software Engineer at Microsoft, where I build the container platform behind Microsoft Fabric and HDInsight — the control plane that runs workloads on AKS and ACI. We moved a lot of workloads from VMs to containers, which cut compute costs by around 80 percent.
 
 Before that, I spent almost 7 years at Alibaba Cloud on the ECS team — kind of their version of AWS EC2 — mostly working on networking and large-scale instance migration, including moving over 600,000 instances across availability zones with their IPs unchanged.
 
 That's a quick overview of me. I'm happy to talk about any of these in more detail — where would you like to start?
-
----
-
-Hi everyone, I'm Cunfeng, very excited to join the team. I've been working in cloud infrastructure for around 10 years. Before joining you, I was at Azure Data, working on the container platform behind Microsoft Fabric and HDInsight. Outside of work, I enjoy traveling with my family and playing sports. Substrate WLM is a new challenge for me, and I'm really happy to be here and looking forward to working with all of you.
