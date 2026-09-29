@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import { PageLayout, ZoomableImageModal } from '../components';
-import layout from '../styles/layout.module.css';
 import anim from '../styles/animation.module.css';
 import exp from '../styles/experience.module.css';
 
@@ -9,6 +8,7 @@ import asiImage from '../../img/ASI/ASI-2026-01-20-1022.png';
 import scoutImage from '../../img/Scout/Scout-2026-01-20-1022.png';
 import fcsImage from '../../img/FCS/FCS-2026-01-20-1331.png';
 import notebookImage from '../../img/Fabric/Notebook-RetriableSession-2025-09-04-1233.png';
+import idoImage from '../../img/IDO/IDO-System-Design-Overview.svg';
 
 /* ── SVG Icons (monochrome, currentColor) ── */
 const IconDatabase = () => (
@@ -46,6 +46,11 @@ const IconShuffle = () => (
     <polyline points="16 3 21 3 21 8" /><line x1="4" y1="20" x2="21" y2="3" /><polyline points="21 16 21 21 16 21" /><line x1="15" y1="15" x2="21" y2="21" /><line x1="4" y1="4" x2="9" y2="9" />
   </svg>
 );
+const IconWorkflow = () => (
+  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <rect x="3" y="3" width="6" height="6" rx="1" /><rect x="15" y="15" width="6" height="6" rx="1" /><path d="M9 6h3a3 3 0 013 3v6" /><polyline points="12 12 15 15 18 12" />
+  </svg>
+);
 
 const MS_PROJECTS = [
   { key: 'hdi', icon: <IconDatabase />, title: 'HDInsight', desc: 'Azure HDInsight 大数据分析平台', image: hdiImage },
@@ -53,6 +58,17 @@ const MS_PROJECTS = [
   { key: 'scout', icon: <IconSearch />, title: 'Scout', desc: 'AI-AzureData 智能分析引擎', image: scoutImage },
   { key: 'fcs', icon: <IconBox />, title: 'Fabric Container Service', desc: 'Microsoft Fabric 容器服务管理平台', image: fcsImage },
   { key: 'notebook', icon: <IconFileText />, title: 'Fabric Notebook', desc: 'Microsoft Fabric Notebook 服务', image: notebookImage },
+];
+
+const M365_PROJECTS = [
+  {
+    key: 'ido',
+    icon: <IconWorkflow />,
+    title: 'IDO',
+    desc: 'Inorganic Demand Orchestrator：面向大规模资源需求的安全、可审计 rollout 控制平面。',
+    image: idoImage,
+    imageAlt: 'IDO system design and technical architecture overview',
+  },
 ];
 
 const ALI_PROJECTS = [
@@ -107,9 +123,9 @@ export default function Experience() {
               {p.image && (
                 <img
                   src={p.image}
-                  alt={p.title}
+                  alt={p.imageAlt || p.title}
                   className={exp.cardImage}
-                  onClick={() => setModalImage({ src: p.image, alt: p.title })}
+                  onClick={() => setModalImage({ src: p.image, alt: p.imageAlt || p.title })}
                 />
               )}
             </div>
@@ -121,7 +137,23 @@ export default function Experience() {
           <span className={exp.groupLine} />
           <span className={`${exp.groupState} ${exp.groupStateCurrent}`}>现团队</span>
         </div>
-        <p className={exp.groupPlaceholder}>新组项目筹备中 · 敬请期待</p>
+        <div className={exp.projectGrid}>
+          {M365_PROJECTS.map((p) => (
+            <div key={p.key} className={`${exp.projectCard} ${anim.animateCard}`}>
+              <div className={exp.cardHeader}>
+                <span className={exp.cardIcon}>{p.icon}</span>
+                <h3 className={exp.cardTitle}>{p.title}</h3>
+              </div>
+              <p className={exp.cardDesc}>{p.desc}</p>
+              <img
+                src={p.image}
+                alt={p.imageAlt || p.title}
+                className={exp.cardImage}
+                onClick={() => setModalImage({ src: p.image, alt: p.imageAlt || p.title })}
+              />
+            </div>
+          ))}
+        </div>
       </section>
 
       {/* Alibaba */}
