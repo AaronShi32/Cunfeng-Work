@@ -54,3 +54,9 @@ ToolRegistry(名称，描述，参数) -> Agent 把对话历史 + 全量工具�
 - 该模式适合复杂任务（>=5步），简单任务（<=3步）直接 ReAct 就解决了，规划本身就有开销
 
 ### Q7: Multi-Agent 是如何协作的？
+
+- 模式: Orchestrator 编排器模式，Handoff 模式，Pipeline 模式
+- 和单 Agent 怎么选: 跨领域知识，单 Agent Context 装不下时候，适合 Multi-Agent，反之，单 Agent + 工具即可，节省协调成本
+- 快速选择: 需要动态拆任务、并行协作并统一汇总：选 Orchestrator。需要根据当前任务把控制权转给某个专家 Agent：选 Handoff。任务有稳定、固定的处理步骤：选 Pipeline。
+
+简单说：Orchestrator 负责调度，Handoff 负责转交，Pipeline 负责按序处理。 这几种方式也可以组合使用，例如由 Orchestrator 组织整体任务，其中某一步采用 Pipeline，遇到专业问题时再 Handoff 给专家 Agent。
