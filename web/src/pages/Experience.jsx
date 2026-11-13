@@ -3,11 +3,11 @@ import { PageLayout, ZoomableImageModal } from '../components';
 import anim from '../styles/animation.module.css';
 import exp from '../styles/experience.module.css';
 
-import hdiImage from '../../img/HDI/HDI-2025-09-04-1233.png';
-import asiImage from '../../img/ASI/ASI-2026-01-20-1022.png';
-import scoutImage from '../../img/Scout/Scout-2026-01-20-1022.png';
+import hdiImage from '../../img/HDI/HDI-System-Overview.svg';
+import asiImage from '../../img/ASI/ASI-System-Overview.svg';
+import scoutImage from '../../img/Scout/Scout-System-Overview.svg';
 import fcsImage from '../../img/FCS/FCS-2026-01-20-1331.png';
-import notebookImage from '../../img/Fabric/Notebook-RetriableSession-2025-09-04-1233.png';
+import notebookImage from '../../img/Fabric/Notebook-RetriableSession-Overview.svg';
 import idoImage from '../../img/IDO/IDO-System-Design-Overview.svg';
 
 /* ── SVG Icons (monochrome, currentColor) ── */
@@ -107,32 +107,6 @@ export default function Experience() {
         </div>
 
         <div className={exp.groupDivider}>
-          <span className={exp.groupLabel}>C+AI · Azure Data</span>
-          <span className={exp.groupLine} />
-          <span className={exp.groupState}>原团队</span>
-        </div>
-
-        <div className={exp.projectGrid}>
-          {MS_PROJECTS.map((p) => (
-            <div key={p.key} className={`${exp.projectCard} ${anim.animateCard}`}>
-              <div className={exp.cardHeader}>
-                <span className={exp.cardIcon}>{p.icon}</span>
-                <h3 className={exp.cardTitle}>{p.title}</h3>
-              </div>
-              <p className={exp.cardDesc}>{p.desc}</p>
-              {p.image && (
-                <img
-                  src={p.image}
-                  alt={p.imageAlt || p.title}
-                  className={exp.cardImage}
-                  onClick={() => setModalImage({ src: p.image, alt: p.imageAlt || p.title })}
-                />
-              )}
-            </div>
-          ))}
-        </div>
-
-        <div className={`${exp.groupDivider} ${exp.groupDividerSpaced}`}>
           <span className={exp.groupLabel}>E+D · M365</span>
           <span className={exp.groupLine} />
           <span className={`${exp.groupState} ${exp.groupStateCurrent}`}>现团队</span>
@@ -151,6 +125,31 @@ export default function Experience() {
                 className={exp.cardImage}
                 onClick={() => setModalImage({ src: p.image, alt: p.imageAlt || p.title })}
               />
+            </div>
+          ))}
+        </div>
+
+        <div className={`${exp.groupDivider} ${exp.groupDividerSpaced}`}>
+          <span className={exp.groupLabel}>C+AI · Azure Data</span>
+          <span className={exp.groupLine} />
+          <span className={exp.groupState}>原团队</span>
+        </div>
+        <div className={exp.projectGrid}>
+          {MS_PROJECTS.map((p) => (
+            <div key={p.key} className={`${exp.projectCard} ${anim.animateCard}`}>
+              <div className={exp.cardHeader}>
+                <span className={exp.cardIcon}>{p.icon}</span>
+                <h3 className={exp.cardTitle}>{p.title}</h3>
+              </div>
+              <p className={exp.cardDesc}>{p.desc}</p>
+              {p.image && (
+                <img
+                  src={p.image}
+                  alt={p.imageAlt || p.title}
+                  className={exp.cardImage}
+                  onClick={() => setModalImage({ src: p.image, alt: p.imageAlt || p.title })}
+                />
+              )}
             </div>
           ))}
         </div>

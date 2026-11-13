@@ -1,7 +1,7 @@
 .pageDark {
   font-family: var(--font-family);
   min-height: 100vh;
-  background: #fafafa;
+  background: #f7f8f9;
   padding: var(--page-padding);
 }
 
@@ -115,7 +115,7 @@
 
 .archImage:hover {
   transform: scale(1.02);
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+  box-shadow: 0 8px 24px rgba(41, 43, 48, 0.15);
 }
 
 .archHint {

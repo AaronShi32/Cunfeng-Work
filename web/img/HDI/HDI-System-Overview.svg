@@ -1,0 +1,63 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="900" viewBox="0 0 1600 900" role="img" aria-labelledby="title description">
+  <title id="title">Azure HDInsight system overview</title>
+  <desc id="description">A high-level HDInsight architecture showing client access, management, customer VNet cluster nodes, security boundaries, and connected storage services.</desc>
+  <defs>
+    <linearGradient id="background" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#fafafa"/><stop offset="1" stop-color="#eaf0f2"/></linearGradient>
+    <linearGradient id="cluster" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#e9eef1"/><stop offset="1" stop-color="#e5ecec"/></linearGradient>
+    <filter id="shadow" x="-20%" y="-20%" width="140%" height="140%"><feDropShadow dx="0" dy="7" stdDeviation="10" flood-color="#292b30" flood-opacity=".10"/></filter>
+    <marker id="arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0 10 5 0 10z" fill="#6f8c84"/></marker>
+    <style>
+      .heading{font:700 42px 'Segoe UI',Arial,sans-serif;fill:#292b30}.subtitle{font:400 20px 'Segoe UI',Arial,sans-serif;fill:#5b7488}
+      .section{font:700 18px 'Segoe UI',Arial,sans-serif;fill:#292b30}.title{font:700 17px 'Segoe UI',Arial,sans-serif;fill:#292b30}
+      .body{font:400 14px 'Segoe UI',Arial,sans-serif;fill:#5b7488}.small{font:600 12px 'Segoe UI',Arial,sans-serif;fill:#7b8088;letter-spacing:.6px}
+      .badge{font:700 11px 'Segoe UI',Arial,sans-serif;fill:#fff;letter-spacing:.5px}
+    </style>
+  </defs>
+  <rect width="1600" height="900" fill="url(#background)"/>
+  <circle cx="1500" cy="70" r="150" fill="#d3d5d9" opacity=".10"/><circle cx="75" cy="830" r="175" fill="#6f8c84" opacity=".08"/>
+  <text x="60" y="72" class="heading">Azure HDInsight</text>
+  <text x="60" y="108" class="subtitle">Managed Hadoop and Spark clusters inside a customer virtual network</text>
+  <g transform="translate(1190 48)"><rect width="112" height="30" rx="15" fill="#5b7488"/><text x="56" y="20" class="badge" text-anchor="middle">MANAGED PaaS</text><rect x="122" width="112" height="30" rx="15" fill="#6f8c84"/><text x="178" y="20" class="badge" text-anchor="middle">CUSTOMER VNET</text><rect x="244" width="106" height="30" rx="15" fill="#ad8c5e"/><text x="297" y="20" class="badge" text-anchor="middle">SECURE ACCESS</text></g>
+
+  <text x="60" y="166" class="small">CLIENT ACCESS AND SERVICE MANAGEMENT</text>
+  <g filter="url(#shadow)">
+    <rect x="60" y="190" width="275" height="112" rx="16" fill="#fff" stroke="#d3d5d9"/>
+    <rect x="405" y="190" width="300" height="112" rx="16" fill="#fff" stroke="#d3d5d9"/>
+    <rect x="775" y="190" width="340" height="112" rx="16" fill="#fff" stroke="#d3d5d9"/>
+    <rect x="1185" y="190" width="355" height="112" rx="16" fill="#fff" stroke="#d3d5d9"/>
+  </g>
+  <circle cx="101" cy="232" r="22" fill="#eaf0f2"/><text x="101" y="238" class="title" text-anchor="middle">01</text>
+  <text x="138" y="228" class="title">Client</text><text x="138" y="253" class="body">HTTPS / SSH requests</text><text x="82" y="281" class="body">Submit jobs and access cluster</text>
+  <text x="430" y="228" class="title">HDInsight service</text><text x="430" y="253" class="body">Provisioning and control plane</text><text x="430" y="278" class="body">Coordinates cluster operations</text>
+  <text x="800" y="228" class="title">Managed VNet</text><text x="800" y="253" class="body">HDInsight management node</text><text x="800" y="278" class="body">Service-managed connectivity</text>
+  <text x="1210" y="228" class="title">Security boundary</text><text x="1210" y="253" class="body">NSG rules restrict public access</text><text x="1210" y="278" class="body">Customer controls network policy</text>
+  <path d="M335 246h62M705 246h62M1115 246h62" fill="none" stroke="#6f8c84" stroke-width="2.5" marker-end="url(#arrow)"/>
+
+  <text x="60" y="356" class="small">CLUSTER DATA PLANE</text>
+  <rect x="60" y="378" width="1480" height="440" rx="22" fill="none" stroke="#6f8c84" stroke-width="2" stroke-dasharray="5 8"/>
+  <text x="82" y="410" class="section">Customer VNet · subnet and network security group</text>
+  <rect x="95" y="452" width="250" height="294" rx="18" fill="#fff" stroke="#d3d5d9" filter="url(#shadow)"/>
+  <text x="120" y="488" class="title">Cluster endpoints</text>
+  <rect x="120" y="510" width="200" height="66" rx="12" fill="#eaf0f2" stroke="#d3d5d9"/><text x="220" y="539" class="title" text-anchor="middle">Private load balancer</text><text x="220" y="559" class="body" text-anchor="middle">HTTPS within VNet</text>
+  <rect x="120" y="596" width="200" height="66" rx="12" fill="#eaf0f2" stroke="#d3d5d9"/><text x="220" y="625" class="title" text-anchor="middle">Public load balancer</text><text x="220" y="645" class="body" text-anchor="middle">SSH when NSG permits</text>
+  <text x="120" y="704" class="body">Endpoints route to gateway nodes</text>
+
+  <rect x="390" y="438" width="750" height="330" rx="22" fill="url(#cluster)" stroke="#6f8c84" stroke-width="2" stroke-dasharray="5 7"/>
+  <text x="420" y="476" class="section">HDInsight cluster</text>
+  <rect x="430" y="508" width="185" height="214" rx="15" fill="#fff" stroke="#d3d5d9"/>
+  <text x="522" y="541" class="title" text-anchor="middle">Gateway nodes</text><text x="522" y="566" class="body" text-anchor="middle">Cluster access</text>
+  <g fill="#5b7488"><rect x="475" y="594" width="42" height="30" rx="5"/><rect x="527" y="594" width="42" height="30" rx="5"/></g><text x="522" y="658" class="body" text-anchor="middle">HTTPS / SSH entry</text>
+  <rect x="640" y="508" width="205" height="214" rx="15" fill="#fff" stroke="#d3d5d9"/>
+  <text x="742" y="541" class="title" text-anchor="middle">Head nodes</text><text x="742" y="566" class="body" text-anchor="middle">Coordination services</text>
+  <g fill="#6f8c84"><rect x="690" y="594" width="42" height="30" rx="5"/><rect x="742" y="594" width="42" height="30" rx="5"/></g><text x="742" y="658" class="body" text-anchor="middle">Cluster management</text>
+  <rect x="870" y="508" width="235" height="214" rx="15" fill="#fff" stroke="#d3d5d9"/>
+  <text x="987" y="541" class="title" text-anchor="middle">Worker nodes</text><text x="987" y="566" class="body" text-anchor="middle">Distributed compute</text>
+  <g fill="#ad8c5e"><rect x="920" y="594" width="42" height="30" rx="5"/><rect x="972" y="594" width="42" height="30" rx="5"/><rect x="1024" y="594" width="42" height="30" rx="5"/></g><text x="987" y="658" class="body" text-anchor="middle">Hadoop / Spark workloads</text>
+  <path d="M345 543h38M345 630h38M615 615h18M845 615h18" stroke="#6f8c84" stroke-width="2.5" fill="none" marker-end="url(#arrow)"/>
+  <rect x="1190" y="452" width="300" height="294" rx="18" fill="#fff" stroke="#d3d5d9" filter="url(#shadow)"/>
+  <text x="1220" y="488" class="title">Connected services</text>
+  <rect x="1220" y="514" width="240" height="78" rx="12" fill="#eaf0f2"/><text x="1340" y="546" class="title" text-anchor="middle">Azure Storage</text><text x="1340" y="570" class="body" text-anchor="middle">Data and cluster files</text>
+  <rect x="1220" y="610" width="240" height="78" rx="12" fill="#eaf0f2"/><text x="1340" y="642" class="title" text-anchor="middle">Hive metastore</text><text x="1340" y="666" class="body" text-anchor="middle">Metadata service</text>
+  <path d="M1140 615h42" stroke="#6f8c84" stroke-width="2.5" fill="none" marker-end="url(#arrow)"/>
+  <text x="60" y="858" class="body">Network access depends on the configured endpoints, subnet, and NSG rules.</text>
+</svg>
