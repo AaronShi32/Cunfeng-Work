@@ -50,7 +50,7 @@ export default function ZoomableImageModal({ imageSrc, imageAlt, isOpen, onClose
         left: 0,
         right: 0,
         bottom: 0,
-        background: 'rgba(0, 0, 0, 0.85)',
+        background: 'rgba(41, 43, 48, 0.88)',
         display: 'flex',
         justifyContent: 'center',
         alignItems: 'center',
@@ -74,7 +74,7 @@ export default function ZoomableImageModal({ imageSrc, imageAlt, isOpen, onClose
           background: '#ffffff',
           borderRadius: '16px',
           padding: '20px',
-          boxShadow: '0 20px 60px rgba(0,0,0,0.3)',
+          boxShadow: '0 20px 60px rgba(41,43,48,0.3)',
           display: 'flex',
           justifyContent: 'center',
           alignItems: 'center',
@@ -89,7 +89,7 @@ export default function ZoomableImageModal({ imageSrc, imageAlt, isOpen, onClose
             position: 'absolute',
             top: '15px',
             right: '15px',
-            background: '#ef4444',
+            background: '#62676f',
             color: '#ffffff',
             border: 'none',
             borderRadius: '50%',
@@ -105,11 +105,11 @@ export default function ZoomableImageModal({ imageSrc, imageAlt, isOpen, onClose
             zIndex: 10
           }}
           onMouseEnter={(e) => {
-            e.currentTarget.style.background = '#dc2626';
+            e.currentTarget.style.background = '#454950';
             e.currentTarget.style.transform = 'scale(1.1)';
           }}
           onMouseLeave={(e) => {
-            e.currentTarget.style.background = '#ef4444';
+            e.currentTarget.style.background = '#62676f';
             e.currentTarget.style.transform = 'scale(1)';
           }}
         >
@@ -124,7 +124,7 @@ export default function ZoomableImageModal({ imageSrc, imageAlt, isOpen, onClose
               position: 'absolute',
               bottom: '15px',
               left: '15px',
-              background: '#3b82f6',
+              background: '#62676f',
               color: '#ffffff',
               border: 'none',
               borderRadius: '8px',
@@ -135,11 +135,11 @@ export default function ZoomableImageModal({ imageSrc, imageAlt, isOpen, onClose
               zIndex: 10
             }}
             onMouseEnter={(e) => {
-              e.currentTarget.style.background = '#1d4ed8';
+              e.currentTarget.style.background = '#454950';
               e.currentTarget.style.transform = 'scale(1.05)';
             }}
             onMouseLeave={(e) => {
-              e.currentTarget.style.background = '#3b82f6';
+              e.currentTarget.style.background = '#62676f';
               e.currentTarget.style.transform = 'scale(1)';
             }}
           >
@@ -153,7 +153,7 @@ export default function ZoomableImageModal({ imageSrc, imageAlt, isOpen, onClose
             position: 'absolute',
             bottom: '15px',
             right: '15px',
-            background: 'rgba(0, 0, 0, 0.6)',
+            background: 'rgba(41, 43, 48, 0.6)',
             color: '#ffffff',
             padding: '8px 12px',
             borderRadius: '6px',

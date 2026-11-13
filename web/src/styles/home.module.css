@@ -22,6 +22,34 @@
   margin: 20px 0;
 }
 
+.languageToggle {
+  display: flex;
+  justify-content: center;
+  gap: 8px;
+  margin: 28px auto 0;
+  width: fit-content;
+}
+
+.languageToggle button {
+  padding: 2px 0;
+  border: 0;
+  background: transparent;
+  color: var(--color-lavender);
+  font: inherit;
+  font-size: 12px;
+  cursor: pointer;
+}
+
+.languageToggle button:focus-visible {
+  outline: 2px solid var(--color-blue);
+  outline-offset: 2px;
+}
+
+.languageToggle .languageActive {
+  color: var(--color-navy);
+  font-weight: 600;
+}
+
 .heroName {
   font-size: var(--font-size-hero);
   font-weight: 700;

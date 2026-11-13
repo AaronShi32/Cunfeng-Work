@@ -3,12 +3,12 @@ import React from 'react';
 const footerStyle = {
   marginTop: '60px',
   paddingTop: '24px',
-  borderTop: '1px solid var(--color-beige, #c9ada7)',
+  borderTop: '1px solid var(--color-beige, #d3d5d9)',
   textAlign: 'center',
 };
 
 const linkStyle = {
-  color: '#4a4e69',
+  color: '#51555d',
   textDecoration: 'none',
   fontSize: '13px',
   transition: 'color 0.2s ease',
@@ -38,8 +38,8 @@ export default function Footer() {
             target={link.external ? '_blank' : undefined}
             rel={link.external ? 'noopener noreferrer' : undefined}
             style={linkStyle}
-            onMouseEnter={(e) => (e.target.style.color = '#22223b')}
-            onMouseLeave={(e) => (e.target.style.color = '#4a4e69')}
+            onMouseEnter={(e) => (e.target.style.color = '#292b30')}
+            onMouseLeave={(e) => (e.target.style.color = '#51555d')}
           >
             {link.label}
           </a>

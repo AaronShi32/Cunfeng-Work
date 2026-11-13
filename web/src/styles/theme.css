@@ -1,14 +1,14 @@
 :root {
-  /* Warm palette inspired by xfsherry */
-  --color-navy: #22223b;
-  --color-blue: #4a4e69;
-  --color-lavender: #9a8c98;
-  --color-beige: #c9ada7;
-  --color-shell: #f2e9e4;
+  /* Soft monochrome palette */
+  --color-navy: #292b30;
+  --color-blue: #51555d;
+  --color-lavender: #7b8088;
+  --color-beige: #d3d5d9;
+  --color-shell: #f0f1f2;
 
   /* Colors */
-  --color-bg-dark-start: #fafafa;
-  --color-bg-dark-end: #f5f5f5;
+  --color-bg-dark-start: #f7f8f9;
+  --color-bg-dark-end: #eef0f2;
   --color-white: #ffffff;
   --color-text-primary: var(--color-navy);
   --color-text-secondary: var(--color-blue);
@@ -23,8 +23,8 @@
   --card-bg: rgba(255, 255, 255, 0.75);
   --card-radius: 16px;
   --card-padding: 32px;
-  --card-shadow: 0 4px 16px rgba(34, 34, 59, 0.06);
-  --card-shadow-hover: 0 8px 24px rgba(34, 34, 59, 0.10);
+  --card-shadow: 0 4px 16px rgba(41, 43, 48, 0.06);
+  --card-shadow-hover: 0 8px 24px rgba(41, 43, 48, 0.10);
 
   /* Glass */
   --glass-bg: rgba(255, 255, 255, 0.7);
@@ -37,12 +37,12 @@
   --btn-ghost-border: 1px solid var(--color-beige);
 
   /* Links */
-  --link-alibaba-start: #ff6600;
-  --link-alibaba-end: #ff8533;
-  --link-alibaba-shadow: rgba(255, 102, 0, 0.3);
-  --link-microsoft-start: #3b82f6;
-  --link-microsoft-end: #1d4ed8;
-  --link-microsoft-shadow: rgba(59, 130, 246, 0.3);
+  --link-alibaba-start: #5f646c;
+  --link-alibaba-end: #777c84;
+  --link-alibaba-shadow: rgba(41, 43, 48, 0.18);
+  --link-microsoft-start: #454950;
+  --link-microsoft-end: #62676f;
+  --link-microsoft-shadow: rgba(41, 43, 48, 0.18);
 
   /* Spacing */
   --page-padding: 48px 24px;

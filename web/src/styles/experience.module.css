@@ -145,7 +145,7 @@
 
 .cardImage:hover {
   transform: scale(1.02);
-  box-shadow: 0 4px 16px rgba(34, 34, 59, 0.12);
+  box-shadow: 0 4px 16px rgba(41, 43, 48, 0.12);
 }
 
 .linkRow {
